@@ -6,7 +6,22 @@
  */
 
 module.exports = {
-  
+
+    // action - create
+    search: async function (req, res) {
+
+        if (req.method == "GET") return res.view('stock/search');
+
+        /*if (req.wantsJSON) { //ajax call
+
+            var stock = await Stock.create(req.body).fetch();
+
+            //status 201: created
+            return res.status(201).json({ id: stock.id });
+        } else { // normal call
+            res.redirect('/stock/search');
+        }*/
+    },
 
 };
 

@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>New Sails App</title>
 
-    <!-- Viewport mobile tag for sensible mobile support -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <title>Investment & Stock Analysis Platform</title>
 
-    <%/* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
-    <%/* <meta name="robots" content="noindex"> */%>
+  <!-- Viewport mobile tag for sensible mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <% /* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
+    <% /* <meta name="robots" content="noindex"> */%>
 
 
-    <!--
+      <!--
         Stylesheets and Preprocessors
         ==============================
 
@@ -31,12 +32,78 @@
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
     -->
 
-    <!--STYLES-->
-    <!--STYLES END-->
-  </head>
+      <!--STYLES-->
+      <link rel="stylesheet" href="/styles/importer.css">
+      <!--STYLES END-->
 
-  <body>
-    <%- body %>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+
+</head>
+
+
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.24.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0-beta.9/dist/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@0.2.1"></script>
+<script src="https://www.chartjs.org/chartjs-chart-financial/chartjs-chart-financial.js"
+  type="text/javascript"></script>
+
+<body>
+
+  <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <img src="https://th.bing.com/th/id/OIP.qpjeNYihWYtgYTEdknvTHAHaHa?pid=ImgDet&rs=1" width="75" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="ex">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="ex" class="navbar-menu">
+        <!-- hidden on mobile -->
+        <div class="navbar-start">
+          <!-- navbar items -->
+          <a class="navbar-item" href="/">
+            Market
+          </a>
+          <a class="navbar-item" href="/stock/search">
+            Stock Search
+          </a>
+          <a class="navbar-item" href="/">
+            Create
+          </a>
+          <a class="navbar-item" href="/">
+            Admin
+          </a>
+
+        </div>
+
+        <div class="navbar-end">
+          <!-- navbar items -->
+          <div class="navbar-item">
+            <div class="buttons">
+              <!--no username in session, recover login and signup button-->
+              <a class="button is-primary" href="#">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light" href="#">
+                Log in
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <%- body %>
 
 
 
@@ -105,6 +172,37 @@
     -->
 
     <!--SCRIPTS-->
+    <script src="/dependencies/sails.io.js"></script>
     <!--SCRIPTS END-->
-  </body>
+</body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    // Check if there are any navbar burgers
+    if ($navbarBurgers.length > 0) {
+
+      // Add a click event on each of them
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+
+          // Get the target from the "data-target" attribute
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+
+        });
+      });
+    }
+
+  });
+</script>
+
+
 </html>
