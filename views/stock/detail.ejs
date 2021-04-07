@@ -18,16 +18,16 @@
           <div class="tile is-vertical is-8">
             <div class="tile">
               <div class="tile is-parent">
-                <article class="tile is-child notification is-info">
+                <article class="tile is-child notification">
                   <p class="title">Stock Title</p>
                   <p class="subtitle">
                     some description about the stock and the Chart
                   </p>
-                  <figure class="image is-4by3">
-                    <img
-                      src="https://bulma.io/images/placeholders/640x480.png"
-                    />
-                  </figure>
+                  <div>
+                    <nav class="panel">
+                      <canvas id="myChart"></canvas>
+                    </nav>
+                  </div>
                 </article>
               </div>
             </div>
@@ -48,3 +48,103 @@
     </nav>
   </div>
 </div>
+
+<script>
+  //
+  // chart code
+  //
+  var ctx = document.getElementById("myChart").getContext("2d");
+  var myChart = new Chart(ctx, {
+    type: "line",
+    backgroundColor: "rgb(255, 99, 132)",
+    data: {
+      datasets: [
+        {
+          type: "line",
+          label: "price",
+          backgroundColor: "red",
+          borderColor: "red",
+          data: [],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        xAxes: {
+          type: "timeseries",
+          display: true,
+        },
+        yAxes: {
+          beginAtZero: false,
+        },
+      },
+    },
+  });
+
+  //
+  // websocket code
+  //
+
+  let wSocket;
+
+  if (wSocket) {
+    wSocket.close();
+  }
+  wSocket = new WebSocket("wss://ws.finnhub.io?token=c0n56d748v6v1q0c1ph0");
+  wSocket.onopen = function () {
+    wSocket.send(`{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}`);
+  };
+
+  wSocket.onmessage = function (event) {
+    if (event.type == "message" && JSON.parse(event.data).data) {
+      let d = JSON.parse(event.data).data[0];
+      if (d) {
+        // console.log(d);
+        let volumeData = myChart.data.datasets[0].data;
+        volumeData.push({ x: d.t, y: d.p });
+        myChart.update();
+      }
+    }
+  };
+
+  //   var WebSocket = require("ws");
+
+  //   const socket = new WebSocket(
+  //     "wss://ws.finnhub.io?token=c0ro5sv48v6voi2d8ndg"
+  //   );
+
+  //   // Connection opened -> Subscribe
+  //   socket.addEventListener("open", function (event) {
+  //     // socket.send(JSON.stringify({ type: "subscribe", symbol: "AAPL" }));
+  //     socket.send(
+  //       JSON.stringify({ type: "subscribe", symbol: "BINANCE:BTCUSDT" })
+  //     );
+  //     //   socket.send(JSON.stringify({ type: "subscribe", symbol: "IC MARKETS:1" }));
+  //   });
+
+  //   // Listen for messages
+  //   socket.addEventListener("message", function (event) {
+  //     // console.log("Message from server ", event.data); //string type
+  //     var cur_data = JSON.parse(event.data); //object type
+  //     // console.log(cur_data.data);
+  //     if (cur_data.type == "trade" && cur_data.data) {
+  //       console.log(cur_data.data[0]);
+  //     }
+  //     console.log("----------------");
+  //   });
+
+  //   // Unsubscribe
+  //   var unsubscribe = function (symbol) {
+  //     socket.send(JSON.stringify({ type: "unsubscribe", symbol: symbol }));
+  //   };
+
+  /*
+  s Symbol.
+  p Last price.
+  t UNIX milliseconds timestamp.
+  v Volume.
+  c List of trade conditions.
+  */
+</script>
