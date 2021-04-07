@@ -6,33 +6,31 @@
                 Investment & Stock Analysis Platform
             </p>
             <p class="subtitle">
-                US Stock Market
+                Stock Market
             </p>
         </div>
     </section>
 </div>
 
 <div class="container">
-
-
     <div class="columns">
-
         <div class="column">
 
         </div>
 
-        <div class="column">
-            <label class="label">Exchange Code</label>
-            <div class="control is-expanded">
-                <input class="input" type="text" name="exchange" id="input">
-            </div>
-
+        <div class="column is-one-third">
             <div class="field">
-                <div class="control">
-                    <button class="button is-link" onclick="stockData(document.getElementById('input').value)">Submit</button>
+                <label class="label">Exchange Code</label>
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="exchange" placeholder="US" value="US" id="input">
                 </div>
             </div>
-
+            <div class="field">
+                <div class="control">
+                    <button class="button is-link"
+                        onclick="stockData(document.getElementById('input').value)">Submit</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -44,22 +42,23 @@
 <script>
 
     async function stockData(code) {
+        
 
-    }
-
-    async function submitForm(formElem) {
-
-        var response = await fetch(formElem.action, {
-            method: formElem.method,
-            body: new FormData(formElem),
+        data = new FormData();
+        data.append("exchange", code);
+        console.log(data);
+        var response = await fetch("/stock/", {
+            method: "POST",
+            body: data,
         });
 
         if (response.ok) {
-            var course = await response.json();
-            alert("id: " + course.id + " created successfully. ");
-            location.assign('/course/createCourse');
+            var symbol = await response.json();
+            console.log(symbol);
+            location.assign('/stock/search');
         } else {
             alert(response.statusText);
         }
-    };
+    }
+
 </script>
