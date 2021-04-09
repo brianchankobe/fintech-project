@@ -15,7 +15,20 @@
 <div class="container">
     <div class="columns">
         <div class="column">
-
+            <div class="tile is-ancestor">
+                <div class="tile is-vertical" id="pdata">
+                    <!--div class="tile is-parent is-vertical">
+                        <article class="tile is-child notification is-primary">
+                            <p class="title">Wide tile</p>
+                            <div class="content">
+                                <p class="subtitle">Wide tile</p>
+                                <p class="subtitle">Wide tile</p>
+                                <p class="subtitle">Wide tile</p>
+                            </div>
+                        </article>
+                    </div-->
+                </div>
+            </div>
         </div>
 
         <div class="column is-one-third">
@@ -41,10 +54,58 @@
 
 <script>
 
-    async function stockData(code) {
-        
 
-        data = new FormData();
+    async function stockData(code) {
+
+        var mic_list = [];
+
+        //get all related stock symbols
+        var symbol_by_exchange = await fetch('https://finnhub.io/api/v1/stock/symbol?exchange=' + code + '&token=<%= my_api %>');
+
+        if (symbol_by_exchange.ok) {
+
+            var allSymbol = await symbol_by_exchange.json();
+
+            console.log(allSymbol);
+
+            allSymbol.forEach(function (symbolName) {
+                //identify the unique mic e.g. US stock exchange has 6 mics
+                var existed = false;
+                for (var i = 0; i < mic_list.length; i++) {
+                    if (symbolName.mic == mic_list[i]) {
+                        existed = true;
+                        break;
+                    } else {
+                        existed = false;
+                    }
+                }
+
+                if (!existed) {  //found company's industry not in list, add it.
+                    mic_list.push(symbolName.mic);
+                }
+            });
+
+            var dynamicCode = '';
+
+            mic_list.forEach(async function (mics) {
+                dynamicCode += '<div class="tile is-parent is-vertical"><article class="tile is-child notification is-primary"><p class="title">MIC code: ' + mics + '</p><div class="content">';
+
+                allSymbol.forEach(async function (symbolName) {
+                    if (symbolName.mic == mics) {
+                        dynamicCode += '<p class="subtitle">' + symbolName.description + '(' + symbolName.symbol + ')</p>';
+                    }
+                });
+
+                dynamicCode += '</div></article></div>';
+            });
+
+            document.querySelector('#pdata').innerHTML = dynamicCode;
+
+        } else {
+            alert(response.statusText);
+        }
+
+        /*data = new FormData();
         data.append("exchange", code);
         console.log(data);
         var response = await fetch("/stock/", {
@@ -54,11 +115,11 @@
 
         if (response.ok) {
             var symbol = await response.json();
-            console.log(symbol);
+            console.log(symbol[0]);
             location.assign('/stock/search');
         } else {
             alert(response.statusText);
-        }
+        }  */
     }
 
 </script>
