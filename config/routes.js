@@ -29,6 +29,9 @@ module.exports.routes = {
   //stock detail page
   "GET /stock/detail": "StockController.detail",
 
+  //stock candlestick chart
+  "GET /stock/candlestick": "StockController.candlestick",
+
   /***************************************************************************
    *                                                                          *
    * More custom routes here...                                               *

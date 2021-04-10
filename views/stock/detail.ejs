@@ -159,37 +159,6 @@
     }
   };
 
-  //   var WebSocket = require("ws");
-
-  //   const socket = new WebSocket(
-  //     "wss://ws.finnhub.io?token=c0ro5sv48v6voi2d8ndg"
-  //   );
-
-  //   // Connection opened -> Subscribe
-  //   socket.addEventListener("open", function (event) {
-  //     // socket.send(JSON.stringify({ type: "subscribe", symbol: "AAPL" }));
-  //     socket.send(
-  //       JSON.stringify({ type: "subscribe", symbol: "BINANCE:BTCUSDT" })
-  //     );
-  //     //   socket.send(JSON.stringify({ type: "subscribe", symbol: "IC MARKETS:1" }));
-  //   });
-
-  //   // Listen for messages
-  //   socket.addEventListener("message", function (event) {
-  //     // console.log("Message from server ", event.data); //string type
-  //     var cur_data = JSON.parse(event.data); //object type
-  //     // console.log(cur_data.data);
-  //     if (cur_data.type == "trade" && cur_data.data) {
-  //       console.log(cur_data.data[0]);
-  //     }
-  //     console.log("----------------");
-  //   });
-
-  //   // Unsubscribe
-  //   var unsubscribe = function (symbol) {
-  //     socket.send(JSON.stringify({ type: "unsubscribe", symbol: symbol }));
-  //   };
-
   /*
   s Symbol.
   p Last price.
@@ -197,4 +166,8 @@
   v Volume.
   c List of trade conditions.
   */
+
+  //
+  // candlestick chart
+  //
 </script>

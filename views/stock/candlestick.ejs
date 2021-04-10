@@ -1,0 +1,115 @@
+<style>
+  #container {
+    height: 100%;
+    padding: 8px;
+  }
+  #content {
+    padding: 5px;
+  }
+</style>
+<div class="columns" id="container">
+  <div class="column is-10 is-offset-1">
+    <!-- 面板 -->
+    <nav class="panel">
+      <!-- 内容 -->
+      <div id="content">
+        <div class="tile is-ancestor">
+          <div class="tile is-vertical is-12">
+            <div class="tile">
+              <div class="tile is-parent">
+                <article class="tile is-child notification">
+                  <p class="title" id="symbol_title"></p>
+                  <p class="subtitle">
+                    some description about the stock and the Chart
+                  </p>
+                  <div>
+                    <nav class="panel">
+                      <div id="main" style="width: 800px; height: 600px"></div>
+                    </nav>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+<script>
+  // const { dataTool } = require("echarts");
+  // const fetch = require("node-fetch");
+  var chartDom = document.getElementById("main");
+  var myChart = echarts.init(chartDom);
+  var option;
+
+  option = {
+    xAxis: {
+      //time
+      data: [],
+    },
+    yAxis: {
+      scale: true,
+    },
+    series: [
+      {
+        type: "k",
+        //open,close,low,high
+        data: [],
+      },
+    ],
+  };
+
+  // //adding datetime data
+  // var today = new Date();
+  // var day_7 = new Array();
+  // for (i = 0; i < 7; i++) {
+  //   let d = today.getTime() - i * 24 * 60 * 60 * 1000;
+  //   let d_date = new Date(d);
+  //   // day_7.push(d_date.toLocaleDateString());
+  //   option.xAxis.data.push(d_date.toLocaleDateString());
+  // }
+  // // console.log(day_7);
+
+  async function fetchCandleData(symbol) {
+    // var echarts = require("echarts");
+
+    //adding datetime data
+    var today = new Date();
+    var day_7 = new Array();
+    for (i = 0; i < 7; i++) {
+      let d = today.getTime() - i * 24 * 60 * 60 * 1000;
+      let d_date = new Date(d);
+      // day_7.push(d_date.toLocaleDateString());
+      option.xAxis.data.push(d_date.toLocaleDateString());
+    }
+    // console.log(day_7);
+
+    let f = Math.round(new Date().getTime() / 1000 - 3600 * 24 * 7);
+    let t = Math.round(new Date().getTime() / 1000);
+    const response = await fetch(
+      "https://finnhub.io/api/v1/stock/candle?symbol=" +
+        symbol +
+        "&resolution=D&from=" +
+        f +
+        "&to=" +
+        t +
+        "&token=c0ro5sv48v6voi2d8ndg"
+    );
+    let data = await response.json();
+    // console.log(data);
+
+    //**********************************************************************//
+    // var y_data = [];
+    //// open,close,low,high
+    for (i = 0; i < 7; i++) {
+      let y_d = [data.o[i], data.c[i], data.l[i], data.h[i]];
+      option.series[0].data.push(y_d);
+    }
+    // console.log(y_data);
+    option && myChart.setOption(option);
+  }
+
+  fetchCandleData("BINANCE:BTCUSDT");
+  // option && myChart.setOption(option);
+</script>
