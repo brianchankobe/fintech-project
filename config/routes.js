@@ -32,6 +32,9 @@ module.exports.routes = {
   //stock candlestick chart
   "GET /stock/candlestick": "StockController.candlestick",
 
+  //stock Recommendation Trends chart
+  "GET /stock/rcmd": "StockController.rcmd",
+
   /***************************************************************************
    *                                                                          *
    * More custom routes here...                                               *

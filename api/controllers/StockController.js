@@ -36,4 +36,12 @@ module.exports = {
       return res.view("stock/candlestick");
     }
   },
+
+  //stock Recommendation Trends chart
+  rcmd: async function (req, res) {
+    // const fetch = require("node-fetch");
+    if (req.method == "GET") {
+      return res.view("stock/recommend");
+    }
+  },
 };

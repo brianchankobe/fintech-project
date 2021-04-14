@@ -1,0 +1,113 @@
+<style>
+  #container {
+    height: 100%;
+    padding: 8px;
+  }
+  #content {
+    padding: 5px;
+  }
+</style>
+<div class="columns" id="container">
+  <div class="column is-10 is-offset-1">
+    <!-- 面板 -->
+    <nav class="panel">
+      <!-- 内容 -->
+      <div id="content">
+        <div class="tile is-ancestor">
+          <div class="tile is-vertical is-12">
+            <div class="tile">
+              <div class="tile is-parent">
+                <article class="tile is-child notification">
+                  <p class="title" id="symbol_title"></p>
+                  <p class="subtitle">
+                    some description about the stock and the Chart
+                  </p>
+                  <div>
+                    <nav class="panel">
+                      <div id="main" style="width: 800px; height: 600px"></div>
+                    </nav>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+<script>
+  var app = {};
+
+  var chartDom = document.getElementById("main");
+  var myChart = echarts.init(chartDom);
+  var option;
+
+  option = {
+    legend: {},
+    tooltip: {},
+    dataset: {
+      source: [],
+    },
+    xAxis: { type: "category" },
+    yAxis: {},
+    // Declare several bar series, each will be mapped
+    // to a column of dataset.source by default.
+    series: [
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      //   { type: "bar" },
+    ],
+  };
+
+  async function fetchRcmData(symbol) {
+    const response = await fetch(
+      "https://finnhub.io/api/v1/stock/recommendation?symbol=" +
+        symbol +
+        "&token=c0ro5sv48v6voi2d8ndg"
+    );
+    var data = await response.json();
+    //   console.log(data);
+    //   import * as echarts from "echarts";
+
+    var rcmd_index = [
+      "recommandation",
+      "strongBuy",
+      "buy",
+      "hold",
+      "sell",
+      "strongSell",
+    ];
+    option.dataset.source.push(rcmd_index);
+    // console.log(option.dataset.source);
+
+    var group_data = [];
+    for (let i = 0; i < 6; i++) {
+      let data_i = [
+        data[i].period,
+        data[i].strongBuy,
+        data[i].buy,
+        data[i].hold,
+        data[i].sell,
+        data[i].strongSell,
+      ];
+      option.dataset.source.push(data_i);
+      // console.log(data_i);
+      //   group_data.push(data_i);
+    }
+    // console.log(group_data);
+
+    console.log(option.dataset.source);
+
+    option && myChart.setOption(option);
+    //   console.log(strongBuy_index);
+    //   ok
+    //   strongBuy_index.reverse();
+    //   strongBuy_index.unshift(data[5].period);
+    //   console.log(strongBuy_index);
+  }
+  fetchRcmData("TSLA");
+</script>

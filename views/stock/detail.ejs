@@ -142,7 +142,7 @@
   if (wSocket) {
     wSocket.close();
   }
-  wSocket = new WebSocket("wss://ws.finnhub.io?token=c0n56d748v6v1q0c1ph0");
+  wSocket = new WebSocket("wss://ws.finnhub.io?token=c0ro5sv48v6voi2d8ndg");
   wSocket.onopen = function () {
     wSocket.send(`{"type":"subscribe","symbol":"${text}"}`);
   };
