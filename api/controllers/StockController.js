@@ -6,13 +6,11 @@
  */
 
 module.exports = {
+  // action - create
+  search: async function (req, res) {
+    if (req.method == "GET") return res.view("stock/search");
 
-    // action - create
-    search: async function (req, res) {
-
-        if (req.method == "GET") return res.view('stock/search');
-
-        /*if (req.wantsJSON) { //ajax call
+    /*if (req.wantsJSON) { //ajax call
 
             var stock = await Stock.create(req.body).fetch();
 
@@ -21,7 +19,29 @@ module.exports = {
         } else { // normal call
             res.redirect('/stock/search');
         }*/
-    },
+  },
 
+  // action - create
+  detail: async function (req, res) {
+    // const fetch = require("node-fetch");
+    if (req.method == "GET") {
+      return res.view("stock/detail");
+    }
+  },
+
+  // action - create
+  candlestick: async function (req, res) {
+    // const fetch = require("node-fetch");
+    if (req.method == "GET") {
+      return res.view("stock/candlestick");
+    }
+  },
+
+  //stock Recommendation Trends chart
+  rcmd: async function (req, res) {
+    // const fetch = require("node-fetch");
+    if (req.method == "GET") {
+      return res.view("stock/recommend");
+    }
+  },
 };
-
