@@ -15,20 +15,7 @@
 <div class="container">
     <div class="columns">
         <div class="column">
-            <div class="tile is-ancestor">
-                <div class="tile is-vertical" id="pdata">
-                    <!--div class="tile is-parent is-vertical">
-                        <article class="tile is-child notification is-primary">
-                            <p class="title">Wide tile</p>
-                            <div class="content">
-                                <p class="subtitle">Wide tile</p>
-                                <p class="subtitle">Wide tile</p>
-                                <p class="subtitle">Wide tile</p>
-                            </div>
-                        </article>
-                    </div-->
-                </div>
-            </div>
+            <div class="columns card is-multiline" id="pdata"></div>
         </div>
 
         <div class="column is-one-third">
@@ -54,6 +41,7 @@
 
 <script>
 
+    let wSocket;
 
     async function stockData(code) {
 
@@ -68,6 +56,8 @@
 
             console.log(allSymbol);
 
+            if (allSymbol.length == 0) alert("Attention: No Content for this code. ");
+
             allSymbol.forEach(function (symbolName) {
                 //identify the unique mic e.g. US stock exchange has 6 mics
                 var existed = false;
@@ -80,7 +70,7 @@
                     }
                 }
 
-                if (!existed) {  //found company's industry not in list, add it.
+                if (!existed) {  //found company's mic code not in list, add it.
                     mic_list.push(symbolName.mic);
                 }
             });
@@ -88,38 +78,62 @@
             var dynamicCode = '';
 
             mic_list.forEach(async function (mics) {
-                dynamicCode += '<div class="tile is-parent is-vertical"><article class="tile is-child notification is-primary"><p class="title">MIC code: ' + mics + '</p><div class="content">';
+                dynamicCode += '<div class="column card is-one-third"><header class="card-header"><p class="card-header-title">MIC code: ' + mics + '</p></header><div id="stockByMic"><div class="card-content"><div class="content">';
 
                 allSymbol.forEach(async function (symbolName) {
+
                     if (symbolName.mic == mics) {
-                        dynamicCode += '<p class="subtitle">' + symbolName.description + '(' + symbolName.symbol + ')</p>';
+
+                        dynamicCode += '<div class="columns"><div class="column"><a herf="#"><b>' + symbolName.symbol + '</b></a></div> <div class="column"> <label class="label" id="' + symbolName.symbol + '"></label></div></div>' + '<br>';
+                        //call message from socket
+                        //wSocket.onmessage = function (event) {
+                        //   console.log(event);
+                        //    if (event.type == 'message' && JSON.parse(event.data).data) {
+                        //        let d = JSON.parse(event.data).data[0];
+                        //        if (d) {
+                        //            document.getElementById("priceStock").value = d.p;
+                        //        }
+                        //    }
+                        //}
                     }
                 });
 
-                dynamicCode += '</div></article></div>';
+                //'<label class="label" id="priceStock">' + d.p + '</label><br>';
+                dynamicCode += '</div></div></div></div>';
             });
 
             document.querySelector('#pdata').innerHTML = dynamicCode;
 
+
+            /*close socket
+            if (wSocket) {
+                wSocket.close();
+            }
+
+            //open socket
+            wSocket = new WebSocket("wss://ws.finnhub.io?token=<%= my_api %>");
+
+            allSymbol.forEach(async function (symbolName) {
+                //subsribe the stock
+                wSocket.onopen = function () {
+                    wSocket.send(`{"type":"subscribe","symbol":"${symbolName.symbol}"}`);
+                };
+
+                //socket call message
+                wSocket.onmessage = function (event) {
+                    console.log(event);
+                    if (event.type == 'message' && JSON.parse(event.data).data) {
+                        let d = JSON.parse(event.data).data[0];
+                        if (d) {
+                            document.getElementById(symbolName.symbol).innerHTML = d.p;
+                        }
+                    }
+                }
+            });*/
+
         } else {
             alert(response.statusText);
         }
-
-        /*data = new FormData();
-        data.append("exchange", code);
-        console.log(data);
-        var response = await fetch("/stock/", {
-            method: "POST",
-            body: data,
-        });
-
-        if (response.ok) {
-            var symbol = await response.json();
-            console.log(symbol[0]);
-            location.assign('/stock/search');
-        } else {
-            alert(response.statusText);
-        }  */
     }
 
 </script>
