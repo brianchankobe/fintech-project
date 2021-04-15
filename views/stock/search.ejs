@@ -85,7 +85,7 @@
 
                     if (symbolName.mic == mics) {
 
-                        dynamicCode += '<div class="columns"><div class="column"><a herf="#"><b>' + symbolName.symbol + '</b></a></div> <div class="column"> <label class="label" id="' + symbolName.symbol + '"></label></div></div>' + '<br>';
+                        dynamicCode += '<div class="columns"><div class="column"><a href="/stock/detail/'+ symbolName.symbol  +'"><b>' + symbolName.symbol + '</b></a></div> <div class="column"> <label class="label" id="' + symbolName.symbol + '"></label></div></div>' + '<br>';
 
                     }
                 });
@@ -97,6 +97,7 @@
 
         } else {
             alert(response.statusText);
-        }  
+        }
     }
+
 </script>

@@ -29,7 +29,7 @@ module.exports = {
     detail: async function (req, res) {
         // const fetch = require("node-fetch");
         if (req.method == "GET") {
-            return res.view("stock/detail");
+            return res.view("stock/detail", { stockSymbol: req.params.sym });
         }
     },
 

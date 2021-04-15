@@ -27,7 +27,7 @@ module.exports.routes = {
   "POST /stock/": "StockController.search",
 
   //stock detail page
-  "GET /stock/detail": "StockController.detail",
+  "GET /stock/detail/:sym": "StockController.detail",
 
   //stock candlestick chart
   "GET /stock/candlestick": "StockController.candlestick",
