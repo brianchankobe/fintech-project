@@ -5,39 +5,46 @@
   <title>Investment & Stock Analysis Platform</title>
 
   <!-- Viewport mobile tag for sensible mobile support -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <% /* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
-    <% /* <meta name="robots" content="noindex" />
-    */%>
+    <% /* <meta name="robots" content="noindex"> */%>
 
-    <!--
+
+      <!--
         Stylesheets and Preprocessors
         ==============================
-
         You can always bring in CSS files manually with `<link>` tags, or asynchronously
         using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
         of Sails' conventional asset pipeline (boilerplate Gruntfile).
-
         By default, stylesheets from your `assets/styles` folder are included
         here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
         are supported. In production, your styles will be minified and concatenated into
         a single file.
-
         To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
         For example, here are a few things you could do:
-
             + Change the order of your CSS files
             + Import stylesheets from other directories
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
     -->
 
-    <!--STYLES-->
-    <link rel="stylesheet" href="/styles/importer.css">
-    <!--STYLES END-->
+      <!--STYLES-->
+      <link rel="stylesheet" href="/styles/importer.css">
+      <!--STYLES END-->
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+      <style>
+        #stockByMic {
+          max-height: 30vh;
+          overflow: auto;
+        }
+
+        #priceStock {
+          float: right;
+        }
+      </style>
 </head>
+
 
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
@@ -46,14 +53,14 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@0.2.1"></script>
 <script src="https://www.chartjs.org/chartjs-chart-financial/chartjs-chart-financial.js"
   type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.0.2/dist/echarts.min.js"></script>
 
 <body>
+
   <nav class="navbar is-black" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
         <a class="navbar-item" href="/">
-          <img src="https://th.bing.com/th/id/OIP.qpjeNYihWYtgYTEdknvTHAHaHa?pid=ImgDet&rs=1" width="75" height="28" />
+          <img src="https://th.bing.com/th/id/OIP.qpjeNYihWYtgYTEdknvTHAHaHa?pid=ImgDet&rs=1" width="75" height="28">
         </a>
 
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="ex">
@@ -63,42 +70,43 @@
         </a>
       </div>
 
-      <div class="navbar-end">
-        <!-- navbar items -->
-        <div class="navbar-item">
-          <div class="buttons">
-            <!--no username in session, recover login and signup button-->
-            <a class="button is-primary" href="#">
-              <strong>Sign up</strong>
-            </a>
-            <a class="button is-light" href="#">
-              Log in
-            </a>
-            <div id="ex" class="navbar-menu">
-              <!-- hidden on mobile -->
-              <div class="navbar-start">
-                <!-- navbar items -->
-                <a class="navbar-item" href="/"> Market </a>
-                <a class="navbar-item" href="/stock/search"> Stock Search </a>
-                <a class="navbar-item" href="/"> Create </a>
-                <a class="navbar-item" href="/"> Admin </a>
-              </div>
+      <div id="ex" class="navbar-menu">
+        <!-- hidden on mobile -->
+        <div class="navbar-start">
+          <!-- navbar items -->
+          <a class="navbar-item" href="/">
+            Market
+          </a>
+          <a class="navbar-item" href="/stock/search">
+            Stock Search
+          </a>
+          <a class="navbar-item" href="/">
+            Create
+          </a>
+          <a class="navbar-item" href="/">
+            Admin
+          </a>
 
-              <div class="navbar-end">
-                <!-- navbar items -->
-                <div class="navbar-item">
-                  <div class="buttons">
-                    <!--no username in session, recover login and signup button-->
-                    <a class="button is-primary" href="#">
-                      <strong>Sign up</strong>
-                    </a>
-                    <a class="button is-light" href="#"> Log in </a>
-                  </div>
-                </div>
-              </div>
+        </div>
+
+        <div class="navbar-end">
+          <!-- navbar items -->
+          <div class="navbar-item">
+            <div class="buttons">
+              <!--no username in session, recover login and signup button-->
+              <a class="button is-primary" href="#">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light" href="#">
+                Log in
+              </a>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
   </nav>
+
 
   <%- body %>
 
