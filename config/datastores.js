@@ -31,7 +31,10 @@ module.exports.datastores = {
    ***************************************************************************/
 
   default: {
+    //adapter: require("sails-mysql"),
+    //url: "mysql://root:chenshanghua@localhost:3306/fintech_db",
     // protocol://user:password@host:port/database
+
     /***************************************************************************
      *                                                                          *
      * Want to use a different database during development?                     *

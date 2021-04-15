@@ -19,7 +19,7 @@ module.exports.routes = {
    ***************************************************************************/
 
   //'/': { view: 'pages/homepage' },
-  "/test": { view: "test/test1" },
+  //'/test': { view: 'test/test1' },
   //'/': { view: 'pages/homepage' },
 
   //create stock model for getting info of stock
@@ -27,7 +27,7 @@ module.exports.routes = {
   "POST /stock/": "StockController.search",
 
   //stock detail page
-  "GET /stock/detail": "StockController.detail",
+  "GET /stock/detail/:sym": "StockController.detail",
 
   //stock candlestick chart
   "GET /stock/candlestick": "StockController.candlestick",

@@ -6,33 +6,33 @@
                 Investment & Stock Analysis Platform
             </p>
             <p class="subtitle">
-                US Stock Market
+                Stock Market
             </p>
         </div>
     </section>
 </div>
 
 <div class="container">
-
-
+    <!-- display stock  -->
     <div class="columns">
-
         <div class="column">
-
+            <div class="columns card is-multiline" id="pdata"></div>
         </div>
 
-        <div class="column">
-            <label class="label">Exchange Code</label>
-            <div class="control is-expanded">
-                <input class="input" type="text" name="exchange" id="input">
-            </div>
-
+        <!-- input exchange code -->
+        <div class="column is-one-third">
             <div class="field">
-                <div class="control">
-                    <button class="button is-link" onclick="stockData(document.getElementById('input').value)">Submit</button>
+                <label class="label">Exchange Code</label>
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="exchange" placeholder="US" value="US" id="input">
                 </div>
             </div>
-
+            <div class="field">
+                <div class="control">
+                    <button class="button is-link"
+                        onclick="stockData(document.getElementById('input').value)">Submit</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -43,23 +43,61 @@
 
 <script>
 
+    let wSocket;
+
     async function stockData(code) {
 
-    }
+        var mic_list = [];
 
-    async function submitForm(formElem) {
+        //get all related stock symbols
+        var symbol_by_exchange = await fetch('https://finnhub.io/api/v1/stock/symbol?exchange=' + code + '&token=<%= my_api %>');
 
-        var response = await fetch(formElem.action, {
-            method: formElem.method,
-            body: new FormData(formElem),
-        });
+        if (symbol_by_exchange.ok) {
 
-        if (response.ok) {
-            var course = await response.json();
-            alert("id: " + course.id + " created successfully. ");
-            location.assign('/course/createCourse');
+            var allSymbol = await symbol_by_exchange.json();
+
+            // invalid exchange code
+            if (allSymbol.length == 0) alert("Attention: No Content for this code. ");
+
+            //identify the unique mic e.g. US stock exchange has 6 mics
+            allSymbol.forEach(function (symbolName) {
+                var existed = false;
+                for (var i = 0; i < mic_list.length; i++) {
+                    if (symbolName.mic == mic_list[i]) {
+                        existed = true;
+                        break;
+                    } else {
+                        existed = false;
+                    }
+                }
+                if (!existed) {  //found company's mic code not in list, add it.
+                    mic_list.push(symbolName.mic);
+                }
+            });
+
+            var dynamicCode = '';
+
+            //display stock according to each mic code
+            mic_list.forEach(async function (mics) {
+                dynamicCode += '<div class="column card is-one-third"><header class="card-header"><p class="card-header-title">MIC code: ' + mics + '</p></header><div id="stockByMic"><div class="card-content"><div class="content">';
+
+                allSymbol.forEach(async function (symbolName) {
+
+                    if (symbolName.mic == mics) {
+
+                        dynamicCode += '<div class="columns"><div class="column"><a href="/stock/detail/'+ symbolName.symbol  +'"><b>' + symbolName.symbol + '</b></a></div> <div class="column"> <label class="label" id="' + symbolName.symbol + '"></label></div></div>' + '<br>';
+
+                    }
+                });
+
+                dynamicCode += '</div></div></div></div>';
+            });
+
+            document.querySelector('#pdata').innerHTML = dynamicCode;
+
         } else {
             alert(response.statusText);
         }
-    };
+    }
+
 </script>
