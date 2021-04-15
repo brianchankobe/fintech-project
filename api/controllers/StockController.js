@@ -8,8 +8,6 @@
 const finnhub = require('finnhub');
 const api_key = finnhub.ApiClient.instance.authentications['api_key'];
 api_key.apiKey = "c0n56d748v6v1q0c1ph0"; // Replace this
-const finnhubClient = new finnhub.DefaultApi();
-
 
 module.exports = {
     // action - create

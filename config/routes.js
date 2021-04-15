@@ -19,7 +19,7 @@ module.exports.routes = {
    ***************************************************************************/
 
   //'/': { view: 'pages/homepage' },
-  "/test": { view: "test/test1" },
+  //'/test': { view: 'test/test1' },
   //'/': { view: 'pages/homepage' },
 
   //create stock model for getting info of stock
