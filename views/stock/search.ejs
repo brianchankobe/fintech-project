@@ -33,6 +33,23 @@
                         onclick="stockData(document.getElementById('input').value)">Submit</button>
                 </div>
             </div>
+
+            <!-- find symbol automatacally change the symbol we find into yellow colow -->
+            <div class="field">
+                <label class="label">Find Your Stock Symbol: </label>
+            </div>
+            <div class="field has-addons">
+                <div class="control">
+                    <datalist id="symbols"></datalist>
+                    <input class="input" type="text" placeholder="Stock symbol" oninput="findSymbol(this.value)"
+                        list="symbols" id="input-symbol">
+                </div>
+                <div class="control">
+                    <a class="button is-info" href="#" onclick="this.href = '#' +  document.getElementById('input-symbol').value; searchSymbol(document.getElementById('input-symbol').value);">
+                        SearchView
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -43,7 +60,7 @@
 
 <script>
 
-    let wSocket;
+    let allSymbol;
 
     async function stockData(code) {
 
@@ -54,7 +71,7 @@
 
         if (symbol_by_exchange.ok) {
 
-            var allSymbol = await symbol_by_exchange.json();
+            allSymbol = await symbol_by_exchange.json();
 
             // invalid exchange code
             if (allSymbol.length == 0) alert("Attention: No Content for this code. ");
@@ -85,7 +102,7 @@
 
                     if (symbolName.mic == mics) {
 
-                        dynamicCode += '<div class="columns"><div class="column"><a href="/stock/detail/'+ symbolName.symbol  +'"><b>' + symbolName.symbol + '</b></a></div> <div class="column"> <label class="label" id="' + symbolName.symbol + '"></label></div></div>' + '<br>';
+                        dynamicCode += '<div class="field" id="' + symbolName.symbol + '" style="background-color: #FFFFFF"><a name="' + symbolName.symbol + '" href="/stock/detail/' + symbolName.symbol + '"><b>' + symbolName.symbol + '</b></a>' + '</div>' + '<br>';
 
                     }
                 });
@@ -97,6 +114,49 @@
 
         } else {
             alert(response.statusText);
+        }
+    }
+
+    async function findSymbol(text) {
+        if (text && text.length > 3) {
+
+            const response = await fetch("https://finnhub.io/api/v1/search?q=" + encodeURI(text) + "&token=<%= my_api %>");
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                let datalist = document.getElementById('symbols');
+                datalist.innerHTML = '';
+                data.result.forEach(function (stock) {
+                    datalist.innerHTML += `<option value="${stock.symbol}">${stock.displaySymbol}  ${stock.description}</option>`
+                });
+            }
+        }
+    }
+
+    async function searchSymbol(text) {
+
+        if (!allSymbol) {
+            alert("Please first input which exchange you find. ");
+            return;
+        }
+
+        //get symbol input from query
+        if (document.querySelector(`option[value="${text}"]`)) {
+            //only show the symbol user searches
+            console.log(text);
+            allSymbol.forEach(function (symbolName) {
+                if (symbolName.symbol != text) {
+                    document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFFFF';
+                } else {
+                    document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFF00';
+                }
+            });
+        } else {
+            alert("Searching Nothing, Stay All Symbols Displayed");
+            //all the symbol shows
+            allSymbol.forEach(function (symbolName) {
+                document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFFFF';
+            });
         }
     }
 
