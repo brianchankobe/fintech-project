@@ -143,14 +143,23 @@
         //get symbol input from query
         if (document.querySelector(`option[value="${text}"]`)) {
             //only show the symbol user searches
+            var existed = false;
             console.log(text);
             allSymbol.forEach(function (symbolName) {
                 if (symbolName.symbol != text) {
                     document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFFFF';
                 } else {
+                    existed = true;
                     document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFF00';
                 }
             });
+
+            if (existed) {
+                alert("found the records. " + text);
+            } else {
+                alert(text + " cannot be found. ");
+            }
+            
         } else {
             alert("Searching Nothing, Stay All Symbols Displayed");
             //all the symbol shows
