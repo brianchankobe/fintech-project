@@ -3,6 +3,7 @@
     height: 100%;
     padding: 8px;
   }
+
   #content {
     padding: 5px;
   }
@@ -66,8 +67,8 @@
   async function fetchRcmData(symbol) {
     const response = await fetch(
       "https://finnhub.io/api/v1/stock/recommendation?symbol=" +
-        symbol +
-        "&token=c0ro5sv48v6voi2d8ndg"
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
     );
     var data = await response.json();
     //   console.log(data);
