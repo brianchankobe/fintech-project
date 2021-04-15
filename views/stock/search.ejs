@@ -13,11 +13,13 @@
 </div>
 
 <div class="container">
+    <!-- display stock  -->
     <div class="columns">
         <div class="column">
             <div class="columns card is-multiline" id="pdata"></div>
         </div>
 
+        <!-- input exchange code -->
         <div class="column is-one-third">
             <div class="field">
                 <label class="label">Exchange Code</label>
@@ -54,12 +56,11 @@
 
             var allSymbol = await symbol_by_exchange.json();
 
-            console.log(allSymbol);
-
+            // invalid exchange code
             if (allSymbol.length == 0) alert("Attention: No Content for this code. ");
 
+            //identify the unique mic e.g. US stock exchange has 6 mics
             allSymbol.forEach(function (symbolName) {
-                //identify the unique mic e.g. US stock exchange has 6 mics
                 var existed = false;
                 for (var i = 0; i < mic_list.length; i++) {
                     if (symbolName.mic == mic_list[i]) {
@@ -76,6 +77,7 @@
 
             var dynamicCode = '';
 
+            //display stock according to each mic code
             mic_list.forEach(async function (mics) {
                 dynamicCode += '<div class="column card is-one-third"><header class="card-header"><p class="card-header-title">MIC code: ' + mics + '</p></header><div id="stockByMic"><div class="card-content"><div class="content">';
 
@@ -84,50 +86,15 @@
                     if (symbolName.mic == mics) {
 
                         dynamicCode += '<div class="columns"><div class="column"><a herf="#"><b>' + symbolName.symbol + '</b></a></div> <div class="column"> <label class="label" id="' + symbolName.symbol + '"></label></div></div>' + '<br>';
-                        //call message from socket
-                        //wSocket.onmessage = function (event) {
-                        //   console.log(event);
-                        //    if (event.type == 'message' && JSON.parse(event.data).data) {
-                        //        let d = JSON.parse(event.data).data[0];
-                        //        if (d) {
-                        //            document.getElementById("priceStock").value = d.p;
-                        //        }
-                        //    }
-                        //}
+
                     }
                 });
 
-                //'<label class="label" id="priceStock">' + d.p + '</label><br>';
                 dynamicCode += '</div></div></div></div>';
             });
 
             document.querySelector('#pdata').innerHTML = dynamicCode;
 
-
-            /*close socket
-            if (wSocket) {
-                wSocket.close();
-            }
-
-            //open socket
-            wSocket = new WebSocket("wss://ws.finnhub.io?token=<%= my_api %>");
-
-            allSymbol.forEach(async function (symbolName) {
-                //subsribe the stock
-                wSocket.onopen = function () {
-                    wSocket.send(`{"type":"subscribe","symbol":"${symbolName.symbol}"}`);
-                };
-                //socket call message
-                wSocket.onmessage = function (event) {
-                    console.log(event);
-                    if (event.type == 'message' && JSON.parse(event.data).data) {
-                        let d = JSON.parse(event.data).data[0];
-                        if (d) {
-                            document.getElementById(symbolName.symbol).innerHTML = d.p;
-                        }
-                    }
-                }
-            });*/
         } else {
             alert(response.statusText);
         }  
