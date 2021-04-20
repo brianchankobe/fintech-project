@@ -67,42 +67,50 @@
             <div class="tile is-parent">
               <article class="tile is-child notification is-danger">
                 <p class="title"> Latest Recommendation Index </p>
+                <p class="subtitle" id="TODAY_DATE"></p>
                 <nav class="level is-mobile is-multiline">
                   <div class="level-item ">
                     <div>
                       <p class="heading">StrongBuy</p>
-                      <p class="title" id="TODAY_SB">3,456</p>
+                      <p class="title" id="TODAY_SB"></p>
                     </div>
                   </div>
                   <div class="level-item has-text-centered">
                     <div>
                       <p class="heading">Buy</p>
-                      <p class="title" id="TODAY_B">123</p>
+                      <p class="title" id="TODAY_B"></p>
                     </div>
                   </div>
                   <div class="level-item has-text-centered">
                     <div>
                       <p class="heading">Hold</p>
-                      <p class="title" id="TODAY_H">456K</p>
+                      <p class="title" id="TODAY_H"></p>
                     </div>
                   </div>
                   <div class="level-item has-text-centered">
                     <div>
                       <p class="heading">Sell</p>
-                      <p class="title" id="TODAY_SL">789</p>
+                      <p class="title" id="TODAY_SL"></p>
                     </div>
                   </div>
                   <div class="level-item has-text-centered">
                     <div>
                       <p class="heading">StrongSell</p>
-                      <p class="title" id="TODAY_SS">789</p>
+                      <p class="title" id="TODAY_SS"></p>
                     </div>
                   </div>
                 </nav>
-                <p class="subtitle" id="TODAY_DATE" style="float: right"></p>
+                <article class="tile is-child notification is-danger">
+                  <button class="button is-warning is-large modal-button" data-target="modal-ter" aria-haspopup="true"
+                    onclick="activateRoom()">Show Me</button>
+                </article>
+
               </article>
             </div>
 
+            <div class="content">
+
+            </div>
           </div>
 
         </div>
@@ -113,13 +121,38 @@
 
       </div>
     </nav>
+
+    <!-- content show the details of recommendation -->
+    <div id='modal-ter' class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card" style="width: 900px; height: 800px">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Recent Six Month Recommendation Index</p>
+          <button class="delete" aria-label="close" onclick="deactivate();"></button>
+        </header>
+        <section class="modal-card-body">
+          <!-- Content ... -->
+          <article class="tile is-child notification">
+            <p class="title" id="symbol_title_rcmd"></p>
+            <div>
+              <nav class="panel">
+                <div id="main_rcmd" style="width: 700px; height: 600px"></div>
+              </nav>
+            </div>
+          </article>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" onclick="deactivate();">Cancel</button>
+        </footer>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-  //
+
   // chart code
-  //
   var ctx = document.getElementById("myChart").getContext("2d");
   var myChart = new Chart(ctx, {
     type: "line",
@@ -173,21 +206,39 @@
 
   };
 
-  //
-  // basic information about the stock company
-  //
+  var chartDom_rcmd = document.getElementById("main_rcmd");
+  var myChart_rcmd = echarts.init(chartDom_rcmd);
+  var option_rcmd;
+  //recommendation graph option
+  option_rcmd = {
+    legend: {},
+    tooltip: {},
+    dataset: {
+      source: [],
+    },
+    xAxis: { type: "category" },
+    yAxis: {},
+    // Declare several bar series, each will be mapped
+    // to a column of dataset.source by default.
+    series: [
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+    ],
+  };
 
-  // standard symbol
+  // basic information about the stock company
   var text = "<%= stockSymbol %>";
 
   // the title of the company
   var obj = document.getElementById("symbol_title");
   obj.innerHTML = text;
+  var obj_rcmd = document.getElementById('symbol_title_rcmd');
+  obj_rcmd.innerHTML = text;
 
-  //
   // stock company profile
-  //
-
   async function stockProfile(symbol) {
 
     var response = await fetch("https://finnhub.io/api/v1/stock/profile2?symbol=" + symbol + "&token=c0ro5sv48v6voi2d8ndg");
@@ -261,6 +312,10 @@
     );
     var data = await response.json();
 
+    if (!data) {
+      alert("No Data Fetched");
+    }
+
     var rcmd_index = [
       "recommandation",
       "strongBuy",
@@ -269,6 +324,7 @@
       "sell",
       "strongSell",
     ];
+    option_rcmd.dataset.source.push(rcmd_index);
 
     var group_data = [];
     for (let i = 0; i < 6; i++) {
@@ -280,6 +336,7 @@
         data[i].sell,
         data[i].strongSell,
       ];
+      option_rcmd.dataset.source.push(data_i);
     }
 
     var today_obj1 = document.getElementById('TODAY_SB');
@@ -288,7 +345,7 @@
     var today_obj4 = document.getElementById('TODAY_SL');
     var today_obj5 = document.getElementById('TODAY_SS');
     var today_obj6 = document.getElementById('TODAY_DATE')
-    
+
     today_obj1.innerHTML = data[0].strongBuy;
     today_obj2.innerHTML = data[0].buy;
     today_obj3.innerHTML = data[0].hold;
@@ -297,15 +354,24 @@
     today_obj6.innerHTML = "Date: " + data[0].period;
 
     // console.log(group_data);
-
     //console.log(option.dataset.source);
-
-    //option && myChart.setOption(option);
+    option_rcmd && myChart_rcmd.setOption(option_rcmd);
     //   console.log(strongBuy_index);
     //   ok
     //   strongBuy_index.reverse();
     //   strongBuy_index.unshift(data[5].period);
     //   console.log(strongBuy_index);
+
+  }
+
+  //activate window to show the details of recommendation index
+  function activateRoom() {
+    document.getElementById("modal-ter").className = "modal is-active";
+  }
+
+  //cancel the window
+  function deactivate() {
+    document.getElementById("modal-ter").className = "modal";
   }
 
   stockProfile("<%= stockSymbol %>");
