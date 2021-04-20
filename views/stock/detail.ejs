@@ -46,6 +46,7 @@
                   </div>
                 </article>
               </div>
+
             </div>
           </div>
           <!-- 股票基本信息 -->
@@ -63,9 +64,53 @@
                 </div>
               </article>
             </div>
-            
+            <div class="tile is-parent">
+              <article class="tile is-child notification is-danger">
+                <p class="title"> Latest Recommendation Index </p>
+                <nav class="level is-mobile is-multiline">
+                  <div class="level-item ">
+                    <div>
+                      <p class="heading">StrongBuy</p>
+                      <p class="title" id="TODAY_SB">3,456</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Buy</p>
+                      <p class="title" id="TODAY_B">123</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Hold</p>
+                      <p class="title" id="TODAY_H">456K</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Sell</p>
+                      <p class="title" id="TODAY_SL">789</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">StrongSell</p>
+                      <p class="title" id="TODAY_SS">789</p>
+                    </div>
+                  </div>
+                </nav>
+                <p class="subtitle" id="TODAY_DATE" style="float: right"></p>
+              </article>
+            </div>
+
           </div>
+
         </div>
+
+        <div class="tile is-ancestor">
+
+        </div>
+
       </div>
     </nav>
   </div>
@@ -167,6 +212,7 @@
     // console.log(data);
   }
 
+  //candlestick data
   async function fetchCandleData(symbol) {
     // var echarts = require("echarts");
 
@@ -206,9 +252,65 @@
     option && myChart_candlestick.setOption(option);
   }
 
+  //recommendation data
+  async function fetchRcmData(symbol) {
+    const response = await fetch(
+      "https://finnhub.io/api/v1/stock/recommendation?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+    var data = await response.json();
+
+    var rcmd_index = [
+      "recommandation",
+      "strongBuy",
+      "buy",
+      "hold",
+      "sell",
+      "strongSell",
+    ];
+
+    var group_data = [];
+    for (let i = 0; i < 6; i++) {
+      let data_i = [
+        data[i].period,
+        data[i].strongBuy,
+        data[i].buy,
+        data[i].hold,
+        data[i].sell,
+        data[i].strongSell,
+      ];
+    }
+
+    var today_obj1 = document.getElementById('TODAY_SB');
+    var today_obj2 = document.getElementById('TODAY_B');
+    var today_obj3 = document.getElementById('TODAY_H');
+    var today_obj4 = document.getElementById('TODAY_SL');
+    var today_obj5 = document.getElementById('TODAY_SS');
+    var today_obj6 = document.getElementById('TODAY_DATE')
+    
+    today_obj1.innerHTML = data[0].strongBuy;
+    today_obj2.innerHTML = data[0].buy;
+    today_obj3.innerHTML = data[0].hold;
+    today_obj4.innerHTML = data[0].sell;
+    today_obj5.innerHTML = data[0].strongSell;
+    today_obj6.innerHTML = "Date: " + data[0].period;
+
+    // console.log(group_data);
+
+    //console.log(option.dataset.source);
+
+    //option && myChart.setOption(option);
+    //   console.log(strongBuy_index);
+    //   ok
+    //   strongBuy_index.reverse();
+    //   strongBuy_index.unshift(data[5].period);
+    //   console.log(strongBuy_index);
+  }
 
   stockProfile("<%= stockSymbol %>");
   fetchCandleData("<%= stockSymbol %>");
+  fetchRcmData("<%= stockSymbol %>");
 
   //
   // websocket code
