@@ -1,15 +1,29 @@
-# fintech-project
+# Fintech Project - Stock Analytics & Simulation Trading Platform
 
-a [Sails v1](https://sailsjs.com) application
+a web-based application that involves stock analytics and trading simulation
 
 
-### Links
+## Stock Search Page (Search Page)
 
-+ [Sails framework documentation](https://sailsjs.com/get-started)
-+ [Version notes / upgrading](https://sailsjs.com/documentation/upgrading)
-+ [Deployment tips](https://sailsjs.com/documentation/concepts/deployment)
-+ [Community support options](https://sailsjs.com/support)
-+ [Professional / enterprise options](https://sailsjs.com/enterprise)
++ Searching stock from different exchange code (e.g. US)
++ Searching stock by inputing stock symbols or stock name
++ all the stocks will be classified according to unique mic code
++ Uilized symbol searching function to help users to highlight the stock symbol in the output area in order to find stock we want search immediately
+
+## Stock Visualization & Analytics (Detail Page)
+
++ Stock Basic Information Display
++ stock Price Trend Visualization
++ Candlestick Trend Visualizarion
++ Latest Recommendation Index for reference of investment ()
++ Company News Display (Records in the nearly half a year) 
++ Company Sentiment Analysis (未完成 - 从股票新闻情绪感知来分析股市情况)
+
+## User Login 
+
+## Main Page
+
+## Stock Trading
 
 
 ### Version info
