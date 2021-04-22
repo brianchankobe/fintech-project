@@ -24,7 +24,7 @@ module.exports = {
     },
 
     // action - create
-    candlestick: async function (req, res) {
+    /*candlestick: async function (req, res) {
         // const fetch = require("node-fetch");
         if (req.method == "GET") {
             return res.view("stock/candlestick");
@@ -37,5 +37,5 @@ module.exports = {
         if (req.method == "GET") {
             return res.view("stock/recommend");
         }
-    },
+    },*/
 };
