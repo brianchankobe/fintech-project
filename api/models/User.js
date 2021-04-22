@@ -23,6 +23,29 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
+    username: {
+      type: "string",
+      unique: true,
+      required: true
+    },
+
+    password: {
+      type: "string",
+      required: true
+    },
+
+    role: {
+      type: 'string',
+      isIn: ['admin', 'member', 'nonmember'],
+      defaultsTo: 'nonmember'
+    },
+
+    balances: {
+      type: "number",
+      defaultsTo: 0,
+      min: 0
+    },
+
   },
 
 };

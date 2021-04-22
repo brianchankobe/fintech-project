@@ -26,17 +26,21 @@ a web-based application that involves stock analytics and trading simulation
 
         - Check the order details including which user buy stock, or which user sell stock
 
-    - investor 
+    - member 
     
         -  Search and browser stock details and data visualization basically
         - browser the basic information including market new, IPO calendar etc..
-        - Try to buy or sell stock 
+        - Try to carry out simulation of stock trading 
+        - provided with balance (default balance: 5000000)
         - Check the stock order
 
-    - visitor
+    - nonmember
 
         - Search and browser stock details and data visualization basically
         - browser the basic information including market new, IPO calendar etc..
+        - No right for simulation of stock trading
+        - default balance: 0
+        
 
 
 ## Main Page (待定)

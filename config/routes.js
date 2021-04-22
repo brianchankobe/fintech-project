@@ -22,6 +22,9 @@ module.exports.routes = {
   //'/test': { view: 'test/test1' },
   //'/': { view: 'pages/homepage' },
 
+  //Get to main page
+  //'GET /': "StockController.search",
+
   //create stock model for getting info of stock
   "GET /stock/search": "StockController.search",
   "POST /stock/": "StockController.search",
@@ -34,6 +37,11 @@ module.exports.routes = {
 
   //stock Recommendation Trends chart
   "GET /stock/rcmd": "StockController.rcmd",
+
+  //user login and logout route
+  'POST /user/login': 'UserController.login',
+  'GET /user/logout': 'UserController.logout',
+  //'GET /user/login': 'UserController.login',
 
   /***************************************************************************
    *                                                                          *

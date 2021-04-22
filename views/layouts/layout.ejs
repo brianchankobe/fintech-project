@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Investment & Stock Analysis Platform</title>
 
-    <!-- Viewport mobile tag for sensible mobile support -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
+<head>
+  <title>Investment & Stock Analysis Platform</title>
 
-    <% /* If you want to discourage search engines from indexing this site,
-    uncomment the following line: */%> <% /*
-    <meta name="robots" content="noindex" />
+  <!-- Viewport mobile tag for sensible mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+  <% /* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
+    <% /* <meta name="robots" content="noindex" />
     */%>
 
     <!--
@@ -31,21 +28,21 @@
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
     -->
 
-      <!--STYLES-->
-      <link rel="stylesheet" href="/styles/importer.css">
-      <!--STYLES END-->
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
 
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-      <style>
-        #stockByMic {
-          max-height: 30vh;
-          overflow: auto;
-        }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <style>
+      #stockByMic {
+        max-height: 30vh;
+        overflow: auto;
+      }
 
-        #priceStock {
-          float: right;
-        }
-      </style>
+      #priceStock {
+        float: right;
+      }
+    </style>
 </head>
 
 
@@ -65,20 +62,10 @@
     <div class="container">
       <div class="navbar-brand">
         <a class="navbar-item" href="/">
-          <img
-            src="https://th.bing.com/th/id/OIP.qpjeNYihWYtgYTEdknvTHAHaHa?pid=ImgDet&rs=1"
-            width="75"
-            height="28"
-          />
+          <img src="https://th.bing.com/th/id/OIP.qpjeNYihWYtgYTEdknvTHAHaHa?pid=ImgDet&rs=1" width="75" height="28" />
         </a>
 
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="ex"
-        >
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="ex">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -92,24 +79,72 @@
           <a class="navbar-item" href="/"> Market </a>
           <a class="navbar-item" href="/stock/search"> Stock Search </a>
           <a class="navbar-item" href="/"> Create </a>
-          <a class="navbar-item" href="/"> Admin </a>
+          <% if (req.session.role=='admin' ) { %>
+            <a class="navbar-item" href="/"> Admin </a>
+          <% } %>
         </div>
 
         <div class="navbar-end">
           <!-- navbar items -->
           <div class="navbar-item">
             <div class="buttons">
-              <!--no username in session, recover login and signup button-->
-              <a class="button is-primary" href="#">
-                <strong>Sign up</strong>
-              </a>
-              <a class="button is-light" href="#"> Log in </a>
+              <% if (!req.session.username) { %>
+                <!--no username in session, recover login and signup button-->
+                <a class="button is-primary" href="#">
+                  <strong>Sign up</strong>
+                </a>
+                <button class="button is-light modal-button" data-target="modal-login" aria-haspopup="true"
+                  onclick="activateRoom()"> Log in </button>
+                <% } else {%>
+                  <!-- have username -->
+                  <a class="button is-white" href="">
+                    <strong>hi, <%= req.session.username%> (role: <%= req.session.role%>) </strong>
+                  </a>
+                  <a class="button is-light" href="/user/logout">
+                    Log out
+                  </a>
+                <% } %>
             </div>
           </div>
         </div>
       </div>
     </div>
   </nav>
+
+  <!-- login page -->
+  <div id="modal-login" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Login</p>
+        <button class="delete" aria-label="close" onclick="deactivate();"></button>
+      </header>
+      <form action="/user/login" method="POST" onsubmit="submitForm(this); return false">
+        <section class="modal-card-body">
+          <!-- Content ... -->
+          <div class="field">
+            <p class="control has-icons-left has-icons-right">
+              <input class="input" type="text" placeholder="Username" name="username">
+              <span class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+              </span>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control has-icons-left">
+              <input class="input" type="password" placeholder="Password" name="password">
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </p>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success" type="submit">Login</button>
+        </footer>
+      </form>
+    </div>
+  </div>
 
 
   <%- body %>
@@ -182,6 +217,37 @@
 </body>
 
 <script>
+
+  //activate window to show the details of recommendation index
+  function activateRoom() {
+    document.getElementById("modal-login").className = "modal is-active";
+  }
+
+  //cancel the window
+  function deactivate() {
+    document.getElementById("modal-login").className = "modal";
+  }
+
+  //login form validation
+  async function submitForm(formElem) {
+
+    var response = await fetch(formElem.action, {
+      method: formElem.method,
+      body: new FormData(formElem),
+    });
+
+    if (response.ok) {
+      var user = await response.json();
+      alert("Welcome, " + user.username);
+      location.assign('/');
+    } else if (response.status == 401) {
+      var msg = await response.json();
+      alert(msg);
+    } else {
+      alert(response.statusText);
+    }
+  };
+
   document.addEventListener("DOMContentLoaded", () => {
     // Get all "navbar-burger" elements
     const $navbarBurgers = Array.prototype.slice.call(
