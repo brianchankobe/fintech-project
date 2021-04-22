@@ -14,14 +14,37 @@ a web-based application that involves stock analytics and trading simulation
 
 + Stock Basic Information Display
 + stock Price Trend Visualization
-+ Candlestick Trend Visualizarion
++ Candlestick Trend Visualizarion (将日期顺序从前到最近， 从左到右)
 + Latest Recommendation Index for reference of investment ()
 + Company News Display (Records in the nearly half a year) 
 + Company Sentiment Analysis (未完成 - 从股票新闻情绪感知来分析股市情况)
 
 ## User Login 
 
-## Main Page
++ system user role
+    - admin
+
+        - Check the order details including which user buy stock, or which user sell stock
+
+    - investor 
+    
+        -  Search and browser stock details and data visualization basically
+        - browser the basic information including market new, IPO calendar etc..
+        - Try to buy or sell stock 
+        - Check the stock order
+
+    - visitor
+
+        - Search and browser stock details and data visualization basically
+        - browser the basic information including market new, IPO calendar etc..
+
+
+## Main Page (待定)
+
++ Market News Display
++ IPO calendar
++ Covid-19 data
+
 
 ## Stock Trading
 
