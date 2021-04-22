@@ -43,6 +43,9 @@ module.exports.routes = {
   'GET /user/logout': 'UserController.logout',
   //'GET /user/login': 'UserController.login',
 
+  //stock order creation
+  'POST /order/': 'StockController.create',
+
   /***************************************************************************
    *                                                                          *
    * More custom routes here...                                               *

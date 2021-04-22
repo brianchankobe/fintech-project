@@ -23,6 +23,30 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
+    symbolTitle: {
+      type: "string",
+    },
+
+    price: {
+      type: "number",
+    },
+
+    volume: {
+      type: 'number',
+    },
+
+    totalPrice: {
+      type: "number",
+    },
+
+    category: {
+      type: "string",
+    },
+
+    datetime: {
+      type: "string",
+    },
+
   },
 
 };

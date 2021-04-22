@@ -23,6 +23,22 @@ module.exports = {
         }
     },
 
+    // action - create stock order
+    create: async function (req, res) {
+
+        if (req.method == "GET") return res.view('stock/createOrder');
+
+        if (req.wantsJSON) { //ajax call
+
+            var order = await Stock.create(req.body).fetch();
+
+            //status 201: created
+            return res.status(201).json({ id: order.id });
+        } else { // normal call
+            res.redirect('/stock/search');
+        }
+    },
+
     // action - create
     candlestick: async function (req, res) {
         // const fetch = require("node-fetch");

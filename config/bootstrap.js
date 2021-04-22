@@ -40,10 +40,10 @@ module.exports.bootstrap = async function () {
 
     await User.createEach([
       { username: "admin", password: hash, role: 'admin' },
-      { username: "brianchan", password: hash, role: 'member', balances: 500000},
-      { username: "shanghuah", password: hash, role: 'member',  balances: 500000 },
-      { username: "andychow", password: hash, role: 'member',  balances: 500000},
-      { username: "chantaiman", password: hash, role: 'nonmember' },
+      { username: "brianchan", password: hash, role: 'member', balances: 500000, tradeStatus: 1, tradeCount: 4 },
+      { username: "shanghuah", password: hash, role: 'member',  balances: 500000, tradeStatus: 1, tradeCount: 4  },
+      { username: "andychow", password: hash, role: 'member',  balances: 500000, tradeStatus: 1, tradeCount: 4 },
+      { username: "chantaiman", password: hash, role: 'nonmember'},
       // etc.
     ]);
   }

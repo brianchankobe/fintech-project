@@ -97,12 +97,15 @@
                   <p class="subtitle" id="symbol_country"></p>
                   <div class="content">
                     <!-- Content -->
+                    <!-- 股票交易按钮 -->
                     <div class="columns">
                       <div class="column is-mobile">
-                        <button class="button is-warning is-large modal-button" data-target="modal-buy"
-                          aria-haspopup="true" onclick="activateBuy()">Buy</button>
-                        <button class="button is-warning is-large modal-button" data-target="modal-sell"
-                          aria-haspopup="true" onclick="activateSell()">Sell</button>
+                        <% if (req.session.role=='member' ) { %>
+                          <button class="button is-warning is-large modal-button" data-target="modal-buy"
+                            aria-haspopup="true" onclick="activateBuy()">Buy</button>
+                          <button class="button is-warning is-large modal-button" data-target="modal-sell"
+                            aria-haspopup="true" onclick="activateSell()">Sell</button>
+                          <% } %>
                       </div>
                     </div>
 
@@ -163,14 +166,105 @@
       </div>
     </div>
 
-    <!-- purchase page  -->
+
+    <!-- 购买页面  -->
     <div id='modal-buy' class="modal">
-      
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Take the Order</p>
+          <button class="delete" aria-label="close" onclick="deactivateBuy();"></button>
+        </header>
+        <form action="/order/" method="POST" onsubmit="submitOrder(this); return false">
+          <section class="modal-card-body">
+            <div class="field">
+              <label class="label"> Stock Symbol: </label>
+              <input class="input" id="buy_name" type="text" name="symbolTitle"> </input>
+            </div>
+            <div class="field">
+              <p class="control">
+                <label class="label"> Price: </label>
+                <input class="input" type="number" name="price" id="input_price" required>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control">
+                <label class="label"> Volume: </label>
+                <input class="input" type="number" name="volume"
+                  oninput="calculateTotal(this.value, document.getElementById('input_price').value);" required>
+              </p>
+            </div>
+            <div class="field">
+              <div class="control">
+                Subtotal: <input class="input" type="number" name="totalPrice" id="subtotal"> </input>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <label class="label"> Category: </label>
+                <div class="select is-multiple">
+                  <select multiple size="1" name="category" required>
+                    <option>buy</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-success" type="submit">Purchase</button>
+          </footer>
+        </form>
+      </div>
     </div>
 
-    <!-- sell page  -->
+    <!-- 卖出页面  -->
     <div id='modal-sell' class="modal">
-
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Sell the Stock</p>
+          <button class="delete" aria-label="close" onclick="deactivateSell();"></button>
+        </header>
+        <form action="/order/" method="POST" onsubmit="submitOrder(this); return false">
+          <section class="modal-card-body">
+            <div class="field">
+              <label class="label"> Stock Symbol: </label>
+              <input class="input" id="sell_name" type="text" name="symbolTitle"> </input>
+            </div>
+            <div class="field">
+              <p class="control">
+                <label class="label"> Price: </label>
+                <input class="input" type="number" name="price" id="input_price_2" required>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control">
+                <label class="label"> Volume: </label>
+                <input class="input" type="number" name="volume"
+                  oninput="calculateTotal_2(this.value, document.getElementById('input_price_2').value);" required>
+              </p>
+            </div>
+            <div class="field">
+              <div class="control">
+                Subtotal: <input class="input" type="number" name="totalPrice" id="subtotal_sell"> </input>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <label class="label"> Category: </label>
+                <div class="select is-multiple">
+                  <select multiple size="1" name="category" required>
+                    <option>sell</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-danger" type="submit">Sell</button>
+          </footer>
+        </form>
+      </div>
     </div>
 
 
@@ -265,28 +359,39 @@
   obj.innerHTML = text;
   var obj_rcmd = document.getElementById('symbol_title_rcmd');
   obj_rcmd.innerHTML = text;
+  var obj_buy_name = document.getElementById('buy_name');
+  obj_buy_name.value = text;
+  var obj_sell_name = document.getElementById('sell_name');
+  obj_sell_name.value = text;
+
 
   // stock company profile
   async function stockProfile(symbol) {
 
     var response = await fetch("https://finnhub.io/api/v1/stock/profile2?symbol=" + symbol + "&token=c0ro5sv48v6voi2d8ndg");
-    let data = await response.json();
-    //name
-    var sym_name = data.name;
-    var profile_name = document.getElementById("symbol_name");
-    profile_name.innerHTML = "Stock Name:<br><strong>" + sym_name + "<strong>";
-    //ipo
-    var sym_ipo = data.ipo;
-    var profile_ipo = document.getElementById("symbol_ipo");
-    profile_ipo.innerHTML = "Stock IPO Date:<br>" + sym_ipo;
-    //logo
-    var sym_logo = data.logo;
-    var profile_logo = document.getElementById("symbol_logo");
-    profile_logo.src = sym_logo;
-    //country
-    var sym_country = data.country;
-    var profile_country = document.getElementById("symbol_country");
-    profile_country.innerHTML = "Country:<br>" + sym_country;
+
+    if (response.ok) {
+      let data = await response.json();
+      //name
+      var sym_name = data.name;
+      var profile_name = document.getElementById("symbol_name");
+      profile_name.innerHTML = "Stock Name:<br><strong>" + sym_name + "<strong>";
+      //ipo
+      var sym_ipo = data.ipo;
+      var profile_ipo = document.getElementById("symbol_ipo");
+      profile_ipo.innerHTML = "Stock IPO Date:<br>" + sym_ipo;
+      //logo
+      var sym_logo = data.logo;
+      var profile_logo = document.getElementById("symbol_logo");
+      profile_logo.src = sym_logo;
+      //country
+      var sym_country = data.country;
+      var profile_country = document.getElementById("symbol_country");
+      profile_country.innerHTML = "Country:<br>" + sym_country;
+    } else {
+      alert(response.statusText);
+    }
+
 
     // console.log(data);
   }
@@ -308,6 +413,7 @@
 
     let f = Math.round(new Date().getTime() / 1000 - 3600 * 24 * 7);
     let t = Math.round(new Date().getTime() / 1000);
+
     var response = await fetch(
       "https://finnhub.io/api/v1/stock/candle?symbol=" +
       symbol +
@@ -317,18 +423,24 @@
       t +
       "&token=c0ro5sv48v6voi2d8ndg"
     );
-    let data = await response.json();
-    // console.log(data);
 
-    //**********************************************************************//
-    // var y_data = [];
-    //// open,close,low,high
-    for (i = 0; i < 7; i++) {
-      let y_d = [data.o[i], data.c[i], data.l[i], data.h[i]];
-      option.series[0].data.push(y_d);
+    if (response.ok) {
+      let data = await response.json();
+      // console.log(data);
+
+      //**********************************************************************//
+      // var y_data = [];
+      //// open,close,low,high
+      for (i = 0; i < 7; i++) {
+        let y_d = [data.o[i], data.c[i], data.l[i], data.h[i]];
+        option.series[0].data.push(y_d);
+      }
+      // console.log(y_data);
+      option && myChart_candlestick.setOption(option);
+    } else {
+      alert(response.statusText);
     }
-    // console.log(y_data);
-    option && myChart_candlestick.setOption(option);
+
   }
 
   //recommendation data
@@ -338,57 +450,61 @@
       symbol +
       "&token=c0ro5sv48v6voi2d8ndg"
     );
-    var data = await response.json();
 
-    if (!data) {
-      alert("No Data Fetched");
-    }
+    if (response.ok) {
+      var data = await response.json();
 
-    var rcmd_index = [
-      "recommandation",
-      "strongBuy",
-      "buy",
-      "hold",
-      "sell",
-      "strongSell",
-    ];
-    option_rcmd.dataset.source.push(rcmd_index);
+      console.log(data);
 
-    var group_data = [];
-    for (let i = 0; i < 6; i++) {
-      let data_i = [
-        data[i].period,
-        data[i].strongBuy,
-        data[i].buy,
-        data[i].hold,
-        data[i].sell,
-        data[i].strongSell,
+      var rcmd_index = [
+        "recommandation",
+        "strongBuy",
+        "buy",
+        "hold",
+        "sell",
+        "strongSell",
       ];
-      option_rcmd.dataset.source.push(data_i);
+      option_rcmd.dataset.source.push(rcmd_index);
+
+      var group_data = [];
+      for (let i = 0; i < 6; i++) {
+        let data_i = [
+          data[i].period,
+          data[i].strongBuy,
+          data[i].buy,
+          data[i].hold,
+          data[i].sell,
+          data[i].strongSell,
+        ];
+        option_rcmd.dataset.source.push(data_i);
+      }
+
+      var today_obj1 = document.getElementById('TODAY_SB');
+      var today_obj2 = document.getElementById('TODAY_B');
+      var today_obj3 = document.getElementById('TODAY_H');
+      var today_obj4 = document.getElementById('TODAY_SL');
+      var today_obj5 = document.getElementById('TODAY_SS');
+      var today_obj6 = document.getElementById('TODAY_DATE')
+
+      today_obj1.innerHTML = data[0].strongBuy;
+      today_obj2.innerHTML = data[0].buy;
+      today_obj3.innerHTML = data[0].hold;
+      today_obj4.innerHTML = data[0].sell;
+      today_obj5.innerHTML = data[0].strongSell;
+      today_obj6.innerHTML = "Date: " + data[0].period;
+
+      // console.log(group_data);
+      //console.log(option.dataset.source);
+      option_rcmd && myChart_rcmd.setOption(option_rcmd);
+      //   console.log(strongBuy_index);
+      //   ok
+      //   strongBuy_index.reverse();
+      //   strongBuy_index.unshift(data[5].period);
+      //   console.log(strongBuy_index);
+    } else {
+      alert(response.statusText);
     }
 
-    var today_obj1 = document.getElementById('TODAY_SB');
-    var today_obj2 = document.getElementById('TODAY_B');
-    var today_obj3 = document.getElementById('TODAY_H');
-    var today_obj4 = document.getElementById('TODAY_SL');
-    var today_obj5 = document.getElementById('TODAY_SS');
-    var today_obj6 = document.getElementById('TODAY_DATE')
-
-    today_obj1.innerHTML = data[0].strongBuy;
-    today_obj2.innerHTML = data[0].buy;
-    today_obj3.innerHTML = data[0].hold;
-    today_obj4.innerHTML = data[0].sell;
-    today_obj5.innerHTML = data[0].strongSell;
-    today_obj6.innerHTML = "Date: " + data[0].period;
-
-    // console.log(group_data);
-    //console.log(option.dataset.source);
-    option_rcmd && myChart_rcmd.setOption(option_rcmd);
-    //   console.log(strongBuy_index);
-    //   ok
-    //   strongBuy_index.reverse();
-    //   strongBuy_index.unshift(data[5].period);
-    //   console.log(strongBuy_index);
 
   }
 
@@ -405,6 +521,34 @@
       day = '0' + day;
 
     return [year, month, day].join('-');
+  }
+
+  //convert date into yyyy-mm-dd hour:min:seconds
+  function formatDate_2(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear(),
+      hour = '' + d.getHours(),
+      min = '' + d.getMinutes(),
+      sec = '' + d.getSeconds();
+
+    if (month.length < 2) {
+      month = '0' + month;
+    }
+    if (day.length < 2) {
+      day = '0' + day;
+    }
+    if (hour.length < 2)
+      hour = '0' + hour;
+    if (min.length < 2)
+      min = '0' + min;
+    if (sec.length < 2)
+      sec = '0' + sec;
+
+    var date_format = [year, month, day].join('-');
+    var time_format = [hour, min, sec].join(':');
+    return [date_format, time_format].join(' ');
   }
 
   //company news
@@ -481,6 +625,53 @@
   function deactivateSell() {
     document.getElementById("modal-sell").className = "modal";
   }
+
+  //calculate the total price of buy
+  function calculateTotal(v, p) {
+
+    var obj_total = document.getElementById('subtotal');
+    if (v.length > 0 && p.length > 0) {
+
+      var sum = p * v;
+      obj_total.value = sum;
+
+    }
+  }
+
+  //calculate the total price of sell
+  function calculateTotal_2(v, p) {
+
+    var obj_total = document.getElementById('subtotal_sell');
+    if (v.length > 0 && p.length > 0) {
+
+      var sum = p * v;
+      obj_total.value = sum;
+
+    }
+  }
+
+  //submit order 
+  async function submitOrder(formElem) {
+
+    //datetime
+    var today = formatDate_2(new Date());
+    console.log(today);
+    var data_form = new FormData(formElem);
+    data_form.append("datetime", today);
+
+    var response = await fetch(formElem.action, {
+      method: formElem.method,
+      body: data_form,
+    });
+
+    if (response.ok) {
+      var order = await response.json();
+      alert("order ID" + order.id + " created successfully");
+      location.assign('/stock/search');
+    } else {
+      alert(response.statusText);
+    }
+  };
 
   stockProfile("<%= stockSymbol %>");
   fetchCandleData("<%= stockSymbol %>");

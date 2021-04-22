@@ -46,6 +46,19 @@ module.exports = {
       min: 0
     },
 
+    tradeStatus: {
+      type: "number",
+      isIn: [0, 1],
+      defaultsTo: 0
+    },
+
+    tradeCount: {
+      type: "number",
+      defaultsTo: 0,
+      max: 4,
+      min: 0,
+    }
+
   },
 
 };
