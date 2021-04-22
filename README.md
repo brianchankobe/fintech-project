@@ -31,7 +31,7 @@ a web-based application that involves stock analytics and trading simulation
         -  Search and browser stock details and data visualization basically
         - browser the basic information including market new, IPO calendar etc..
         - Try to carry out simulation of stock trading 
-        - provided with balance (default balance: 5000000)
+        - provided with balance (default balance: 500000)
         - Check the stock order
 
     - nonmember

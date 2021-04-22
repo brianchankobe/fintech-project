@@ -1,4 +1,10 @@
 <!--search.ejs-->
+<style>
+    .progress::-webkit-progress-value {
+        transition: width 0.5s ease;
+    }
+</style>
+
 <div class="container">
     <section class="hero is-white">
         <div class="hero-body">
@@ -14,6 +20,7 @@
 
 <div class="container">
     <!-- display stock  -->
+    <progress class="progress is-medium is-primary" max="100" id="loading"></progress>
     <div class="columns">
         <div class="column">
             <div class="columns card is-multiline" id="pdata"></div>
@@ -45,7 +52,8 @@
                         list="symbols" id="input-symbol">
                 </div>
                 <div class="control">
-                    <a class="button is-info" href="#" onclick="this.href = '#' +  document.getElementById('input-symbol').value; searchSymbol(document.getElementById('input-symbol').value);">
+                    <a class="button is-info" href="#"
+                        onclick="this.href = '#' +  document.getElementById('input-symbol').value; searchSymbol(document.getElementById('input-symbol').value);">
                         SearchView
                     </a>
                 </div>
@@ -65,6 +73,7 @@
     async function stockData(code) {
 
         var mic_list = [];
+        var load_obj = document.getElementById("loading");
 
         //get all related stock symbols
         var symbol_by_exchange = await fetch('https://finnhub.io/api/v1/stock/symbol?exchange=' + code + '&token=<%= my_api %>');
@@ -93,9 +102,16 @@
             });
 
             var dynamicCode = '';
+            var count = 0;
+            load_obj.value = '0'.toString();
+            var len_mic = mic_list.length * 10
+            load_obj.max = len_mic.toString();
+
 
             //display stock according to each mic code
-            mic_list.forEach(async function (mics) {
+            mic_list.forEach(async function (mics, index) {
+                count += 10;
+
                 dynamicCode += '<div class="column card is-one-third"><header class="card-header"><p class="card-header-title">MIC code: ' + mics + '</p></header><div id="stockByMic"><div class="card-content"><div class="content">';
 
                 allSymbol.forEach(async function (symbolName) {
@@ -108,7 +124,16 @@
                 });
 
                 dynamicCode += '</div></div></div></div>';
+
+               
+                //load_obj.value = count.toString();
+                
+                setTimeout(function () {
+                    load_obj.value = count.toString();
+                }, 200 * (count / 10));
+
             });
+
 
             document.querySelector('#pdata').innerHTML = dynamicCode;
 
@@ -159,7 +184,7 @@
             } else {
                 alert(text + " cannot be found. ");
             }
-            
+
         } else {
             alert("Searching Nothing, Stay All Symbols Displayed");
             //all the symbol shows
@@ -169,4 +194,5 @@
         }
     }
 
+    stockData("US");
 </script>
