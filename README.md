@@ -9,13 +9,14 @@ a web-based application that involves stock analytics and trading simulation
 + Searching stock by inputing stock symbols or stock name
 + all the stocks will be classified according to unique mic code
 + Uilized symbol searching function to help users to highlight the stock symbol in the output area in order to find stock we want search immediately
++ see the searching progress by progress bar (green one)
 
 ## Stock Visualization & Analytics (Detail Page)
 
 + Stock Basic Information Display
 + stock Price Trend Visualization
 + Candlestick Trend Visualizarion (将日期顺序从前到最近， 从左到右)
-+ Latest Recommendation Index for reference of investment ()
++ Latest Recommendation Index for reference of investment 
 + Company News Display (Records in the nearly half a year) 
 + Company Sentiment Analysis (未完成 - 从股票新闻情绪感知来分析股市情况)
 
@@ -24,6 +25,8 @@ a web-based application that involves stock analytics and trading simulation
 + system user role
     - admin
 
+        - search stock
+        - browse stock details and visulization
         - Check the order details including which user buy stock, or which user sell stock
 
     - member 
@@ -32,13 +35,13 @@ a web-based application that involves stock analytics and trading simulation
         - browser the basic information including market new, IPO calendar etc..
         - Try to carry out simulation of stock trading 
         - provided with balance (default balance: 500000)
-        - Check the stock order
+        - Check the stock order (已经完成)
+        - Selected Stocks list (未购买)
 
     - nonmember
 
         - Search and browser stock details and data visualization basically
         - browser the basic information including market new, IPO calendar etc..
-        - No right for simulation of stock trading
         - default balance: 0
         
 

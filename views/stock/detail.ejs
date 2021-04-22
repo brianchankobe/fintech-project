@@ -97,8 +97,15 @@
                   <p class="subtitle" id="symbol_country"></p>
                   <div class="content">
                     <!-- Content -->
-                    <button class="button is-warning is-large modal-button" data-target="modal-buy" aria-haspopup="true"
-                    onclick="activateRcmd()">Buy</button>
+                    <div class="columns">
+                      <div class="column is-mobile">
+                        <button class="button is-warning is-large modal-button" data-target="modal-buy"
+                          aria-haspopup="true" onclick="activateBuy()">Buy</button>
+                        <button class="button is-warning is-large modal-button" data-target="modal-sell"
+                          aria-haspopup="true" onclick="activateSell()">Sell</button>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </article>
@@ -155,6 +162,17 @@
         </footer>
       </div>
     </div>
+
+    <!-- purchase page  -->
+    <div id='modal-buy' class="modal">
+      
+    </div>
+
+    <!-- sell page  -->
+    <div id='modal-sell' class="modal">
+
+    </div>
+
 
   </div>
 </div>
@@ -443,6 +461,25 @@
   //cancel the window
   function deactivateRcmd() {
     document.getElementById("modal-ter").className = "modal";
+  }
+
+  //activate window of buying stock
+  function activateBuy() {
+    document.getElementById("modal-buy").className = "modal is-active";
+  }
+
+  //cancel the window of stock buying
+  function deactivateBuy() {
+    document.getElementById("modal-buy").className = "modal";
+  }
+  //activate window of buying stock
+  function activateSell() {
+    document.getElementById("modal-sell").className = "modal is-active";
+  }
+
+  //cancel the window of stock buying
+  function deactivateSell() {
+    document.getElementById("modal-sell").className = "modal";
   }
 
   stockProfile("<%= stockSymbol %>");
