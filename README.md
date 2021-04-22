@@ -50,7 +50,9 @@ a web-based application that involves stock analytics and trading simulation
 + Covid-19 data
 
 
-## Stock Trading
+## Administration Page
+
+- List the table including order id, symbol name, price, volumn, category(buy or sell), datetime, who buy or sell it
 
 
 ### Version info

@@ -27,7 +27,7 @@
               <div class="tile is-parent">
                 <article class="tile is-child notification">
                   <p class="title" id="symbol_title"></p>
-                  <p class="subtitle">
+                  <p class="subtitle" id="price_stock_graph">
                     some description about the stock and the Chart
                   </p>
                   <div>
@@ -77,7 +77,7 @@
                   </nav>
                   <article class="tile is-child notification is-danger">
                     <button class="button is-warning is-large modal-button" data-target="modal-ter" aria-haspopup="true"
-                      onclick="activateRoom()">Show Me</button>
+                      onclick="activateRcmd()">Show Me</button>
                   </article>
 
                 </article>
@@ -97,6 +97,8 @@
                   <p class="subtitle" id="symbol_country"></p>
                   <div class="content">
                     <!-- Content -->
+                    <button class="button is-warning is-large modal-button" data-target="modal-buy" aria-haspopup="true"
+                    onclick="activateRcmd()">Buy</button>
                   </div>
                 </div>
               </article>
@@ -135,7 +137,7 @@
       <div class="modal-card" style="width: 900px; height: 800px">
         <header class="modal-card-head">
           <p class="modal-card-title">Recent Six Month Recommendation Index</p>
-          <button class="delete" aria-label="close" onclick="deactivate();"></button>
+          <button class="delete" aria-label="close" onclick="deactivateRcmd();"></button>
         </header>
         <section class="modal-card-body">
           <!-- Content ... -->
@@ -149,7 +151,7 @@
           </article>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" onclick="deactivate();">Cancel</button>
+          <button class="button" onclick="deactivateRcmd();">Cancel</button>
         </footer>
       </div>
     </div>
@@ -161,6 +163,7 @@
 
   // chart code
   var ctx = document.getElementById("myChart").getContext("2d");
+  var current_label = document.getElementById("price_stock_graph");
   var myChart = new Chart(ctx, {
     type: "line",
     backgroundColor: "rgb(255, 99, 132)",
@@ -433,12 +436,12 @@
   }
 
   //activate window to show the details of recommendation index
-  function activateRoom() {
+  function activateRcmd() {
     document.getElementById("modal-ter").className = "modal is-active";
   }
 
   //cancel the window
-  function deactivate() {
+  function deactivateRcmd() {
     document.getElementById("modal-ter").className = "modal";
   }
 
@@ -468,6 +471,7 @@
         // console.log(d);
         let volumeData = myChart.data.datasets[0].data;
         volumeData.push({ x: d.t, y: d.p });
+        current_label.innerHTML = d.p;
         myChart.update();
       }
     }

@@ -78,7 +78,9 @@
           <!-- navbar items -->
           <a class="navbar-item" href="/"> Market </a>
           <a class="navbar-item" href="/stock/search"> Stock Search </a>
-          <a class="navbar-item" href="/"> Create </a>
+          <% if (req.session.role =='member' ) { %>
+          <a class="navbar-item" href="/"> My Trading </a>
+          <% } %>
           <% if (req.session.role=='admin' ) { %>
             <a class="navbar-item" href="/"> Admin </a>
           <% } %>
@@ -94,7 +96,7 @@
                   <strong>Sign up</strong>
                 </a>
                 <button class="button is-light modal-button" data-target="modal-login" aria-haspopup="true"
-                  onclick="activateRoom()"> Log in </button>
+                  onclick="activateLogin()"> Log in </button>
                 <% } else {%>
                   <!-- have username -->
                   <a class="button is-white" href="">
@@ -117,7 +119,7 @@
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Login</p>
-        <button class="delete" aria-label="close" onclick="deactivate();"></button>
+        <button class="delete" aria-label="close" onclick="deactivateLogin();"></button>
       </header>
       <form action="/user/login" method="POST" onsubmit="submitForm(this); return false">
         <section class="modal-card-body">
@@ -219,12 +221,12 @@
 <script>
 
   //activate window to show the details of recommendation index
-  function activateRoom() {
+  function activateLogin() {
     document.getElementById("modal-login").className = "modal is-active";
   }
 
   //cancel the window
-  function deactivate() {
+  function deactivateLogin() {
     document.getElementById("modal-login").className = "modal";
   }
 
