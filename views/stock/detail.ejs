@@ -5,24 +5,28 @@
   }
 
   #content {
-    padding: 5px;
+    padding: 5px 5px;
   }
 
   #company_news_list {
     max-height: 50vh;
     overflow: auto;
   }
+
+  #right_side{
+    margin-right: 5px;
+  }
 </style>
 
 <div class="columns" id="container">
-  <div class="column is-10 is-offset-1">
+  <div class="column is-12">
     <!-- 面板 -->
     <nav class="panel">
       <!-- 内容 -->
       <div id="content">
         <div class="tile is-ancestor">
           <div class="tile is-vertical is-8">
-            <div class="tile is-vertical">
+            <div class="tile is-vertical ">
               <!-- 股票股价图 -->
               <div class="tile is-parent">
                 <article class="tile is-child notification">
@@ -86,9 +90,9 @@
             </div>
           </div>
 
-          <div class="tile is-vertical">
+          <div class="tile is-vertical" id="right_side">
             <!-- 股票基本信息 -->
-            <div class="tile is-parent is-12">
+            <div class="tile is-parent is-10" >
               <article class="tile is-child notification is-success">
                 <div class="content">
                   <p class="title" id="symbol_name"></p>
