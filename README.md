@@ -45,6 +45,108 @@ a web-based application that involves stock analytics and trading simulation
         - default balance: 0
         
 
+## System Core Function: Stock Trade
+
+- Main Implementation: Two Buttons (buy and sell) in detail page
+- create stock order (Stock Model: SymbolTitle, Price, Volume, TotalPrice, Category, DateTime, Consultant (for association with User))
+
+    - if user account not exist order, then create new order
+    - else find that order 
+        - new_price = new_price + old_price / 2
+        - new_volume += old_volume
+        - total_price = new_price * new_volume
+
+
+- Set up association between User and Stock (one to many) e.g. a user can have multiple orders
+
+    - User model (username, password, role, balance, asset ,tradeStatus (0,1), tradeCount (min = 0, max = 4), Client for assiciation with Stock)
+
+- set up the business trading conditions: 
+
+    - Buy Function
+
+        + if user not exist order,  (新订单)
+    
+            + if balance >= 25000 and TradeStatus = 1, then
+        
+                - if balance >= totalPrice, then create new order (balance -= totalPrice && asset += totalPrice)
+            
+                    - if new balance < 25000 and tradeCount > 0, then set tradeStatus = 1, else set tradeStatus = 0
+
+                        - 用户层变化： balance -= totalPrice && asset += totalPrice, tradeStatus
+                        - 股票订单层： price， volume, totalPrice,category, datetime
+
+                - else not buy 
+
+            + if balance < 25000 and tradeStatus = 1 and tradeCount > 0, then 
+
+                - if balance >= totalPrice, then buy it (balance -= totalPrice && asset += totalPrice && tradeCount - 1)
+        
+                    - if tradeCount == 0, then set tradeStatus = 0, else set tradeStatus = 1
+                
+                        - 用户层变化： balance -= totalPrice && asset += totalPrice, tradeStatus, tradeCount
+                        - 股票订单层： price， volume, totalPrice,category, datetime
+                    
+                - else not buy
+        
+            + if balance < 25000  and tradeStatus = 0, then not buy
+        
+        + if user exist order, (旧订单，未卖完)
+        
+            + if balance >= 25000 and TradeStatus = 1, then
+
+                - if balance >= totalPrice, then change old order (balance -= totalPrice && asset += totalPrice)
+
+                    - if new balance < 25000 and tradeCount > 0, then set tradeStatus = 1, else set tradeStatus = 0
+
+                        - 用户层变化： balance -= totalPrice && asset += totalPrice, tradeStatus
+                        - 股票订单层： 
+                            
+                            - new_price = new_price + old_price / 2
+                            - new_volume += old_volume
+                            - totalPrice = new_price * new_volume
+                            - new_category
+                            - new_datetime  
+                
+                - else not buy 
+            
+            + if balance < 25000 and tradeStatus = 1 and tradeCount > 0, then    
+
+                - if balance >= totalPrice, then buy it (balance -= totalPrice && asset += totalPrice && tradeCount - 1)
+        
+                    - if tradeCount == 0, then set tradeStatus = 0, else set tradeStatus = 1
+                
+                        - 用户层变化： balance -= totalPrice && asset += totalPrice, tradeStatus, tradeCount
+                        - 股票订单层：同上
+                
+                - else not buy
+            
+            + if balance < 25000  and tradeStatus = 0, then not buy
+
+    - Sell Function
+
+        + if exist order, then 
+
+            - if current hold volume >= input volume, then sell （balance += totalPrice && asset -= totalPrice）
+
+                - if new balance >= 25000, then set tradeStatus = 1, tradeCount = 4, else set tradeStatus = 0
+
+                - if new_order volume == 0, then delete this order
+
+                - 用户层： （balance += totalPrice && asset -= totalPrice, tradeStatus, tradeCount）
+                - 股票订单层
+
+                    - new_price = new_price + old_price / 2
+                    - new_volume = old_volume - new_volumn
+                    - totalPrice = new_price * new_volume
+                    - new_category
+                    - new_datetime
+
+        + if not exist order, then not sell
+
+- show the order to member and admin
+
+
 
 ## Main Page (待定)
 
