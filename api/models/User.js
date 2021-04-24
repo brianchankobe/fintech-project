@@ -46,6 +46,12 @@ module.exports = {
       min: 0
     },
 
+    assets: {
+      type: "number",
+      defaultsTo: 0,
+      min: 0,
+    },
+
     tradeStatus: {
       type: "number",
       isIn: [0, 1],
@@ -57,7 +63,12 @@ module.exports = {
       defaultsTo: 0,
       max: 4,
       min: 0,
-    }
+    },
+
+    clients: {
+      collection: 'Stock',
+      via: 'consultants',
+    },
 
   },
 

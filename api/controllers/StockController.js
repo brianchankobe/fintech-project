@@ -26,7 +26,7 @@ module.exports = {
     // action - create stock order
     create: async function (req, res) {
 
-        if (req.method == "GET") return res.view('stock/createOrder');
+        //if (req.method == "GET") return res.view('stock/createOrder');
 
         if (req.wantsJSON) { //ajax call
 

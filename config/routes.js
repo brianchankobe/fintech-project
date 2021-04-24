@@ -46,6 +46,12 @@ module.exports.routes = {
   //stock order creation
   'POST /order/': 'StockController.create',
 
+  //get associations
+  //'GET /stock/:id/consultants': 'StockController.populate',
+  'GET /user/clients': 'UserController.searchValidOrder',
+  'POST /user/clients': 'UserController.searchValidOrder',
+
+
   /***************************************************************************
    *                                                                          *
    * More custom routes here...                                               *
