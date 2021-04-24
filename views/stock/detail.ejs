@@ -13,7 +13,7 @@
     overflow: auto;
   }
 
-  #right_side{
+  #right_side {
     margin-right: 5px;
   }
 </style>
@@ -92,7 +92,7 @@
 
           <div class="tile is-vertical" id="right_side">
             <!-- 股票基本信息 -->
-            <div class="tile is-parent is-10" >
+            <div class="tile is-parent is-10">
               <article class="tile is-child notification is-success">
                 <div class="content">
                   <p class="title" id="symbol_name"></p>
@@ -663,6 +663,25 @@
     var data_form = new FormData(formElem);
     data_form.append("datetime", today);
 
+    var dat_form_user_validation = new FormData();
+    dat_form_user_validation.append("symbolTitle", data_form.get("symbolTitle"));
+
+    //validate whether user used to buy
+    var res_searchValid = await fetch('/user/clients', {
+      method: "POST",
+      body: dat_form_user_validation,
+    });
+
+    if (res_searchValid.ok) {
+      alert("already have");
+    } else if (res_searchValid.status == 404) {  //用户还没有买这只股票
+      alert("no buy");
+    } else {
+      alert(res_searchValid.statusText);
+    }
+
+    /*
+    //create the stock order
     var response = await fetch(formElem.action, {
       method: formElem.method,
       body: data_form,
@@ -674,7 +693,7 @@
       location.assign('/stock/search');
     } else {
       alert(response.statusText);
-    }
+    }*/
   };
 
   stockProfile("<%= stockSymbol %>");

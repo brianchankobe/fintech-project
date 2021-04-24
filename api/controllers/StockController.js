@@ -10,58 +10,48 @@ const api_key = finnhub.ApiClient.instance.authentications["api_key"];
 api_key.apiKey = "c0n56d748v6v1q0c1ph0"; // Replace this
 
 module.exports = {
-  // action - create
-  search: async function (req, res) {
-    if (req.method == "GET")
-      return res.view("stock/search", { my_api: api_key.apiKey });
-  },
+    // action - create
+    search: async function (req, res) {
+        if (req.method == "GET") return res.view('stock/search', { my_api: api_key.apiKey });
+    },
 
-  // action - create
-  detail: async function (req, res) {
-    // const fetch = require("node-fetch");
-    if (req.method == "GET") {
-      return res.view("stock/detail", { stockSymbol: req.params.sym });
-    }
-  },
+    // action - create
+    detail: async function (req, res) {
+        // const fetch = require("node-fetch");
+        if (req.method == "GET") {
+            return res.view("stock/detail", { stockSymbol: req.params.sym });
+        }
+    },
 
-  // action - create stock order
-  create: async function (req, res) {
-    if (req.method == "GET") return res.view("stock/createOrder");
+    // action - create stock order
+    create: async function (req, res) {
 
-    if (req.wantsJSON) {
-      //ajax call
+        //if (req.method == "GET") return res.view('stock/createOrder');
 
-      var order = await Stock.create(req.body).fetch();
+        if (req.wantsJSON) { //ajax call
 
-      //status 201: created
-      return res.status(201).json({ id: order.id });
-    } else {
-      // normal call
-      res.redirect("/stock/search");
-    }
-  },
+            var order = await Stock.create(req.body).fetch();
 
-  // action - create
-  candlestick: async function (req, res) {
-    // const fetch = require("node-fetch");
-    if (req.method == "GET") {
-      return res.view("stock/candlestick");
-    }
-  },
+            //status 201: created
+            return res.status(201).json({ id: order.id });
+        } else { // normal call
+            res.redirect('/stock/search');
+        }
+    },
 
-  //stock Recommendation Trends chart
-  rcmd: async function (req, res) {
-    // const fetch = require("node-fetch");
-    if (req.method == "GET") {
-      return res.view("stock/recommend");
-    }
-  },
+    // action - create
+    candlestick: async function (req, res) {
+        // const fetch = require("node-fetch");
+        if (req.method == "GET") {
+            return res.view("stock/candlestick");
+        }
+    },
 
-  //stock marketnews
-  marketnews: async function (req, res) {
-    // const fetch = require("node-fetch");
-    if (req.method == "GET") {
-      return res.view("stock/marketnews");
-    }
-  },
+    //stock Recommendation Trends chart
+    rcmd: async function (req, res) {
+        // const fetch = require("node-fetch");
+        if (req.method == "GET") {
+            return res.view("stock/recommend");
+        }
+    },
 };

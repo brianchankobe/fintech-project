@@ -49,6 +49,12 @@ module.exports.routes = {
   //market news
   "GET /marketnews": "StockController.marketnews",
 
+  //get associations
+  //'GET /stock/:id/consultants': 'StockController.populate',
+  'GET /user/clients': 'UserController.searchValidOrder',
+  'POST /user/clients': 'UserController.searchValidOrder',
+
+
   /***************************************************************************
    *                                                                          *
    * More custom routes here...                                               *

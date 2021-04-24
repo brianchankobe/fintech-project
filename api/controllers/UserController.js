@@ -68,5 +68,29 @@ module.exports = {
             res.redirect('/');
         }
     },
+
+    //action: searchValidOrder 
+    searchValidOrder: async function (req, res) {
+
+        if (req.wantsJSON) {
+
+            //check if user exists order that can still be processed
+            var thatUser = await User.findOne(req.session.usrid).populate("clients", { symbolTitle: req.body.symbolTitle, valid: 0 });
+
+            if (!thatUser) return res.status(404).json("No This Stock Order");
+
+            return res.json(thatUser);
+        } else {
+            //check if user exists order that can still be processed
+            var thatUser = await User.findOne(req.session.usrid).populate("clients", { symbolTitle: req.body.symbolTitle, valid: 0 });
+
+            if (!thatUser) return res.status(404).json("No This Stock Order");
+
+            //console.log(thatUser);
+
+            return res.view('user/populate', { user: thatUser });
+        }
+
+    },
 };
 

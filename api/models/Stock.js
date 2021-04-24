@@ -39,12 +39,27 @@ module.exports = {
       type: "number",
     },
 
+    initialPrice: {
+      type: "number",
+    },
+
+    valid: {
+      type: "number",
+      isIn: [0, 1],
+      defaultsTo: 0,
+    },
+
     category: {
       type: "string",
     },
 
     datetime: {
       type: "string",
+    },
+
+    consultants: {
+      collection: 'User',
+      via: 'clients',
     },
 
   },
