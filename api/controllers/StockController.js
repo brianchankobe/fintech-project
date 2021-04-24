@@ -54,4 +54,12 @@ module.exports = {
             return res.view("stock/recommend");
         }
     },
+
+    //stock marketnews
+    marketnews: async function (req, res) {
+        // const fetch = require("node-fetch");
+        if (req.method == "GET") {
+            return res.view("stock/marketnews");
+        }
+    },
 };
