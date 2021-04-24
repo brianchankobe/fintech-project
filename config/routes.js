@@ -39,12 +39,15 @@ module.exports.routes = {
   "GET /stock/rcmd": "StockController.rcmd",
 
   //user login and logout route
-  'POST /user/login': 'UserController.login',
-  'GET /user/logout': 'UserController.logout',
+  "POST /user/login": "UserController.login",
+  "GET /user/logout": "UserController.logout",
   //'GET /user/login': 'UserController.login',
 
   //stock order creation
-  'POST /order/': 'StockController.create',
+  "POST /order/": "StockController.create",
+
+  //market news
+  "GET /marketnews": "StockController.marketnews",
 
   /***************************************************************************
    *                                                                          *
