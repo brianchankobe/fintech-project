@@ -22,8 +22,9 @@ module.exports.routes = {
   //'/test': { view: 'test/test1' },
   //'/': { view: 'pages/homepage' },
 
-  //Get to main page
-  //'GET /': "StockController.search",
+  //market news
+  'GET /': "StockController.marketnews",
+  "GET /marketnews": "StockController.marketnews",
 
   //create stock model for getting info of stock
   "GET /stock/search": "StockController.search",
@@ -45,9 +46,6 @@ module.exports.routes = {
 
   //stock order creation
   "POST /order/": "StockController.create",
-
-  //market news
-  "GET /marketnews": "StockController.marketnews",
 
   //get associations
   //'GET /stock/:id/consultants': 'StockController.populate',
