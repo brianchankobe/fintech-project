@@ -42,7 +42,6 @@ module.exports = {
             //console.log(thatUser);
             if (!thatUser) return res.status(404).json("User not found");
 
-
             if (req.body.category == "buy") {
                 /* Buy Function */
                 //check if user have valid order
