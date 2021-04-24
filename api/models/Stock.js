@@ -41,6 +41,7 @@ module.exports = {
 
     initialPrice: {
       type: "number",
+      defaultsTo: 0,
     },
 
     valid: {
