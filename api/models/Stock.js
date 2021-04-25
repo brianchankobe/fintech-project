@@ -35,13 +35,19 @@ module.exports = {
       type: 'number',
     },
 
-    totalPrice: {
+    totalRevenue: {
       type: "number",
+      defaultsTo: 0
     },
 
-    initialPrice: {
+    totalCost: {
       type: "number",
-      defaultsTo: 0,
+      defaultsTo: 0
+    },
+
+    totalVolume: {
+      type: "number",
+      defaultsTo: 0
     },
 
     valid: {

@@ -41,7 +41,7 @@ module.exports = {
                     console.log("no client");
                     if (thatUser.balances >= 25000 && thatUser.tradeStatus == 1) {  //用户余额大于25000， 交易状态为1 （表示账户可进行交易）  无限次T+0交易
 
-                        if (thatUser.balances >= parseFloat(req.body.totalPrice)) { //余额是否足够支付
+                        if (thatUser.balances >= parseFloat(req.body.totalCost)) { //余额是否足够支付
 
                             //create new order for stock buying
                             var order = await Stock.create(req.body).fetch();
@@ -49,10 +49,9 @@ module.exports = {
                             //set the first order prices (方便后期计算收益)
                             var updatedOrder = await Stock.updateOne({
                                 where: {
-                                    initialPrice: 0,
                                     id: order.id
                                 }
-                            }).set({ initialPrice: order.price });
+                            }).set({ totalVolume: parseFloat(req.body.volume) });
 
                             //add association with User
                             await User.addToCollection(req.session.usrid, "clients").members(updatedOrder.id);
@@ -63,7 +62,7 @@ module.exports = {
                                     balances: thatUser.balances,
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: thatUser.balances - order.totalPrice, assets: thatUser.assets + order.totalPrice });
+                            }).set({ balances: thatUser.balances - parseFloat(req.body.price) * parseFloat(req.body.volume), assets: thatUser.assets + parseFloat(req.body.price) * parseFloat(req.body.volume) });
 
                             //如果用户余额小于25000， 开始限制最大T+0买股票次数
                             if (updatedUser.balances < 25000) {
@@ -88,7 +87,7 @@ module.exports = {
 
                     } else if (thatUser.balances < 25000 && thatUser.tradeStatus == 1) {  //用户余额小于25000， 交易状态为1 （表示账户可进行交易） 可进行4次T+0交易
 
-                        if (thatUser.balances >= parseFloat(req.body.totalPrice) && thatUser.tradeCount > 0) {
+                        if (thatUser.balances >= parseFloat(req.body.totalCost) && thatUser.tradeCount > 0) {
 
                             //create new order for stock buying
                             var order = await Stock.create(req.body).fetch();
@@ -99,7 +98,7 @@ module.exports = {
                                     initialPrice: 0,
                                     id: order.id
                                 }
-                            }).set({ initialPrice: order.price });
+                            }).set({ totalVolume: parseFloat(req.body.volume) });
 
                             //add association with User
                             await User.addToCollection(req.session.usrid, "clients").members(updatedOrder.id);
@@ -110,7 +109,7 @@ module.exports = {
                                     balances: thatUser.balances,
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: thatUser.balances - order.totalPrice, assets: thatUser.assets + order.totalPrice, tradeCount: thatUser.tradeCount - 1 });
+                            }).set({ balances: thatUser.balances - parseFloat(req.body.price) * parseFloat(req.body.volume), assets: thatUser.assets + parseFloat(req.body.price) * parseFloat(req.body.volume), tradeCount: thatUser.tradeCount - 1 });
 
                             //购买完后抵达交易限制， 冻结账户
                             if (updatedUser.tradeCount == 0) {
@@ -139,7 +138,7 @@ module.exports = {
                     console.log("have clients");
                     if (thatUser.balances >= 25000 && thatUser.tradeStatus == 1) {  //用户余额大于25000， 交易状态为1 （表示账户可进行交易）  无限次T+0交易
 
-                        if (thatUser.balances >= parseFloat(req.body.totalPrice)) {  //余额是否足够
+                        if (thatUser.balances >= parseFloat(req.body.totalCost)) {  //余额是否足够
 
                             //find that order and change value of order
                             var order = await Stock.findOne(thatUser.clients[0].id);
@@ -147,7 +146,7 @@ module.exports = {
                                 where: {
                                     id: order.id
                                 }
-                            }).set({ volume: order.volume + parseFloat(req.body.volume), totalPrice: parseFloat(req.body.totalPrice), price: parseFloat(req.body.price), category: req.body.category, datetime: req.body.datetime });
+                            }).set({ volume: parseFloat(req.body.volume), totalCost: order.totalCost + parseFloat(req.body.totalCost), price: parseFloat(req.body.price), totalVolume: parseFloat(req.body.volume) + order.totalVolume, category: req.body.category, datetime: req.body.datetime });
 
                             //update User balance of money
                             var updatedUser = await User.updateOne({
@@ -155,7 +154,7 @@ module.exports = {
                                     balances: thatUser.balances,
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: thatUser.balances - parseFloat(req.body.totalPrice), assets: thatUser.assets + parseFloat(req.body.totalPrice) });
+                            }).set({ balances: thatUser.balances - parseFloat(req.body.totalCost), assets: thatUser.assets + parseFloat(req.body.totalCost) });
 
                             //如果用户余额小于25000， 开始限制最大T+0买股票次数
                             if (updatedUser.balances < 25000) {
@@ -180,14 +179,14 @@ module.exports = {
 
                     } else if (thatUser.balances < 25000 && thatUser.tradeStatus == 1) {  //用户余额小于25000， 交易状态为1 （表示账户可进行交易） 可进行4次T+0交易
 
-                        if (thatUser.balances >= parseFloat(req.body.totalPrice) && thatUser.tradeCount > 0) {  //余额是否足够，交易次数限制是否满足
+                        if (thatUser.balances >= parseFloat(req.body.totalCost) && thatUser.tradeCount > 0) {  //余额是否足够，交易次数限制是否满足
                             //find that order and change value of order
                             var order = await Stock.findOne(thatUser.clients[0].id);
                             var updatedOrder = await Stock.updateOne({
                                 where: {
                                     id: order.id
                                 }
-                            }).set({ volume: order.volume + parseFloat(req.body.volume), totalPrice: parseFloat(req.body.totalPrice), price: parseFloat(req.body.price), category: req.body.category, datetime: req.body.datetime });
+                            }).set({ volume: parseFloat(req.body.volume), totalCost: order.totalCost + parseFloat(req.body.totalCost), price: parseFloat(req.body.price), totalVolume: parseFloat(req.body.volume) + order.totalVolume, category: req.body.category, datetime: req.body.datetime });
 
                             //update User balance of money and tradeCount of user - 1
                             var updatedUser = await User.updateOne({
@@ -195,7 +194,7 @@ module.exports = {
                                     balances: thatUser.balances,
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: thatUser.balances - parseFloat(req.body.totalPrice), assets: thatUser.assets + parseFloat(req.body.totalPrice), tradeCount: thatUser.tradeCount - 1 });
+                            }).set({ balances: thatUser.balances - parseFloat(req.body.totalCost), assets: thatUser.assets + parseFloat(req.body.totalCost), tradeCount: thatUser.tradeCount - 1 });
 
                             //购买完后抵达交易限制， 冻结账户
                             if (updatedUser.tradeCount == 0) {
@@ -221,13 +220,13 @@ module.exports = {
                         return res.json("user balance is less than 25000 and your account is locked because your count of limitation of trading is already zero. ");
                     }
                 }
-            } else {
+            } else {  //sell part
                 if (thatUser.clients.length != 0) {  //用户持有股份可卖
                     //order volume >= input volume
-                    if (thatUser.clients[0].volume >= parseFloat(req.body.volume)) {
+                    if (thatUser.clients[0].totalVolume >= parseFloat(req.body.volume)) {
 
                         //如果卖股数和持有股数持平， 清空股票订单，作废
-                        if (thatUser.clients[0].volume == parseFloat(req.body.volume)) {
+                        if (thatUser.clients[0].totalVolume == parseFloat(req.body.volume)) {
                             var order = await Stock.findOne(thatUser.clients[0].id);
 
                             //update order for setting valid to be 1 (invalid order)
@@ -235,13 +234,13 @@ module.exports = {
                                 where: {
                                     id: order.id,
                                 }
-                            }).set({ valid: 1, volume: thatUser.clients[0].volume - parseFloat(req.body.volume), totalPrice: parseFloat(req.body.totalPrice), price: parseFloat(req.body.price), category: req.body.category, datetime: req.body.datetime });
+                            }).set({ valid: 1, volume: parseFloat(req.body.volume), totalRevenue: order.totalRevenue + parseFloat(req.body.totalRevenue), price: parseFloat(req.body.price), totalVolume: order.totalVolume - parseFloat(req.body.volume), category: req.body.category, datetime: req.body.datetime });
 
                             var updatedUser = await User.updateOne({
                                 where: {
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: thatUser.balances + parseFloat(req.body.totalPrice), assets: thatUser.assets - parseFloat(req.body.totalPrice) });
+                            }).set({ balances: thatUser.balances + parseFloat(req.body.totalRevenue), assets: thatUser.assets - parseFloat(req.body.totalRevenue) });
 
                             if (updatedUser.balances >= 25000) {
                                 updatedUser = await User.updateOne({
@@ -265,13 +264,13 @@ module.exports = {
                                 where: {
                                     id: order.id,
                                 }
-                            }).set({ volume: thatUser.clients[0].volume - parseFloat(req.body.volume), totalPrice: parseFloat(req.body.totalPrice), price: parseFloat(req.body.price), category: req.body.category, datetime: req.body.datetime });
+                            }).set({ volume: parseFloat(req.body.volume), totalRevenue: order.totalRevenue + parseFloat(req.body.totalRevenue), price: parseFloat(req.body.price), totalVolume: order.totalVolume - parseFloat(req.body.volume), category: req.body.category, datetime: req.body.datetime });
 
                             var updatedUser = await User.updateOne({
                                 where: {
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: thatUser.balances + parseFloat(req.body.totalPrice), assets: thatUser.assets - parseFloat(req.body.totalPrice) });
+                            }).set({ balances: thatUser.balances + parseFloat(req.body.totalRevenue), assets: thatUser.assets - parseFloat(req.body.totalRevenue) });
 
                             if (updatedUser.balances >= 25000) {
                                 updatedUser = await User.updateOne({
