@@ -42,15 +42,14 @@ module.exports.routes = {
   //user login and logout route
   "POST /user/login": "UserController.login",
   "GET /user/logout": "UserController.logout",
-  //'GET /user/login': 'UserController.login',
 
   //stock order creation
   "POST /order/": "StockController.create",
 
-  //get associations
+  /*show the user information and selected and traded stock*/
   //'GET /stock/:id/consultants': 'StockController.populate',
-  'GET /user/clients': 'UserController.searchValidOrder',
-  'POST /user/clients': 'UserController.searchValidOrder',
+  'GET /user/clients': 'UserController.populate',
+  'POST /user/clients': 'UserController.populate',
 
 
   /***************************************************************************

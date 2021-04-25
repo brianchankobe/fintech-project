@@ -69,15 +69,14 @@ module.exports = {
         }
     },
 
-    //action: searchValidOrder 
-    searchValidOrder: async function (req, res) {
+    //action: populate 
+    populate: async function (req, res) {
 
         if (req.wantsJSON) {
 
             //check if user exists order that can still be processed
             var thatUser = await User.findOne(req.session.usrid).populate("clients");
             
-            console.log(thatUser);
             if (!thatUser) return res.status(404).json("User not found");
 
             return res.json(thatUser);
@@ -86,8 +85,6 @@ module.exports = {
             var thatUser = await User.findOne(req.session.usrid).populate("clients");
 
             if (!thatUser) return res.status(404).json("User not found");
-
-            //console.log(thatUser);
 
             return res.view('user/populate', { user: thatUser });
         }

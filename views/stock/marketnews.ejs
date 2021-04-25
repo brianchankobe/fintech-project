@@ -20,48 +20,58 @@
   }
 </style>
 
-<body>
-  <div class="columns">
-    <div class="column is-10 is-offset-1">
-      <div class="columns">
-        <div class="column is-6">
-          <nav class="panel">
-            <!-- General News -->
-            <p class="panel-heading">General</p>
-            <div id="marketnewsgeneral"></div>
-          </nav>
-        </div>
-        <div class="column is-6">
-          <nav class="panel">
-            <!-- Forex News -->
-            <p class="panel-heading">Forex</p>
-            <div id="marketnewsforex"></div>
-          </nav>
-        </div>
+<div class="container">
+  <section class="hero is-white">
+    <div class="hero-body">
+      <p class="title">
+        Stock Ditalization & Simulation Trading Platform
+      </p>
+      <p class="subtitle">
+        Marker News
+      </p>
+    </div>
+  </section>
+</div>
+
+
+<div class="columns" style="padding-top: 50px;">
+  <div class="column is-10 is-offset-1">
+    <div class="columns">
+      <div class="column is-6">
+        <nav class="panel">
+          <!-- General News -->
+          <p class="panel-heading">General</p>
+          <div id="marketnewsgeneral"></div>
+        </nav>
       </div>
-      <div class="columns">
-        <div class="column is-6">
-          <nav class="panel">
-            <!-- General News -->
-            <p class="panel-heading">Crypto</p>
-            <div id="marketnewscrypto"></div>
-          </nav>
-        </div>
-        <div class="column is-6">
-          <nav class="panel">
-            <!-- Forex News -->
-            <p class="panel-heading">Merger</p>
-            <div id="marketnewsmerger"></div>
-          </nav>
-        </div>
+      <div class="column is-6">
+        <nav class="panel">
+          <!-- Forex News -->
+          <p class="panel-heading">Forex</p>
+          <div id="marketnewsforex"></div>
+        </nav>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-6">
+        <nav class="panel">
+          <!-- General News -->
+          <p class="panel-heading">Crypto</p>
+          <div id="marketnewscrypto"></div>
+        </nav>
+      </div>
+      <div class="column is-6">
+        <nav class="panel">
+          <!-- Forex News -->
+          <p class="panel-heading">Merger</p>
+          <div id="marketnewsmerger"></div>
+        </nav>
       </div>
     </div>
   </div>
-  
-  
-</body>
+</div>
 
-</html>
+
 <script>
   //get general news
   async function getMarketNews_1(news_type) {

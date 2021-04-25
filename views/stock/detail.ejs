@@ -1,3 +1,5 @@
+<!-- detail.ejs  股票数据可视化分析，推荐分析  -->
+
 <style>
   #container {
     height: 100%;
@@ -679,7 +681,7 @@
       var user = await response.json();
 
       alert(user);
-      location.assign('/stock/detail/' + data_form.get("symbolTitle"));
+      location.assign('/user/clients');
 
     } else if (response.status == 404) {
 
