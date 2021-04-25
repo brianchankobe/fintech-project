@@ -30,7 +30,7 @@ module.exports = {
 
             //check if user exists order that can still be processed
             var thatUser = await User.findOne(req.session.usrid).populate("clients", { symbolTitle: req.body.symbolTitle, valid: 0 });
-            console.log(thatUser);
+            //console.log(thatUser);
             if (!thatUser) return res.status(404).json("User not found");
 
 
@@ -75,9 +75,9 @@ module.exports = {
                                 }).set({ tradeCount: 4 });
                             }
 
-                            var user_test = await User.findOne(req.session.usrid).populate("clients");
-                            console.log(" > 25000, tradestatus == 1");
-                            console.log(user_test);
+                            //var user_test = await User.findOne(req.session.usrid).populate("clients");
+                            //console.log(" > 25000, tradestatus == 1");
+                            //console.log(user_test);
 
                             return res.json("Success Buy");
 
@@ -121,9 +121,9 @@ module.exports = {
                                 }).set({ tradeStatus: 0 });
                             }
 
-                            var user_test = await User.findOne(req.session.usrid).populate("clients");
-                            console.log(" < 25000, tradestatus == 1");
-                            console.log(user_test);
+                            //var user_test = await User.findOne(req.session.usrid).populate("clients");
+                            //console.log(" < 25000, tradestatus == 1");
+                            //console.log(user_test);
 
                             return res.json("Success Buy and tradeStatus" + updatedUser.tradeStatus);
                         } else {
@@ -167,9 +167,9 @@ module.exports = {
                                 }).set({ tradeCount: 4 });
                             }
 
-                            var user_test = await User.findOne(req.session.usrid).populate("clients");
-                            console.log(">=25000, tradestatus == 1")
-                            console.log(user_test);
+                            //var user_test = await User.findOne(req.session.usrid).populate("clients");
+                            //console.log(">=25000, tradestatus == 1")
+                            //console.log(user_test);
 
                             return res.json("Success Buys");
 
@@ -206,9 +206,9 @@ module.exports = {
                                 }).set({ tradeStatus: 0 });
                             }
 
-                            var user_test = await User.findOne(req.session.usrid).populate("clients");
-                            console.log("<25000, tradestatus == 1");
-                            console.log(user_test);
+                            //var user_test = await User.findOne(req.session.usrid).populate("clients");
+                            //console.log("<25000, tradestatus == 1");
+                            //console.log(user_test);
 
                             return res.json("Success buy and tradestatus: " + updatedUser.tradeStatus);
 
@@ -295,13 +295,8 @@ module.exports = {
                 }
             }
 
-            //var order = await Stock.create(req.body).fetch();
-
-            //status 201: created
-            //return res.status(201).json({ id: order.id });
-
         } else { // normal call
-            res.redirect('/stock/detail/' + req.body.symbolTitle);
+            res.redirect('/user/clients');
         }
     },
 
