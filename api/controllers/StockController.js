@@ -19,7 +19,7 @@ module.exports = {
     detail: async function (req, res) {
         // const fetch = require("node-fetch");
         if (req.method == "GET") {
-            return res.view("stock/detail", { stockSymbol: req.params.sym });
+            return res.view("stock/detail_2", { stockSymbol: req.params.sym });
         }
     },
 
@@ -250,9 +250,9 @@ module.exports = {
                                 }).set({ tradeStatus: 1, tradeCount: 4 });
                             }
 
-                            var user_test = await User.findOne(req.session.usrid).populate("clients");
-                            console.log(" order volume == input volume ");
-                            console.log(user_test);
+                            //var user_test = await User.findOne(req.session.usrid).populate("clients");
+                            //console.log(" order volume == input volume ");
+                            //console.log(user_test);
 
                             return res.json("success sell, and all the stock were sold out. ");
 
@@ -281,9 +281,9 @@ module.exports = {
                             }
 
 
-                            var user_test = await User.findOne(req.session.usrid).populate("clients");
-                            console.log(" order volume > input volume");
-                            console.log(user_test);
+                            //var user_test = await User.findOne(req.session.usrid).populate("clients");
+                            //console.log(" order volume > input volume");
+                            //console.log(user_test);
                             return res.json("success sell");
                         }
 

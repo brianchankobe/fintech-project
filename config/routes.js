@@ -32,6 +32,7 @@ module.exports.routes = {
 
   //stock detail page
   "GET /stock/detail/:sym": "StockController.detail",
+  //"GET /stock/detail/:sym": "StockController.detail_2",
 
   //stock candlestick chart
   "GET /stock/candlestick": "StockController.candlestick",

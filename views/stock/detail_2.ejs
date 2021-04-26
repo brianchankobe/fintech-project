@@ -1,0 +1,1057 @@
+<style>
+  #candlestick_btn {
+    /* candlestick右边的button居中 */
+    display: table-cell;
+    /*垂直居中 */
+    vertical-align: middle;
+    /*水平居中*/
+    text-align: center;
+    padding-top: 100px;
+  }
+
+  #company_news {
+    max-height: 50vh;
+    overflow: auto;
+  }
+</style>
+<div id="main_content">
+  <div class="columns">
+    <div class="column is-10 is-offset-1" id="container">
+      <!--  -->
+      <!-- 第一行 -->
+      <!--  -->
+      <nav class="panel">
+        <div class="columns">
+          <div class="column">
+            <p class="panel-heading">Latest Recommendation Index</p>
+          </div>
+          <div class="column">
+            <p class="panel-heading" id="TODAY_DATE"></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <nav class="level">
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">STRONG BUY</p>
+                  <p class="title" id="TODAY_SB"></p>
+                </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">BUY</p>
+                  <p class="title" id="TODAY_B"></p>
+                </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">HOLD</p>
+                  <p class="title" id="TODAY_H"></p>
+                </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">SELL</p>
+                  <p class="title" id="TODAY_S"></p>
+                </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">STRONG SELL</p>
+                  <p class="title" id="TODAY_SS"></p>
+                </div>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </nav>
+
+      <!--  -->
+      <!-- 第二行 -->
+      <!--  -->
+      <div class="columns">
+        <!--  -->
+        <!-- real time price chart -->
+        <!--  -->
+        <div class="column is-8">
+          <nav class="panel">
+            <p class="panel-heading">Real-Time Price Chart</p>
+            <div>
+              <p class="subtitle" id="price_stock_graph"></p>
+            </div>
+            <div style="width: 800px; height: 485px">
+              <canvas id="chart_1"></canvas>
+            </div>
+            <div>
+              <p id="today_date"></p>
+            </div>
+          </nav>
+        </div>
+        <!--  -->
+        <!-- company file -->
+        <!--  -->
+        <div class="column">
+          <nav class="panel">
+            <p class="panel-heading">company Profile</p>
+            <div class="card">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-left">
+                    <figure class="image is-128x128">
+                      <a href="" id="company_website">
+                        <!-- <img src="" id="company_logo" /> -->
+                        <img src="https://bulma.io/images/placeholders/640x480.png" id="company_logo" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div class="media-content">
+                    <p class="title is-2" id="company_name"></p>
+                    <br />
+                    <p class="title is-4" id="company_ticker"></p>
+                  </div>
+                </div>
+
+                <div class="content">
+                  <p id="company_country"></p>
+                  <br />
+                  <p id="company_currency"></p>
+                  <br />
+                  <p id="company_exchange"></p>
+                  <br />
+                  <p id="company_ipo"></p>
+                  <br />
+                  <p id="company_finnhubIndustry"></p>
+                </div>
+                <!-- 股票交易按钮 -->
+                <div class="columns">
+                  <div class="column is-mobile">
+                    <% if (req.session.role=='member' ) { %>
+                      <button class="button is-success is-large modal-button" data-target="modal-buy"
+                        aria-haspopup="true" onclick="activateBuy()">Buy</button>
+                      <button class="button is-danger is-large modal-button" data-target="modal-sell"
+                        aria-haspopup="true" onclick="activateSell()">Sell</button>
+                      <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <!--  -->
+      <!-- 第三行 -->
+      <!--  -->
+      <div class="columns">
+        <!--  -->
+        <!-- Candlestick Trende Chart -->
+        <!--  -->
+        <div class="column">
+          <nav class="panel">
+            <p class="panel-heading">Candlestick Trend Chart</p>
+            <div class="panel-block">
+              <div class="columns">
+                <div id="chart_2" style="width: 1100px; height: 500px"></div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <!--  -->
+      <!-- 第四行 -->
+      <!--  -->
+      <nav class="panel">
+        <p class="panel-heading">Recent Six Month Recommendation Index chart</p>
+        <div class="panel-block">
+          <div id="chart_3" style="width: 1200px; height: 450px"></div>
+        </div>
+      </nav>
+      <!--  -->
+      <!-- 第五行 -->
+      <!--  -->
+      <nav class="panel">
+        <p class="panel-heading">Company News</p>
+
+        <div id="company_news"></div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- 购买页面  -->
+  <div id='modal-buy' class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Take the Order</p>
+        <button class="delete" aria-label="close" onclick="deactivateBuy();"></button>
+      </header>
+      <form action="/order/" method="POST" onsubmit="submitOrder(this); return false">
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label"> Stock Symbol: </label>
+            <input class="input" id="buy_name" type="text" name="symbolTitle"> </input>
+          </div>
+          <div class="field">
+            <p class="control">
+              <label class="label"> Price: </label>
+              <input class="input" type="number" name="price" id="input_price" required>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control">
+              <label class="label"> Volume: </label>
+              <input class="input" type="number" name="volume"
+                oninput="calculateTotal(this.value, document.getElementById('input_price').value);" required>
+            </p>
+          </div>
+          <div class="field">
+            <div class="control">
+              Subtotal: <input class="input" type="number" name="totalCost" id="subtotal"> </input>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <label class="label"> Category: </label>
+              <div class="select is-multiple">
+                <select multiple size="1" name="category" required>
+                  <option>buy</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success" type="submit">Purchase</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- 卖出页面  -->
+  <div id='modal-sell' class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Sell the Stock</p>
+        <button class="delete" aria-label="close" onclick="deactivateSell();"></button>
+      </header>
+      <form action="/order/" method="POST" onsubmit="submitOrder(this); return false">
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label"> Stock Symbol: </label>
+            <input class="input" id="sell_name" type="text" name="symbolTitle"> </input>
+          </div>
+          <div class="field">
+            <p class="control">
+              <label class="label"> Price: </label>
+              <input class="input" type="number" name="price" id="input_price_2" required>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control">
+              <label class="label"> Volume: </label>
+              <input class="input" type="number" name="volume"
+                oninput="calculateTotal_2(this.value, document.getElementById('input_price_2').value);" required>
+            </p>
+          </div>
+          <div class="field">
+            <div class="control">
+              Subtotal: <input class="input" type="number" name="totalRevenue" id="subtotal_sell"> </input>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <label class="label"> Category: </label>
+              <div class="select is-multiple">
+                <select multiple size="1" name="category" required>
+                  <option>sell</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-danger" type="submit">Sell</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+
+<script>
+  //
+  // get the symbol from control like this :
+  //
+  //   var text = "AAPL"; // AAPL , TSLA , BINANCE:BTCUSDT
+  // basic information about the stock company
+  var text = "<%= stockSymbol %>";
+  
+
+  //
+  // 第一行：推荐指数
+  //
+  //recommendation data
+  async function fetchRcmData(symbol) {
+    const response = await fetch(
+      "https://finnhub.io/api/v1/stock/recommendation?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+
+    if (response.ok) {
+      var data = await response.json();
+
+      // console.log(data);
+
+      var rcmd_index = [
+        "recommandation",
+        "strongBuy",
+        "buy",
+        "hold",
+        "sell",
+        "strongSell",
+      ];
+      option_3.dataset.source.push(rcmd_index);
+
+      var group_data = [];
+      for (let i = 0; i < 6; i++) {
+        let data_i = [
+          data[i].period,
+          data[i].strongBuy,
+          data[i].buy,
+          data[i].hold,
+          data[i].sell,
+          data[i].strongSell,
+        ];
+        option_3.dataset.source.push(data_i);
+      }
+
+      var today_obj1 = document.getElementById("TODAY_SB");
+      var today_obj2 = document.getElementById("TODAY_B");
+      var today_obj3 = document.getElementById("TODAY_H");
+      var today_obj4 = document.getElementById("TODAY_S");
+      var today_obj5 = document.getElementById("TODAY_SS");
+      var today_obj6 = document.getElementById("TODAY_DATE");
+
+      today_obj1.innerHTML = data[0].strongBuy;
+      today_obj2.innerHTML = data[0].buy;
+      today_obj3.innerHTML = data[0].hold;
+      today_obj4.innerHTML = data[0].sell;
+      today_obj5.innerHTML = data[0].strongSell;
+      today_obj6.innerHTML = "Date: " + data[0].period + "(Latest Updated)";
+
+      // console.log(group_data);
+      //console.log(option.dataset.source);
+      option_3 && myChart_3.setOption(option_3);
+      //   console.log(strongBuy_index);
+      //   ok
+      //   strongBuy_index.reverse();
+      //   strongBuy_index.unshift(data[5].period);
+      //   console.log(strongBuy_index);
+    } else {
+      alert(response.statusText);
+    }
+  }
+  //执行函数
+  fetchRcmData(text);
+
+  //
+  //   Recent Six Month Recommendation Index Chart 六个月的推荐指数图表 chart_3
+  //
+  var chartDom_3 = document.getElementById("chart_3");
+  var myChart_3 = echarts.init(chartDom_3);
+  var option_3;
+  //recommendation graph option
+  option_3 = {
+    legend: {},
+    tooltip: {},
+    dataset: {
+      source: [],
+    },
+    xAxis: { type: "category" },
+    yAxis: {},
+    // Declare several bar series, each will be mapped
+    // to a column of dataset.source by default.
+    series: [
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+      { type: "bar" },
+    ],
+  };
+  option_3 && myChart_3.setOption(option_3);
+
+  // stock company profile
+  async function stockProfile(symbol) {
+    var response = await fetch(
+      "https://finnhub.io/api/v1/stock/profile2?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+
+    if (response.ok) {
+      let data = await response.json();
+      //name
+      var sym_name = data.name;
+      var profile_name = document.getElementById("symbol_name");
+      profile_name.innerHTML =
+        "Stock Name:<br><strong>" + sym_name + "<strong>";
+      //ipo
+      var sym_ipo = data.ipo;
+      var profile_ipo = document.getElementById("symbol_ipo");
+      profile_ipo.innerHTML = "Stock IPO Date:<br>" + sym_ipo;
+      //logo
+      var sym_logo = data.logo;
+      var profile_logo = document.getElementById("symbol_logo");
+      profile_logo.src = sym_logo;
+      // console.log()
+      //country
+      var sym_country = data.country;
+      var profile_country = document.getElementById("symbol_country");
+      profile_country.innerHTML = "Country:<br>" + sym_country;
+    } else {
+      alert(response.statusText);
+    }
+
+    // console.log(data);
+  }
+
+  //
+  // stock company profile
+  //
+  async function getCompanyProfile(symbol) {
+    var response = await fetch(
+      "https://finnhub.io/api/v1/stock/profile2?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+
+    if (response.ok) {
+      let data = await response.json();
+      console.log(data.logo);
+      //website
+      var sym_weburl = data.weburl;
+      var company_website = document.getElementById("company_website");
+      company_website.href = sym_weburl;
+      //logo
+      var sym_logo = data.logo;
+      var company_logo = document.getElementById("company_logo");
+      company_logo.src = sym_logo;
+      //name
+      var sym_name = data.name;
+      var company_name = document.getElementById("company_name");
+      company_name.innerHTML = sym_name;
+      //symbol
+      var sym_ticker = data.ticker;
+      var company_ticker = document.getElementById("company_ticker");
+      company_ticker.innerHTML = "Symbol: " + sym_ticker;
+      //country
+      var sym_country = data.country;
+      var company_country = document.getElementById("company_country");
+      company_country.innerHTML =
+        "Country: <strong>" + sym_country + "</strong>";
+      //currency
+      var sym_currency = data.currency;
+      var company_currency = document.getElementById("company_currency");
+      company_currency.innerHTML =
+        "Currency: <strong>" + sym_currency + "</strong>";
+      //exchange
+      var sym_exchange = data.exchange;
+      var company_exchange = document.getElementById("company_exchange");
+      company_exchange.innerHTML =
+        "Exchange: <strong>" + sym_exchange + "</strong>";
+      //ipo
+      var sym_ipo = data.ipo;
+      var company_ipo = document.getElementById("company_ipo");
+      company_ipo.innerHTML = "IPO: <strong>" + sym_ipo + "</strong>";
+      //finnhubIndustry
+      var sym_finnhubIndustry = data.finnhubIndustry;
+      var company_finnhubIndustry = document.getElementById(
+        "company_finnhubIndustry"
+      );
+      company_finnhubIndustry.innerHTML =
+        "Industry: <strong>" + sym_finnhubIndustry + "</strong>";
+      //
+    } else {
+      alert(response.statusText);
+    }
+    // console.log(data);
+  }
+  //执行函数
+  getCompanyProfile(text);
+
+  //
+  // stock company news
+  //
+  //
+  //convert date into yyyy-mm-dd
+  function formatDate(date) {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  }
+
+  //
+  async function getCompanyNews(symbol) {
+    var today = new Date();
+    let d = today.getTime() - 30 * 24 * 60 * 60 * 1000;
+    let f = new Date(d); //before 1 month
+    let t = new Date(); //today time
+    var newsList_obj = document.getElementById("company_news");
+
+    var response = await fetch(
+      "https://finnhub.io/api/v1/company-news?symbol=" +
+      symbol +
+      "&from=" +
+      formatDate(f) +
+      "&to=" +
+      formatDate(t) +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+    if (response.ok) {
+      let data = await response.json();
+      console.log(data);
+      var dynamicCode = "";
+      data.forEach(function (news) {
+        //show the specific news
+        dynamicCode +=
+          "<br/>" +
+          '<div class="card">' +
+          '<div class="columns">' +
+          '<div class="column is-4" id="news_img">' +
+          '<div class="card-image">' +
+          '<a href="' +
+          news.url +
+          '">' +
+          '<figure class="image is-4by3">' +
+          '<img src="' +
+          news.image +
+          '" id="news_img"/>' +
+          "</figure>" +
+          "</a>" +
+          "</div>" +
+          "</div>" +
+          '<div class="column">' +
+          '<div class="card-content">' +
+          '<div class="media">' +
+          '<div class="media-content">' +
+          '<p class="title is-4" id="news_headline">' +
+          news.headline +
+          "</p>" +
+          '<p class="subtitle is-6" id="news_related">Related: ' +
+          news.related +
+          "</p>" +
+          "</div>" +
+          "</div>" +
+          '<div class="content">' +
+          '<div id="news_summary">' +
+          news.summary +
+          "</div><br/>" +
+          '<div id="news_source">Source:' +
+          news.source +
+          "</div>" +
+          '<div id="news_datetime">Date:' +
+          news.datetime +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>";
+      });
+      newsList_obj.innerHTML = dynamicCode;
+    } else {
+      alert(response.statusText);
+    }
+  }
+  getCompanyNews(text);
+
+  //
+  //   Candlestick Trende Chart  阴阳烛 K 线图表 chart_2
+  //
+  var chartDom_2 = document.getElementById("chart_2");
+  var myChart_2 = echarts.init(chartDom_2);
+  var option_2;
+
+  var upColor = "#00da3c";
+  var upBorderColor = "#8A0000";
+  var downColor = "#ec0000";
+  var downBorderColor = "#008F28";
+
+  function timestampToTime(timestamp) {
+    var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+
+    var Y = date.getFullYear() + "/";
+
+    var M =
+      (date.getMonth() + 1 < 10
+        ? "0" + (date.getMonth() + 1)
+        : date.getMonth() + 1) + "/";
+
+    var D = date.getDate() + "";
+    var h = date.getHours() + ":";
+    var m = date.getMinutes() + ":";
+    var s = date.getSeconds();
+    var date_time = Y + M + D;
+    // console.log(date_time);
+
+    return date_time;
+  }
+
+  async function getCandleData(symbol) {
+    let f = Math.round(new Date().getTime() / 1000 - 3600 * 24 * 180); //half year
+    let t = Math.round(new Date().getTime() / 1000);
+    var response = await fetch(
+      "https://finnhub.io/api/v1/stock/candle?symbol=" +
+      symbol +
+      "&resolution=D&from=" +
+      f +
+      "&to=" +
+      t +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+    if (response.ok) {
+      //
+      var k_data = [];
+      //
+      let data = await response.json();
+      // console.log(data);
+      // console.log(data.c.length);
+      for (i = 0; i < data.c.length; i++) {
+        // 数据意义：开盘(open)，收盘(close)，最低(lowest)，最高(highest)
+        var t_t = timestampToTime(data.t[i]);
+
+        let d_data = [t_t, data.o[i], data.c[i], data.l[i], data.h[i]];
+        k_data.push(d_data);
+      }
+
+      var data0 = splitData(k_data);
+
+      function splitData(rawData) {
+        var categoryData = [];
+        var values = [];
+        for (var i = 0; i < rawData.length; i++) {
+          categoryData.push(rawData[i].splice(0, 1)[0]);
+          values.push(rawData[i]);
+        }
+        return {
+          categoryData: categoryData,
+          values: values,
+        };
+      }
+
+      function calculateMA(dayCount) {
+        var result = [];
+        for (var i = 0, len = data0.values.length; i < len; i++) {
+          if (i < dayCount) {
+            result.push("-");
+            continue;
+          }
+          var sum = 0;
+          for (var j = 0; j < dayCount; j++) {
+            sum += data0.values[i - j][1];
+          }
+          result.push(sum / dayCount);
+        }
+        return result;
+      }
+
+      option_2 = {
+        title: {
+          text: "Candle Stick Chart (USD)",
+          left: 0,
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+          },
+        },
+        legend: {
+          data: ["日K", "MA5", "MA10", "MA20", "MA30"],
+        },
+        grid: {
+          left: "10%",
+          right: "10%",
+          bottom: "15%",
+        },
+        xAxis: {
+          type: "category",
+          data: data0.categoryData,
+          scale: true,
+          boundaryGap: false,
+          axisLine: { onZero: false },
+          splitLine: { show: false },
+          splitNumber: 20,
+          min: "dataMin",
+          max: "dataMax",
+        },
+        yAxis: {
+          scale: true,
+          splitArea: {
+            show: true,
+          },
+        },
+        dataZoom: [
+          {
+            type: "inside",
+            start: 50,
+            end: 100,
+          },
+          {
+            show: true,
+            type: "slider",
+            top: "90%",
+            start: 50,
+            end: 100,
+          },
+        ],
+        series: [
+          {
+            name: "日K",
+            type: "candlestick",
+            data: data0.values,
+            itemStyle: {
+              color: upColor,
+              color0: downColor,
+              borderColor: upBorderColor,
+              borderColor0: downBorderColor,
+            },
+            markPoint: {
+              label: {
+                normal: {
+                  formatter: function (param) {
+                    return param != null ? Math.round(param.value) : "";
+                  },
+                },
+              },
+              data: [
+                {
+                  name: "XX标点",
+                  coord: ["2013/5/31", 2300],
+                  value: 2300,
+                  itemStyle: {
+                    color: "rgb(41,60,85)",
+                  },
+                },
+                {
+                  name: "highest value",
+                  type: "max",
+                  valueDim: "highest",
+                },
+                {
+                  name: "lowest value",
+                  type: "min",
+                  valueDim: "lowest",
+                },
+                {
+                  name: "average value on close",
+                  type: "average",
+                  valueDim: "close",
+                },
+              ],
+              tooltip: {
+                formatter: function (param) {
+                  return param.name + "<br>" + (param.data.coord || "");
+                },
+              },
+            },
+            markLine: {
+              symbol: ["none", "none"],
+              data: [
+                [
+                  {
+                    name: "from lowest to highest",
+                    type: "min",
+                    valueDim: "lowest",
+                    symbol: "circle",
+                    symbolSize: 10,
+                    label: {
+                      show: false,
+                    },
+                    emphasis: {
+                      label: {
+                        show: false,
+                      },
+                    },
+                  },
+                  {
+                    type: "max",
+                    valueDim: "highest",
+                    symbol: "circle",
+                    symbolSize: 10,
+                    label: {
+                      show: false,
+                    },
+                    emphasis: {
+                      label: {
+                        show: false,
+                      },
+                    },
+                  },
+                ],
+                {
+                  name: "min line on close",
+                  type: "min",
+                  valueDim: "close",
+                },
+                {
+                  name: "max line on close",
+                  type: "max",
+                  valueDim: "close",
+                },
+              ],
+            },
+          },
+          {
+            name: "MA5",
+            type: "line",
+            data: calculateMA(5),
+            smooth: true,
+            lineStyle: {
+              opacity: 0.5,
+            },
+          },
+          {
+            name: "MA10",
+            type: "line",
+            data: calculateMA(10),
+            smooth: true,
+            lineStyle: {
+              opacity: 0.5,
+            },
+          },
+          {
+            name: "MA20",
+            type: "line",
+            data: calculateMA(20),
+            smooth: true,
+            lineStyle: {
+              opacity: 0.5,
+            },
+          },
+          {
+            name: "MA30",
+            type: "line",
+            data: calculateMA(30),
+            smooth: true,
+            lineStyle: {
+              opacity: 0.5,
+            },
+          },
+        ],
+      };
+      option_2 && myChart_2.setOption(option_2);
+      // console.log(k_data);
+      // var test = k_data[0][0];
+      // console.log(test);
+    } else {
+      alert(response.statusText);
+    }
+  }
+  getCandleData(text);
+
+  /////////////////////////
+  //// Real Time Chart ///
+  ////////////////////////
+  var ctx = document.getElementById("chart_1");
+  var myChart_1 = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: "Real Time Price (USD)",
+          data: [],
+          backgroundColor: "red",
+          borderColor: "red",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false,
+        },
+      },
+    },
+  });
+  async function getRealTimeData(symbol) {
+    let f = Math.round(new Date().getTime() / 1000 - 3600); //half year
+    let t = Math.round(new Date().getTime() / 1000);
+    var obj_show_price = document.getElementById("price_stock_graph");  //show the price in graph above
+    var response = await fetch(
+      "https://finnhub.io/api/v1/quote?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+    if (response.ok) {
+      let data = await response.json();
+      var current_price = data.c;
+      console.log("current_price: " + current_price);
+      var myDate = new Date();
+      var h = myDate.getHours(); //获取当前小时数(0-23)
+      var m = myDate.getMinutes(); //获取当前分钟数(0-59)
+      var s = myDate.getSeconds(); //获取当前秒数(0-59)
+      var real_time = h + ":" + m + ":" + s;
+      //
+      // push x_label
+      myChart_1.data.labels.push(real_time);
+      //push y_data
+      myChart_1.data.datasets[0].data.push(data.c);
+      obj_show_price.innerHTML = data.c;
+      myChart_1.update();
+    } else {
+      alert(response.statusText);
+    }
+  }
+  setInterval(function () {
+    getRealTimeData(text); // AAPL BINANCE:BTCUSDT
+  }, 5000);
+
+
+  //将日期转为成 yyyy-mm-dd hour:min:seconds
+  function formatDate_2(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear(),
+      hour = '' + d.getHours(),
+      min = '' + d.getMinutes(),
+      sec = '' + d.getSeconds();
+
+    if (month.length < 2) {
+      month = '0' + month;
+    }
+    if (day.length < 2) {
+      day = '0' + day;
+    }
+    if (hour.length < 2)
+      hour = '0' + hour;
+    if (min.length < 2)
+      min = '0' + min;
+    if (sec.length < 2)
+      sec = '0' + sec;
+
+    var date_format = [year, month, day].join('-');
+    var time_format = [hour, min, sec].join(':');
+    return [date_format, time_format].join(' ');
+  }
+
+  /*
+ buy function 
+
+ 用户余额大于25000， 交易状态为1 （表示账户可进行交易）  无限次T+0交易
+ 用户余额小于25000， 交易状态为1 （表示账户可进行交易） 可进行4次T+0交易
+ 用户余额小于25000， 交易状态为0 ， 账户被冻结，无法购买股票， 只能减仓
+
+ sell function
+
+ 持有大于卖出， 记录收入，价格，数量再持有股票记录当中
+ 持有 == 卖出， 计入收入，价格，数量并将其valid变量设为1表示该持有股票订单作废。
+
+ */
+  async function submitOrder(formElem) {
+
+    //订单创建时间
+    var today = formatDate_2(new Date());
+    var data_form = new FormData(formElem);
+    data_form.append("datetime", today);
+
+    //create the stock order
+    var response = await fetch(formElem.action, {
+      method: formElem.method,
+      body: data_form,
+    });
+
+    if (response.ok) {
+
+      var user = await response.json();
+
+      alert(user);
+      location.assign('/user/clients');
+
+    } else if (response.status == 404) {
+
+      alert(response.json());
+
+    } else {
+
+      alert(response.statusText);
+
+    }
+  };
+
+
+  //打开买股窗口
+  function activateBuy() {
+    document.getElementById("modal-buy").className = "modal is-active";
+  }
+
+  //关闭买股窗口
+  function deactivateBuy() {
+    document.getElementById("modal-buy").className = "modal";
+  }
+  //打开卖股窗口
+  function activateSell() {
+    document.getElementById("modal-sell").className = "modal is-active";
+  }
+
+  //关闭卖股窗口
+  function deactivateSell() {
+    document.getElementById("modal-sell").className = "modal";
+  }
+
+  //计算买股的总价值 price * volume  （totalCost）
+  function calculateTotal(v, p) {
+
+    var obj_total = document.getElementById('subtotal');
+    if (v.length > 0 && p.length > 0) {
+
+      var sum = p * v;
+      obj_total.value = sum;
+
+    }
+  }
+
+  //计算卖股的总价值 price * volume (totalRevenue)
+  function calculateTotal_2(v, p) {
+
+    var obj_total = document.getElementById('subtotal_sell');
+    if (v.length > 0 && p.length > 0) {
+
+      var sum = p * v;
+      obj_total.value = sum;
+
+    }
+  }
+
+  //
+  //
+  //
+  var today_Date = new Date();
+  var t_year = today_Date.getFullYear(); //获取完整的年份(4位,1970-????)
+  var t_month = today_Date.getMonth() + 1; //获取当前月份(0-11,0代表1月)
+  var t_day = today_Date.getDate(); //获取当前日(1-31)
+  var today_d = t_year + "-" + t_month + "-" + t_day;
+  var t_date = document.getElementById("today_date");
+  var buy_form_symbol = document.getElementById("buy_name");
+  var sell_form_symbol = document.getElementById("sell_name");
+  t_date.innerHTML = "<strong>" + "Today is: " + today_d + "</strong>";
+  buy_form_symbol.value = text;
+  sell_form_symbol.value = text;
+  
+</script>

@@ -378,6 +378,7 @@
 
     if (response.ok) {
       let data = await response.json();
+
       //name
       var sym_name = data.name;
       var profile_name = document.getElementById("symbol_name");
@@ -437,17 +438,52 @@
       //**********************************************************************//
       // var y_data = [];
       //// open,close,low,high
-      for (i = 0; i < 7; i++) {
-        let y_d = [data.o[i], data.c[i], data.l[i], data.h[i]];
-        option.series[0].data.push(y_d);
+      try {
+        for (i = 0; i < 7; i++) {
+          let y_d = [data.o[i], data.c[i], data.l[i], data.h[i]];
+          option.series[0].data.push(y_d);
+        }
+        // console.log(y_data);
+        option && myChart_candlestick.setOption(option);
+      } catch (e) {
+        //console.log(e.message);
+        alert("error candlestick");
       }
-      // console.log(y_data);
-      option && myChart_candlestick.setOption(option);
+
     } else {
       alert(response.statusText);
     }
 
   }
+
+  //获取实时价格数据
+  async function fetchRealTimePrice(symbol) {
+    //let f = Math.round(new Date().getTime() / 1000 - 3600);
+    //let t = Math.round(new Date().getTime() / 1000);
+
+    var response = await fetch(
+      "https://finnhub.io/api/v1/quote?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+
+    if (response.ok) {
+      var data_real = await response.json();
+      var price_current = data_real.c;
+      var last_closed = data_real.pc;
+      console.log("current: "+price_current);
+      console.log("last"+last_closed);
+
+    } else {
+      alert(response.statusText);
+    }
+  }
+
+  setInterval(function () {
+    fetchRealTimePrice("<%= stockSymbol %>");
+  }, 2000);
+
+
 
   //recommendation data
   async function fetchRcmData(symbol) {
@@ -460,53 +496,59 @@
     if (response.ok) {
       var data = await response.json();
 
-      console.log(data);
+      try {
+        console.log(data);
 
-      var rcmd_index = [
-        "recommandation",
-        "strongBuy",
-        "buy",
-        "hold",
-        "sell",
-        "strongSell",
-      ];
-      option_rcmd.dataset.source.push(rcmd_index);
-
-      var group_data = [];
-      for (let i = 0; i < 6; i++) {
-        let data_i = [
-          data[i].period,
-          data[i].strongBuy,
-          data[i].buy,
-          data[i].hold,
-          data[i].sell,
-          data[i].strongSell,
+        var rcmd_index = [
+          "recommandation",
+          "strongBuy",
+          "buy",
+          "hold",
+          "sell",
+          "strongSell",
         ];
-        option_rcmd.dataset.source.push(data_i);
+        option_rcmd.dataset.source.push(rcmd_index);
+
+        var group_data = [];
+        for (let i = 0; i < 6; i++) {
+          let data_i = [
+            data[i].period,
+            data[i].strongBuy,
+            data[i].buy,
+            data[i].hold,
+            data[i].sell,
+            data[i].strongSell,
+          ];
+          option_rcmd.dataset.source.push(data_i);
+        }
+
+        var today_obj1 = document.getElementById('TODAY_SB');
+        var today_obj2 = document.getElementById('TODAY_B');
+        var today_obj3 = document.getElementById('TODAY_H');
+        var today_obj4 = document.getElementById('TODAY_SL');
+        var today_obj5 = document.getElementById('TODAY_SS');
+        var today_obj6 = document.getElementById('TODAY_DATE')
+
+        today_obj1.innerHTML = data[0].strongBuy;
+        today_obj2.innerHTML = data[0].buy;
+        today_obj3.innerHTML = data[0].hold;
+        today_obj4.innerHTML = data[0].sell;
+        today_obj5.innerHTML = data[0].strongSell;
+        today_obj6.innerHTML = "Date: " + data[0].period;
+
+        // console.log(group_data);
+        //console.log(option.dataset.source);
+        option_rcmd && myChart_rcmd.setOption(option_rcmd);
+        //   console.log(strongBuy_index);
+        //   ok
+        //   strongBuy_index.reverse();
+        //   strongBuy_index.unshift(data[5].period);
+        //   console.log(strongBuy_index);
+      } catch (e) {
+        alert("error rcmd");
       }
 
-      var today_obj1 = document.getElementById('TODAY_SB');
-      var today_obj2 = document.getElementById('TODAY_B');
-      var today_obj3 = document.getElementById('TODAY_H');
-      var today_obj4 = document.getElementById('TODAY_SL');
-      var today_obj5 = document.getElementById('TODAY_SS');
-      var today_obj6 = document.getElementById('TODAY_DATE')
 
-      today_obj1.innerHTML = data[0].strongBuy;
-      today_obj2.innerHTML = data[0].buy;
-      today_obj3.innerHTML = data[0].hold;
-      today_obj4.innerHTML = data[0].sell;
-      today_obj5.innerHTML = data[0].strongSell;
-      today_obj6.innerHTML = "Date: " + data[0].period;
-
-      // console.log(group_data);
-      //console.log(option.dataset.source);
-      option_rcmd && myChart_rcmd.setOption(option_rcmd);
-      //   console.log(strongBuy_index);
-      //   ok
-      //   strongBuy_index.reverse();
-      //   strongBuy_index.unshift(data[5].period);
-      //   console.log(strongBuy_index);
     } else {
       alert(response.statusText);
     }
@@ -662,6 +704,12 @@
   用户余额大于25000， 交易状态为1 （表示账户可进行交易）  无限次T+0交易
   用户余额小于25000， 交易状态为1 （表示账户可进行交易） 可进行4次T+0交易
   用户余额小于25000， 交易状态为0 ， 账户被冻结，无法购买股票， 只能减仓
+
+  sell function
+
+  持有大于卖出， 记录收入，价格，数量再持有股票记录当中
+  持有 == 卖出， 计入收入，价格，数量并将其valid变量设为1表示该持有股票订单作废。
+
   */
   async function submitOrder(formElem) {
 
@@ -708,6 +756,7 @@
     wSocket.close();
   }
   wSocket = new WebSocket("wss://ws.finnhub.io?token=c0ro5sv48v6voi2d8ndg");
+
   wSocket.onopen = function () {
     wSocket.send(`{"type":"subscribe","symbol":"${text}"}`);
   };
@@ -725,6 +774,12 @@
       }
     }
   };
+
+
+
+  //setInterval(() => {
+  //  sendMessage();
+  //}, 2000);
 
   /*
   s Symbol.

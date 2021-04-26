@@ -42,16 +42,12 @@ module.exports = {
 
     totalCost: {
       type: "number",
-<<<<<<< HEAD
       defaultsTo: 0
     },
 
     totalVolume: {
       type: "number",
       defaultsTo: 0
-=======
-      defaultsTo: 0,
->>>>>>> trading function basic finished and need to be optimized
     },
 
     valid: {
