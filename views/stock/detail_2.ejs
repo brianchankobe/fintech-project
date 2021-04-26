@@ -8,6 +8,7 @@
     text-align: center;
     padding-top: 100px;
   }
+
   #company_news {
     max-height: 50vh;
     overflow: auto;
@@ -193,9 +194,18 @@
             <input class="input" id="buy_name" type="text" name="symbolTitle"> </input>
           </div>
           <div class="field">
+            <!-- 价格输入 -->
             <p class="control">
-              <label class="label"> Price: </label>
-              <input class="input" type="number" name="price" id="input_price" required>
+              <label class="label"> Price ($): </label>
+            <div class="columns">
+              <div class="column is-three-quarters">
+                <input class="input" type="number" name="price" min="0.00" step="0.01" id="input_price" required>
+              </div>
+              <div class="column is-one-quarter">
+                <a class="button is-info" onclick="getCurrentPriceForBuy()">Current Price</a>
+              </div>
+            </div>
+
             </p>
           </div>
           <div class="field">
@@ -207,7 +217,8 @@
           </div>
           <div class="field">
             <div class="control">
-              Subtotal: <input class="input" type="number" name="totalCost" id="subtotal"> </input>
+              Subtotal: <input class="input" type="number" min="0.00" step="0.01" name="totalCost" id="subtotal">
+              </input>
             </div>
           </div>
           <div class="field">
@@ -244,20 +255,37 @@
           </div>
           <div class="field">
             <p class="control">
-              <label class="label"> Price: </label>
-              <input class="input" type="number" name="price" id="input_price_2" required>
+              <label class="label"> Price ($): </label>
+            <div class="columns">
+              <!-- 价格输入 -->
+              <div class="column is-three-quarters">
+                <input class="input" type="number" name="price" min="0.00" step="0.01" id="input_price_2" required>
+              </div>
+              <div class="column is-one-quarter">
+                <a class="button is-info" onclick="getCurrentPriceForSell()">Current Price</a>
+              </div>
+            </div>
             </p>
           </div>
           <div class="field">
             <p class="control">
+              <!-- 股数输入 -->
               <label class="label"> Volume: </label>
-              <input class="input" type="number" name="volume"
-                oninput="calculateTotal_2(this.value, document.getElementById('input_price_2').value);" required>
+            <div class="columns">
+              <div class="column is-third-quarters">
+                <input class="input" type="number" name="volume" id="input_volumn_1"
+                  oninput="calculateTotal_2(this.value, document.getElementById('input_price_2').value);" required>
+              </div>
+              <div class="column is-one-quarter">
+                <a class="button is-danger" onclick="getTotalVolume();">All Out</a>
+              </div>
+            </div>
             </p>
           </div>
           <div class="field">
             <div class="control">
-              Subtotal: <input class="input" type="number" name="totalRevenue" id="subtotal_sell"> </input>
+              Subtotal: <input class="input" type="number" min="0.00" step="0.01" name="totalRevenue"
+                id="subtotal_sell"> </input>
             </div>
           </div>
           <div class="field">
@@ -289,7 +317,7 @@
   //   var text = "AAPL"; // AAPL , TSLA , BINANCE:BTCUSDT
   // basic information about the stock company
   var text = "<%= stockSymbol %>";
-  
+
   //
   // 第一行：推荐指数
   //
@@ -912,6 +940,7 @@
       myChart_1.data.datasets[0].data.push(data.c);
       obj_show_price.innerHTML = data.c;
       myChart_1.update();
+
     } else {
       alert(response.statusText);
     }
@@ -969,28 +998,41 @@
     var data_form = new FormData(formElem);
     data_form.append("datetime", today);
 
-    //create the stock order
-    var response = await fetch(formElem.action, {
-      method: formElem.method,
-      body: data_form,
-    });
+    var real_price = document.getElementById("price_stock_graph").innerHTML;  //real-time price
 
-    if (response.ok) {
+    //确保输入价格再合理范围 买入价 >= 实时价格  卖出价 <= 实时价格
+    if ((data_form.get("category") == "buy" && parseFloat(data_form.get("price")) >= parseFloat(real_price)) || (data_form.get("category") == "sell" && parseFloat(data_form.get("price")) <= parseFloat(real_price))) {
+      //create the stock order
+      var response = await fetch(formElem.action, {
+        method: formElem.method,
+        body: data_form,
+      });
 
-      var user = await response.json();
+      if (response.ok) {
 
-      alert(user);
-      location.assign('/user/clients');
+        var user = await response.json();
 
-    } else if (response.status == 404) {
+        alert(user);
+        location.assign('/user/clients');
 
-      alert(response.json());
+      } else if (response.status == 404) {
 
+        alert(response.json());
+
+      } else {
+
+        alert(response.statusText);
+
+      }
     } else {
-
-      alert(response.statusText);
-
+      if (data_form.get("category") == "buy") {
+        alert("Your order still not be processed due to your price is lower than market price. Please make sure that it is market price. ");
+      } else {
+        alert("Your order still not be processed due to your price is greater than market price. Please make sure that it is market price. ");
+      }
     }
+
+
   };
 
 
@@ -1011,6 +1053,46 @@
   //关闭卖股窗口
   function deactivateSell() {
     document.getElementById("modal-sell").className = "modal";
+  }
+
+  //获取当前价格输出到买入表单
+  function getCurrentPriceForBuy() {
+    var real_price = parseFloat(document.getElementById("price_stock_graph").innerHTML);  //real-time price
+    var input_price_form = document.getElementById("input_price");
+    input_price_form.value = real_price;
+  }
+
+  //获取当前价格输出到卖出表单
+  function getCurrentPriceForSell() {
+    var real_price = parseFloat(document.getElementById("price_stock_graph").innerHTML);  //real-time price
+    var input_price_form = document.getElementById("input_price_2");
+    input_price_form.value = real_price;
+  }
+
+  //获取用户所有持有的数量
+  async function getTotalVolume() {
+    var data_form = new FormData();
+    data_form.append("symbolTitle", text);
+
+    var response = await fetch("/user/holds", {
+      method: "POST",
+      body: data_form,
+    });
+
+    if (response.ok) {
+      var user = await response.json();
+
+      if (user.clients.length != 0) {
+        var input_volume = document.getElementById("input_volumn_1");
+        input_volume.value = user.clients[0].totalVolume;
+      } else {
+        alert("You have no holds of this stock. ");
+      }
+
+    } else {
+      alert(response.status);
+    }
+
   }
 
   //计算买股的总价值 price * volume  （totalCost）
@@ -1051,5 +1133,5 @@
   t_date.innerHTML = "<strong>" + "Today is: " + today_d + "</strong>";
   buy_form_symbol.value = text;
   sell_form_symbol.value = text;
-  
+
 </script>

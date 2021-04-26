@@ -44,6 +44,7 @@ module.exports = {
 
             if (req.body.category == "buy") {
                 /* Buy Function */
+                
                 //check if user have valid order
                 if (thatUser.clients.length == 0) { //user's valid order about this stock not exist
                     //console.log("no client");

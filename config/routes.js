@@ -51,6 +51,7 @@ module.exports.routes = {
   //'GET /stock/:id/consultants': 'StockController.populate',
   'GET /user/clients': 'UserController.populate',
   'POST /user/clients': 'UserController.populate',
+  'POST /user/holds': 'UserController.populateOne',
 
 
   /***************************************************************************
