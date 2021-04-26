@@ -1,3 +1,5 @@
+<!-- detail.ejs  股票数据可视化分析，推荐分析  -->
+
 <style>
   #container {
     height: 100%;
@@ -200,7 +202,7 @@
             </div>
             <div class="field">
               <div class="control">
-                Subtotal: <input class="input" type="number" name="totalPrice" id="subtotal"> </input>
+                Subtotal: <input class="input" type="number" name="totalCost" id="subtotal"> </input>
               </div>
             </div>
             <div class="field">
@@ -250,7 +252,7 @@
             </div>
             <div class="field">
               <div class="control">
-                Subtotal: <input class="input" type="number" name="totalPrice" id="subtotal_sell"> </input>
+                Subtotal: <input class="input" type="number" name="totalRevenue" id="subtotal_sell"> </input>
               </div>
             </div>
             <div class="field">
@@ -652,33 +654,20 @@
     }
   }
 
-  //submit order 
+  /*
+  buy function 
+
+  用户余额大于25000， 交易状态为1 （表示账户可进行交易）  无限次T+0交易
+  用户余额小于25000， 交易状态为1 （表示账户可进行交易） 可进行4次T+0交易
+  用户余额小于25000， 交易状态为0 ， 账户被冻结，无法购买股票， 只能减仓
+  */
   async function submitOrder(formElem) {
 
     //datetime
     var today = formatDate_2(new Date());
-    console.log(today);
     var data_form = new FormData(formElem);
     data_form.append("datetime", today);
 
-    var dat_form_user_validation = new FormData();
-    dat_form_user_validation.append("symbolTitle", data_form.get("symbolTitle"));
-
-    //validate whether user used to buy
-    var res_searchValid = await fetch('/user/clients', {
-      method: "POST",
-      body: dat_form_user_validation,
-    });
-
-    if (res_searchValid.ok) {
-      alert("already have");
-    } else if (res_searchValid.status == 404) {  //用户还没有买这只股票
-      alert("no buy");
-    } else {
-      alert(res_searchValid.statusText);
-    }
-
-    /*
     //create the stock order
     var response = await fetch(formElem.action, {
       method: formElem.method,
@@ -686,12 +675,21 @@
     });
 
     if (response.ok) {
-      var order = await response.json();
-      alert("order ID" + order.id + " created successfully");
-      location.assign('/stock/search');
+
+      var user = await response.json();
+
+      alert(user);
+      location.assign('/user/clients');
+
+    } else if (response.status == 404) {
+
+      alert(response.json());
+
     } else {
+
       alert(response.statusText);
-    }*/
+
+    }
   };
 
   stockProfile("<%= stockSymbol %>");

@@ -35,12 +35,23 @@ module.exports = {
       type: 'number',
     },
 
-    totalPrice: {
+    totalRevenue: {
       type: "number",
+      defaultsTo: 0
     },
 
-    initialPrice: {
+    totalCost: {
       type: "number",
+<<<<<<< HEAD
+      defaultsTo: 0
+    },
+
+    totalVolume: {
+      type: "number",
+      defaultsTo: 0
+=======
+      defaultsTo: 0,
+>>>>>>> trading function basic finished and need to be optimized
     },
 
     valid: {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Investment & Stock Analysis Platform</title>
+    <title>Stock Ditalization & Simulation Trading Platform</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta
@@ -97,7 +97,7 @@
             <a class="navbar-item" href="/marketnews"> Market News </a>
             <a class="navbar-item" href="/stock/search"> Stock Search </a>
             <% if (req.session.role =='member' ) { %>
-            <a class="navbar-item" href="/"> My Trading </a>
+            <a class="navbar-item" href="/user/clients"> My Trading </a>
             <% } %> <% if (req.session.role=='admin' ) { %>
             <a class="navbar-item" href="/"> Admin </a>
             <% } %>

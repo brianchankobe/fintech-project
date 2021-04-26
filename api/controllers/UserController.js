@@ -69,24 +69,22 @@ module.exports = {
         }
     },
 
-    //action: searchValidOrder 
-    searchValidOrder: async function (req, res) {
+    //action: populate 
+    populate: async function (req, res) {
 
         if (req.wantsJSON) {
 
             //check if user exists order that can still be processed
-            var thatUser = await User.findOne(req.session.usrid).populate("clients", { symbolTitle: req.body.symbolTitle, valid: 0 });
-
-            if (!thatUser) return res.status(404).json("No This Stock Order");
+            var thatUser = await User.findOne(req.session.usrid).populate("clients");
+            
+            if (!thatUser) return res.status(404).json("User not found");
 
             return res.json(thatUser);
         } else {
             //check if user exists order that can still be processed
-            var thatUser = await User.findOne(req.session.usrid).populate("clients", { symbolTitle: req.body.symbolTitle, valid: 0 });
+            var thatUser = await User.findOne(req.session.usrid).populate("clients");
 
-            if (!thatUser) return res.status(404).json("No This Stock Order");
-
-            //console.log(thatUser);
+            if (!thatUser) return res.status(404).json("User not found");
 
             return res.view('user/populate', { user: thatUser });
         }

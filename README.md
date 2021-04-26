@@ -49,41 +49,41 @@ a web-based application that involves stock analytics and trading simulation
 
 - Main Implementation: Two Buttons (buy and sell) in detail page
 
-- create stock order (Stock Model: SymbolTitle, Price, Volume, TotalPrice, valid(0/1), initialPrice, DateTime, Consultant (for association with User))
+- create stock order (Stock Model: SymbolTitle, Price, Volume, TotalCost, TotalRevenue, valid(0/1), category, DateTime, Consultant (for association with User))
 
 - Set up association between User and Stock (one to many) e.g. a user can have multiple orders
 
-    - User model (username, password, role, balance, asset ,tradeStatus (0,1), tradeCount (min = 0, max = 4), Client for assiciation with Stock)
+    - User model (username, password, role, balance, assets ,tradeStatus (0,1), tradeCount (min = 0, max = 4), Client for assiciation with Stock)
 
 - set up the business trading conditions: 
 
     - Buy Function
 
-        + if not exist stock record in user, 
+        + if not exist stock buying record in user, （如果用户没有持有股票） 
     
-            + if balance >= 25000 and TradeStatus = 1, then
+            + if balance >= 25000 and TradeStatus = 1, then  （用户钱包金额大于25000， 可进行无限次 T+0买股）
 
-                - if balance >= totalPrice, then create new stock record (order) and add association with user (user balance -= totalPrice && user asset += totalPrice)
+                - if balance >= totalCost of buying, then create new stock record to record the total revenue and total cost and add record into user account and update user's information (user balance -= totalCost && user asset += totalCost)   （金额是否足够？）
             
                     - if new user balance < 25000, then set tradeCount = 4
 
                 - else not buy 
 
-            + if balance < 25000 and tradeStatus = 1, then 
+            + if balance < 25000 and tradeStatus = 1, then  （用户钱包金额小于25000， 只能进行有限次 (4次) T+0买股， 四次以后补齐25000才可进行买股。）
 
-                - if (balance >= totalPrice && tradeCount > 0), then create new stock record (order) and add association with user (balance -= totalPrice && asset += totalPrice && tradeCount - 1)
+                - if (balance >= totalCost && tradeCount > 0), then create new stock record to record the total revenue and total cost and add record into user account and update user's information (balance -= totalCost && asset += totalCost && tradeCount - 1)
         
-                    - if tradeCount == 0, then set tradeStatus = 0
+                    - if tradeCount == 0, then set tradeStatus = 0  (冻结账户 - 不能购买只能减仓)
                     
                 - else not buy
         
-            + if balance < 25000  and tradeStatus = 0, then not buy
+            + if balance < 25000  and tradeStatus = 0, then not buy   （账户被锁定，无法购买，只能减仓）
         
-        + if exist stock record and valid in user,
+        + if exist stock record and valid in user, （用户之前已经购买过股票）
 
-            + if balance >= 25000 and TradeStatus = 1, then
+            + if balance >= 25000 and TradeStatus = 1, then 
 
-                - if balance >= totalPrice, then change old record (volume += new_volume, totalPrice, price updated, datetime) (user balance -= totalPrice && user asset += totalPrice)
+                - if balance >= totalPrice, then change old record (volume, totalCost, price, totalVolume, category, datetime) (user balance -= totalPrice && user asset += totalPrice)   
 
                     - if new user balance < 25000, then set tradeCount = 4
                 
@@ -91,7 +91,7 @@ a web-based application that involves stock analytics and trading simulation
 
             + if balance < 25000 and tradeStatus = 1, then 
 
-                - if (balance >= totalPrice && tradeCount > 0), then changed old record (volume += new_volumn, totalPrice, price, datetime updated) (balance -= totalPrice && asset += totalPrice && tradeCount - 1)
+                - if (balance >= totalPrice && tradeCount > 0), then changed old record (volume, totalCost (和之前累加), price, totalVolume (和之前累加), category, datetime)(balance -= totalPrice && asset += totalPrice && tradeCount - 1)
 
                     - if tradeCount == 0, then set tradeStatus = 0
                 
@@ -102,17 +102,25 @@ a web-based application that involves stock analytics and trading simulation
 
     - Sell Function
 
-        + if exist stock order and valid in user, then 
+        + if exist stock order and valid in user, then  (卖股票必须之前用户持有)
 
-            - if order volume > input volume, then changed order (volumn -= new_volumn, totalPrice, price, datetime) (balance += totalPrice, asset -= total Price)
+            - if order volume > input volume, then changed order (volume, totalRevenue (累加), price, category, totalVolume(总股数-卖出股数), datetime) (balance += totalRevenue, asset -= totalRevuew) 
+            
+                (用户持有 > 预卖出数量）
 
                 - if new balance >= 25000, then set tradeStatus = 1, tradeCount = 4
 
-            - if order volume == input volume, then set valid to be 1 (表示订单已无效)，and (volumn -= new_volumn, totalPrice, price, datetime) (balance += totalPrice, asset -= total Price)
+            - if order volume == input volume, then set valid to be 1 (表示订单已无效，清仓)，and (volume, totalRevenue (累加), price, category, totalVolume(总股数-卖出股数), datetime)  (balance += totalRevenue, asset -= totalRevuew) 
+            
+                (用户持有 = 预卖出数量）
 
-            - if order volume < input volume, then not sell
+            - if order volume < input volume, then not sell 
+            
+                (用户持有 < 预卖出数量）
 
         + if not exist order, then not sell
+
+            (无法进行卖股票操作，无持有数量）
 
 - show the order to member and admin
 

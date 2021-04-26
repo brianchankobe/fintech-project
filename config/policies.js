@@ -19,4 +19,7 @@ module.exports.policies = {
 
   // '*': true,
 
+  UserController: {
+    populate: 'isMember'
+  }
 };
