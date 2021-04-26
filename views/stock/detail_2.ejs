@@ -1013,7 +1013,7 @@
         var user = await response.json();
 
         alert(user);
-        location.assign('/user/clients');
+        location.assign('/stock/detail/' + data_form.get("symbolTitle"));
 
       } else if (response.status == 404) {
 
@@ -1067,6 +1067,7 @@
     var real_price = parseFloat(document.getElementById("price_stock_graph").innerHTML);  //real-time price
     var input_price_form = document.getElementById("input_price_2");
     input_price_form.value = real_price;
+    input_price_form.oninput = calculateTotal_2(input_price_form.value, document.getElementById('input_volumn_1').value);
   }
 
   //获取用户所有持有的数量
@@ -1085,6 +1086,7 @@
       if (user.clients.length != 0) {
         var input_volume = document.getElementById("input_volumn_1");
         input_volume.value = user.clients[0].totalVolume;
+        input_volume.oninput = calculateTotal_2(input_volume.value, document.getElementById('input_price_2').value);
       } else {
         alert("You have no holds of this stock. ");
       }

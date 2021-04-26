@@ -24,23 +24,26 @@
 
 <div class="container">
     <div class="columns is-mobile is-multiline">
-        <div class="column" id="userInfo">The Wallet Balance: $<%= user.balances %></div>
-        <div class="column " id="userInfo">Total Assets: $<%= user.assets %></div>
+        <div class="column" id="userInfo">The Wallet Balance: $<%= user.balances %>
+        </div>
+        <div class="column " id="userInfo">Total Assets: $<%= user.assets %>
+        </div>
         <% if (user.tradeStatus==1) {%>
             <div class="column " id="userInfo">Trading Status: normal</div>
-        <% } else { %>
-            <div class="column " id="userInfo">Trading Status: locked</div>
-        <% } %>
-        <% if (user.balances>= 25000) {%>
-            <div class="column " id="userInfo">T+0 Trading limitation: unlimited</div>
-        <% } else { %>
-            <div class="column " id="userInfo">T+0 Trading limitation (For only buying): <%= user.tradeCount %>
-        </div>
-        <% } %>
+            <% } else { %>
+                <div class="column " id="userInfo">Trading Status: locked</div>
+                <% } %>
+                    <% if (user.balances>= 25000) {%>
+                        <div class="column " id="userInfo">T+0 Trading limitation: unlimited</div>
+                        <% } else { %>
+                            <div class="column " id="userInfo">T+0 Trading limitation (For only buying): <%=
+                                    user.tradeCount %>
+                            </div>
+                            <% } %>
     </div>
 </div>
 
-<div class="tile is-ancestor"  style="padding-top: 50px;">
+<div class="tile is-ancestor" style="padding-top: 50px;">
 
     <div class="tile is-vertical">
 
@@ -53,78 +56,64 @@
                         <div class="column is-three-fifths is-offset-one-fifth">
                             <div class="tile is-parent" style="padding-left: 50px;">
                                 <div class="tile is-vertical is-4">
-                                <% user.clients.forEach( function(symbol) { %>
-                                <% if (symbol.valid == 0)  { %>
-                                <nav class="level is-child is-mobile is-multiline">
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">ID</p>
-                                            <p class="subtitle"> <%= symbol.id  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Stock Symbol</p>
-                                            <p class="subtitle"> <%= symbol.symbolTitle  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Price: </p>
-                                            <p class="subtitle"> $<%= symbol.price  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Volume: </p>
-                                            <p class="subtitle"> <%= symbol.volume  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Total Revenue</p>
-                                            <p class="subtitle"> $<%= symbol.totalRevenue  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Total Cost</p>
-                                            <p class="subtitle"> $<%= symbol.totalCost  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Total Volume</p>
-                                            <p class="subtitle"> <%= symbol.totalVolume  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Profit</p>
-                                            <p class="subtitle"> $<%= symbol.totalRevenue - symbol.totalCost  %> </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Profit Rate</p>
-                                            <p class="subtitle"> <%= (symbol.totalRevenue - symbol.totalCost) / (symbol.totalCost) * 100 %>% </p>
-                                        </div>
-                                    </div>
-                                    <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                        <div>
-                                            <p class="heading">Date</p>
-                                            <p class="subtitle"> <%= symbol.datetime %> </p>
-                                        </div>
-                                    </div>
-                                </nav>
-                                <% } }); %>
+                                    <% user.clients.forEach( function(symbol) { %>
+                                        <% if (symbol.valid==0) { %>
+                                            <nav class="level is-child is-mobile is-multiline">
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">ID</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.id %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Stock Symbol</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.symbolTitle %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Total Revenue</p>
+                                                        <p class="subtitle"> $<%= symbol.totalRevenue %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Total Cost</p>
+                                                        <p class="subtitle"> $<%= symbol.totalCost %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Holding Volumns: </p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.totalVolume %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Date</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.datetime %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </nav>
+                                        <% } }); %>
                                 </div>
                             </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
-            
+
             <div class="columns">
                 <div class="column is-four-fifths is-offset-1">
                     <!-- Sold Stocks - (已清仓股) -->
@@ -132,71 +121,59 @@
                     <div class="columns">
                         <div class="column is-three-fifths is-offset-one-fifth">
                             <div class="tile is-parent" style="padding-left: 50px;">
-                        <% user.clients.forEach( function(symbol) { %>
-                        <% if (symbol.valid == 1)  { %>
-                            <nav class="level is-child is-mobile is-multiline">
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">ID</p>
-                                        <p class="subtitle"> <%= symbol.id  %> </p>
-                                    </div>
+                                <div class="tile is-vertical">
+                                    <% user.clients.forEach( function(symbol) { %>
+                                        <% if (symbol.valid==1) { %>
+                                            <nav class="level is-child is-mobile is-multiline">
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">ID</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.id %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Stock Symbol</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.symbolTitle %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Total Revenue</p>
+                                                        <p class="subtitle"> $<%= symbol.totalRevenue %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Total Cost</p>
+                                                        <p class="subtitle"> $<%= symbol.totalCost %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Total Volume</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.totalVolume %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-item has-text-centered" style="padding-right: 50px;">
+                                                    <div>
+                                                        <p class="heading">Date</p>
+                                                        <p class="subtitle">
+                                                            <%= symbol.datetime %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </nav>
+                                            <% } }); %>
                                 </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Stock Symbol</p>
-                                        <p class="subtitle"> <%= symbol.symbolTitle  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Price: </p>
-                                        <p class="subtitle"> $<%= symbol.price  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Volume: </p>
-                                        <p class="subtitle"> <%= symbol.volume  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Total Revenue</p>
-                                        <p class="subtitle"> $<%= symbol.totalRevenue  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Total Cost</p>
-                                        <p class="subtitle"> $<%= symbol.totalCost  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Total Volume</p>
-                                        <p class="subtitle"> <%= symbol.totalVolume  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Profit</p>
-                                        <p class="subtitle"> $<%= symbol.totalRevenue - symbol.totalCost  %> </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Profit Rate</p>
-                                        <p class="subtitle"> <%= (symbol.totalRevenue - symbol.totalCost) / (symbol.totalCost) * 100 %>% </p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered" style="padding-right: 50px;">
-                                    <div>
-                                        <p class="heading">Date</p>
-                                        <p class="subtitle"> <%= symbol.datetime %> </p>
-                                    </div>
-                                </div>
-                            </nav>
-                            <% } }); %>
                             </div>
                         </div>
                     </div>
@@ -217,3 +194,4 @@
     </div>
 
 </div>
+

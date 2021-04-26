@@ -305,7 +305,7 @@ module.exports = {
             }
 
         } else { // normal call
-            res.redirect('/user/clients');
+            res.redirect('/stock/detail/' + req.body.symbolTitle);
         }
     },
 
