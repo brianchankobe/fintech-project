@@ -76,7 +76,7 @@ module.exports = {
 
             //check if user exists order that can still be processed
             var thatUser = await User.findOne(req.session.usrid).populate("clients");
-            
+
             if (!thatUser) return res.status(404).json("User not found");
 
             return res.json(thatUser);
@@ -90,5 +90,17 @@ module.exports = {
         }
 
     },
+
+    //action: populateOne
+    populateOne: async function (req, res) {
+
+        //check if user exists order that can still be processed
+        var thatUser = await User.findOne(req.session.usrid).populate("clients", { symbolTitle: req.body.symbolTitle, valid: 0 });
+
+        if (!thatUser) return res.status(404).json("User not found");
+
+        return res.json(thatUser);
+
+    }
 };
 
