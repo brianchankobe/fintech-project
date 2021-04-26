@@ -23,7 +23,7 @@ module.exports.routes = {
   //'/': { view: 'pages/homepage' },
 
   //market news
-  'GET /': "StockController.marketnews",
+  "GET /": "StockController.marketnews",
   "GET /marketnews": "StockController.marketnews",
 
   //create stock model for getting info of stock
@@ -32,6 +32,8 @@ module.exports.routes = {
 
   //stock detail page
   "GET /stock/detail/:sym": "StockController.detail",
+  //stock detail page(new)
+  "GET /stock/detail_2/:sym": "StockController.detail_2",
 
   //stock candlestick chart
   "GET /stock/candlestick": "StockController.candlestick",
@@ -49,9 +51,8 @@ module.exports.routes = {
 
   //get associations
   //'GET /stock/:id/consultants': 'StockController.populate',
-  'GET /user/clients': 'UserController.searchValidOrder',
-  'POST /user/clients': 'UserController.searchValidOrder',
-
+  "GET /user/clients": "UserController.searchValidOrder",
+  "POST /user/clients": "UserController.searchValidOrder",
 
   /***************************************************************************
    *                                                                          *
