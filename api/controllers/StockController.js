@@ -10,6 +10,7 @@ const api_key = finnhub.ApiClient.instance.authentications["api_key"];
 api_key.apiKey = "c0n56d748v6v1q0c1ph0"; // Replace this
 
 module.exports = {
+
     // action - create
     search: async function (req, res) {
         if (req.method == "GET") return res.view('stock/search', { my_api: api_key.apiKey });
@@ -23,9 +24,17 @@ module.exports = {
         }
     },
 
+    // action - detail_2
+    //detail_2: async function (req, res) {
+    //    // const fetch = require("node-fetch");
+    //    if (req.method == "GET") {
+            // return res.view("stock/detail", { stockSymbol: req.params.sym });
+    //        return res.view("stock/detail_2", { stockSymbol: req.params.sym });
+    //    }
+    //},
+
     // action - create stock order
     create: async function (req, res) {
-
         if (req.wantsJSON) { //ajax call
 
             //check if user exists order that can still be processed
@@ -38,7 +47,7 @@ module.exports = {
                 /* Buy Function */
                 //check if user have valid order
                 if (thatUser.clients.length == 0) { //user's valid order about this stock not exist
-                    console.log("no client");
+                    //console.log("no client");
                     if (thatUser.balances >= 25000 && thatUser.tradeStatus == 1) {  //用户余额大于25000， 交易状态为1 （表示账户可进行交易）  无限次T+0交易
 
                         if (thatUser.balances >= parseFloat(req.body.totalCost)) { //余额是否足够支付

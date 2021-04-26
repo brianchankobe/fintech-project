@@ -1,8 +1,8 @@
 <!--search.ejs-->
 <style>
-    .progress::-webkit-progress-value {
-        transition: width 0.5s ease;
-    }
+  .progress::-webkit-progress-value {
+    transition: width 0.5s ease;
+  }
 </style>
 
 <div class="container">
@@ -19,180 +19,212 @@
 </div>
 
 <div class="container">
-    <!-- display stock  -->
-    <progress class="progress is-medium is-primary" max="100" id="loading"></progress>
-    <div class="columns">
-        <div class="column">
-            <div class="columns card is-multiline" id="pdata"></div>
-        </div>
-
-        <!-- input exchange code -->
-        <div class="column is-one-third">
-            <div class="field">
-                <label class="label">Exchange Code</label>
-                <div class="control is-expanded">
-                    <input class="input" type="text" name="exchange" placeholder="US" value="US" id="input">
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button class="button is-link"
-                        onclick="stockData(document.getElementById('input').value)">Submit</button>
-                </div>
-            </div>
-
-            <!-- find symbol automatacally change the symbol we find into yellow colow -->
-            <div class="field">
-                <label class="label">Find Your Stock Symbol: </label>
-            </div>
-            <div class="field has-addons">
-                <div class="control">
-                    <datalist id="symbols"></datalist>
-                    <input class="input" type="text" placeholder="Stock symbol" oninput="findSymbol(this.value)"
-                        list="symbols" id="input-symbol">
-                </div>
-                <div class="control">
-                    <a class="button is-info" href="#"
-                        onclick="this.href = '#' +  document.getElementById('input-symbol').value; searchSymbol(document.getElementById('input-symbol').value);">
-                        SearchView
-                    </a>
-                </div>
-            </div>
-        </div>
+  <!-- display stock  -->
+  <progress
+    class="progress is-medium is-primary"
+    max="100"
+    id="loading"
+  ></progress>
+  <div class="columns">
+    <div class="column">
+      <div class="columns card is-multiline" id="pdata"></div>
     </div>
 
+    <!-- input exchange code -->
+    <div class="column is-one-third">
+      <div class="field">
+        <label class="label">Exchange Code</label>
+        <div class="control is-expanded">
+          <input
+            class="input"
+            type="text"
+            name="exchange"
+            placeholder="US"
+            value="US"
+            id="input"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button
+            class="button is-link"
+            onclick="stockData(document.getElementById('input').value)"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
 
-
+      <!-- find symbol automatacally change the symbol we find into yellow colow -->
+      <div class="field">
+        <label class="label">Find Your Stock Symbol: </label>
+      </div>
+      <div class="field has-addons">
+        <div class="control">
+          <datalist id="symbols"></datalist>
+          <input
+            class="input"
+            type="text"
+            placeholder="Stock symbol"
+            oninput="findSymbol(this.value)"
+            list="symbols"
+            id="input-symbol"
+          />
+        </div>
+        <div class="control">
+          <a
+            class="button is-info"
+            href="#"
+            onclick="this.href = '#' +  document.getElementById('input-symbol').value; searchSymbol(document.getElementById('input-symbol').value);"
+          >
+            SearchView
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-
 <script>
+  let allSymbol;
 
-    let allSymbol;
+  async function stockData(code) {
+    var mic_list = [];
+    var load_obj = document.getElementById("loading");
 
-    async function stockData(code) {
+    //get all related stock symbols
+    var symbol_by_exchange = await fetch(
+      "https://finnhub.io/api/v1/stock/symbol?exchange=" +
+        code +
+        "&token=<%= my_api %>"
+    );
 
-        var mic_list = [];
-        var load_obj = document.getElementById("loading");
+    if (symbol_by_exchange.ok) {
+      allSymbol = await symbol_by_exchange.json();
 
-        //get all related stock symbols
-        var symbol_by_exchange = await fetch('https://finnhub.io/api/v1/stock/symbol?exchange=' + code + '&token=<%= my_api %>');
+      // invalid exchange code
+      if (allSymbol.length == 0) alert("Attention: No Content for this code. ");
 
-        if (symbol_by_exchange.ok) {
+      //identify the unique mic e.g. US stock exchange has 6 mics
+      allSymbol.forEach(function (symbolName) {
+        var existed = false;
+        for (var i = 0; i < mic_list.length; i++) {
+          if (symbolName.mic == mic_list[i]) {
+            existed = true;
+            break;
+          } else {
+            existed = false;
+          }
+        }
+        if (!existed) {
+          //found company's mic code not in list, add it.
+          mic_list.push(symbolName.mic);
+        }
+      });
 
-            allSymbol = await symbol_by_exchange.json();
+      var dynamicCode = "";
+      var count = 0;
+      load_obj.value = "0".toString();
+      var len_mic = mic_list.length * 10;
+      load_obj.max = len_mic.toString();
 
-            // invalid exchange code
-            if (allSymbol.length == 0) alert("Attention: No Content for this code. ");
+      //display stock according to each mic code
+      mic_list.forEach(async function (mics, index) {
+        count += 10;
 
-            //identify the unique mic e.g. US stock exchange has 6 mics
-            allSymbol.forEach(function (symbolName) {
-                var existed = false;
-                for (var i = 0; i < mic_list.length; i++) {
-                    if (symbolName.mic == mic_list[i]) {
-                        existed = true;
-                        break;
-                    } else {
-                        existed = false;
-                    }
-                }
-                if (!existed) {  //found company's mic code not in list, add it.
-                    mic_list.push(symbolName.mic);
-                }
-            });
+        dynamicCode +=
+          '<div class="column card is-one-third"><header class="card-header"><p class="card-header-title">MIC code: ' +
+          mics +
+          '</p></header><div id="stockByMic"><div class="card-content"><div class="content">';
 
-            var dynamicCode = '';
-            var count = 0;
-            load_obj.value = '0'.toString();
-            var len_mic = mic_list.length * 10
-            load_obj.max = len_mic.toString();
+        allSymbol.forEach(async function (symbolName) {
+          if (symbolName.mic == mics) {
+            dynamicCode +=
+              '<div class="field" id="' +
+              symbolName.symbol +
+              '" style="background-color: #FFFFFF"><a name="' +
+              symbolName.symbol +
+              '" href="/stock/detail_2/' +
+              symbolName.symbol +
+              '"><b>' +
+              symbolName.symbol +
+              "</b></a>" +
+              "</div>" +
+              "<br>";
+          }
+        });
 
+        dynamicCode += "</div></div></div></div>";
 
-            //display stock according to each mic code
-            mic_list.forEach(async function (mics, index) {
-                count += 10;
+        //load_obj.value = count.toString();
 
-                dynamicCode += '<div class="column card is-one-third"><header class="card-header"><p class="card-header-title">MIC code: ' + mics + '</p></header><div id="stockByMic"><div class="card-content"><div class="content">';
+        setTimeout(function () {
+          load_obj.value = count.toString();
+        }, 200 * (count / 10));
+      });
 
-                allSymbol.forEach(async function (symbolName) {
+      document.querySelector("#pdata").innerHTML = dynamicCode;
+    } else {
+      alert(response.statusText);
+    }
+  }
 
-                    if (symbolName.mic == mics) {
+  async function findSymbol(text) {
+    if (text && text.length > 3) {
+      const response = await fetch(
+        "https://finnhub.io/api/v1/search?q=" +
+          encodeURI(text) +
+          "&token=<%= my_api %>"
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        let datalist = document.getElementById("symbols");
+        datalist.innerHTML = "";
+        data.result.forEach(function (stock) {
+          datalist.innerHTML += `<option value="${stock.symbol}">${stock.displaySymbol}  ${stock.description}</option>`;
+        });
+      }
+    }
+  }
 
-                        dynamicCode += '<div class="field" id="' + symbolName.symbol + '" style="background-color: #FFFFFF"><a name="' + symbolName.symbol + '" href="/stock/detail/' + symbolName.symbol + '"><b>' + symbolName.symbol + '</b></a>' + '</div>' + '<br>';
+  async function searchSymbol(text) {
+    if (!allSymbol) {
+      alert("Please first input which exchange you find. ");
+      return;
+    }
 
-                    }
-                });
-
-                dynamicCode += '</div></div></div></div>';
-
-               
-                //load_obj.value = count.toString();
-                
-                setTimeout(function () {
-                    load_obj.value = count.toString();
-                }, 200 * (count / 10));
-
-            });
-
-
-            document.querySelector('#pdata').innerHTML = dynamicCode;
-
+    //get symbol input from query
+    if (document.querySelector(`option[value="${text}"]`)) {
+      //only show the symbol user searches
+      var existed = false;
+      console.log(text);
+      allSymbol.forEach(function (symbolName) {
+        if (symbolName.symbol != text) {
+          document.getElementById(symbolName.symbol).style.backgroundColor =
+            "#FFFFFF";
         } else {
-            alert(response.statusText);
+          existed = true;
+          document.getElementById(symbolName.symbol).style.backgroundColor =
+            "#FFFF00";
         }
+      });
+
+      if (existed) {
+        alert("found the records. " + text);
+      } else {
+        alert(text + " cannot be found. ");
+      }
+    } else {
+      alert("Searching Nothing, Stay All Symbols Displayed");
+      //all the symbol shows
+      allSymbol.forEach(function (symbolName) {
+        document.getElementById(symbolName.symbol).style.backgroundColor =
+          "#FFFFFF";
+      });
     }
+  }
 
-    async function findSymbol(text) {
-        if (text && text.length > 3) {
-
-            const response = await fetch("https://finnhub.io/api/v1/search?q=" + encodeURI(text) + "&token=<%= my_api %>");
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-                let datalist = document.getElementById('symbols');
-                datalist.innerHTML = '';
-                data.result.forEach(function (stock) {
-                    datalist.innerHTML += `<option value="${stock.symbol}">${stock.displaySymbol}  ${stock.description}</option>`
-                });
-            }
-        }
-    }
-
-    async function searchSymbol(text) {
-
-        if (!allSymbol) {
-            alert("Please first input which exchange you find. ");
-            return;
-        }
-
-        //get symbol input from query
-        if (document.querySelector(`option[value="${text}"]`)) {
-            //only show the symbol user searches
-            var existed = false;
-            console.log(text);
-            allSymbol.forEach(function (symbolName) {
-                if (symbolName.symbol != text) {
-                    document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFFFF';
-                } else {
-                    existed = true;
-                    document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFF00';
-                }
-            });
-
-            if (existed) {
-                alert("found the records. " + text);
-            } else {
-                alert(text + " cannot be found. ");
-            }
-
-        } else {
-            alert("Searching Nothing, Stay All Symbols Displayed");
-            //all the symbol shows
-            allSymbol.forEach(function (symbolName) {
-                document.getElementById(symbolName.symbol).style.backgroundColor = '#FFFFFF';
-            });
-        }
-    }
-
-    stockData("US");
+  stockData("US");
 </script>

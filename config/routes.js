@@ -23,7 +23,7 @@ module.exports.routes = {
   //'/': { view: 'pages/homepage' },
 
   //market news
-  'GET /': "StockController.marketnews",
+  "GET /": "StockController.marketnews",
   "GET /marketnews": "StockController.marketnews",
 
   //create stock model for getting info of stock
