@@ -80,25 +80,15 @@
           <tbody>
             <!-- 第一行测试格式 -->
             <!-- 正式使用可以删掉第一行 -->
-            <tr>
-              <td>1</td>
-              <td>AAPL(testing)</td>
-              <td>$134(testing)</td>
-              <td>100(testing)</td>
-              <td>$0.01(testing)</td>
-              <td>$13,452(testing)</td>
-              <td>200(testing)</td>
-              <td>2021-4-26 11:11:11(testing)</td>
-            </tr>
             <!-- 正式插入交易的记录 -->
             <% user.clients.forEach( function(symbol) { %>
             <%if(symbol.valid==0){ %>
             <tr>
               <td><%=symbol.id %></td>
               <td><%=symbol.symbolTitle %></td>
+              <td>$ <%= symbol.price %></td>
+              <td>$ <%= symbol.volume %></td>
               <td>$ <%= symbol.totalRevenue %></td>
-              <td>$ <%= symbol.totalCost %></td>
-              <td><%= symbol.totalVolume %></td>
               <td>$ <%= symbol.totalCost %></td>
               <td><%= symbol.totalVolume %></td>
               <td><%= symbol.datetime %></td>
@@ -132,25 +122,15 @@
           <tbody>
             <!-- 第一行测试格式 -->
             <!-- 正式使用可以删掉第一行 -->
-            <tr>
-              <td>1</td>
-              <td>AAPL(testing)</td>
-              <td>$134(testing)</td>
-              <td>100(testing)</td>
-              <td>$0.01(testing)</td>
-              <td>$13,452(testing)</td>
-              <td>200(testing)</td>
-              <td>2021-4-26 11:11:11(testing)</td>
-            </tr>
             <!-- 正式插入交易的记录 -->
             <% user.clients.forEach( function(symbol) { %>
             <%if(symbol.valid==1){ %>
             <tr>
               <td><%=symbol.id %></td>
               <td><%=symbol.symbolTitle %></td>
-              <td>$ <%= symbol.totalRevenue %></td>
-              <td>$ <%= symbol.totalCost %></td>
-              <td><%= symbol.totalVolume %></td>
+              <td>$ <%= symbol.price %></td>
+              <td>$ <%= symbol.volume %></td>
+              <td>$<%= symbol.totalRevenue %></td>
               <td>$ <%= symbol.totalCost %></td>
               <td><%= symbol.totalVolume %></td>
               <td><%= symbol.datetime %></td>

@@ -211,7 +211,7 @@
           <div class="field">
             <p class="control">
               <label class="label"> Volume: </label>
-              <input class="input" type="number" name="volume"
+              <input class="input" type="number" name="volume" min="1"
                 oninput="calculateTotal(this.value, document.getElementById('input_price').value);" required>
             </p>
           </div>
@@ -273,7 +273,7 @@
               <label class="label"> Volume: </label>
             <div class="columns">
               <div class="column is-third-quarters">
-                <input class="input" type="number" name="volume" id="input_volumn_1"
+                <input class="input" type="number" name="volume" id="input_volumn_1" min="1"
                   oninput="calculateTotal_2(this.value, document.getElementById('input_price_2').value);" required>
               </div>
               <div class="column is-one-quarter">
