@@ -1,0 +1,164 @@
+<div class="container">
+  <!-- 第一行 大标题 -->
+  <div class="columns">
+    <div class="column">
+      <section class="hero">
+        <div class="hero-body" style="padding: 24px 24px">
+          <p class="title" style="margin: 0">
+            Stock Ditalization & Simulation Trade Platform
+          </p>
+          <br />
+          <p class="subtitle">My Transaction Records</p>
+        </div>
+      </section>
+    </div>
+  </div>
+  <!-- 第二行 账户余额情况 -->
+  <div class="columns">
+    <div class="column">
+      <nav class="level">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">The Wallet Balance:</p>
+            <p class="title">$<%= user.balances %></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Total Assets:</p>
+            <p class="title">$<%= user.assets %></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <% if (user.tradeStatus==1) {%>
+            <p class="heading" id="userInfo">Trading Status:Normal</p>
+            <p class="title">Normal</p>
+            <% } else { %>
+            <p class="heading" id="userInfo">Trading Status:Locked</p>
+            <p class="title">Locked</p>
+            <% } %>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <% if (user.balances>= 25000) {%>
+            <p class="heading" id="userInfo">T+0 Trading Limitation:</p>
+            <p class="title">Unlimited</p>
+            <% } else { %>
+            <p class="heading" id="userInfo">
+              T+0 Trading Limitation(For only buying):
+            </p>
+            <p class="title"><%= user.tradeCount %></p>
+
+            <% } %>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <!-- 第三行 持有的股票-->
+  <div class="columns">
+    <div class="column">
+      <nav class="panel">
+        <p class="panel-heading">Holding Stocks</p>
+      </nav>
+      <div id="holding_stock" style="display: flex">
+        <table class="table" style="flex: 1">
+          <thead>
+            <tr>
+              <th><abbr title="Position">ID</abbr></th>
+              <th><abbr title="Played">Stock Symbol</abbr></th>
+              <th><abbr title="Won">Price</abbr></th>
+              <th><abbr title="Drawn">Volumn</abbr></th>
+              <th><abbr title="Lost">Total Revenue</abbr></th>
+              <th><abbr title="Goals for">Total Cost</abbr></th>
+              <th><abbr title="Goals against">Total Volumn</abbr></th>
+              <th><abbr title="Goal difference">Time</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 第一行测试格式 -->
+            <!-- 正式使用可以删掉第一行 -->
+            <tr>
+              <td>1</td>
+              <td>AAPL(testing)</td>
+              <td>$134(testing)</td>
+              <td>100(testing)</td>
+              <td>$0.01(testing)</td>
+              <td>$13,452(testing)</td>
+              <td>200(testing)</td>
+              <td>2021-4-26 11:11:11(testing)</td>
+            </tr>
+            <!-- 正式插入交易的记录 -->
+            <% user.clients.forEach( function(symbol) { %>
+            <%if(symbol.valid==0){ %>
+            <tr>
+              <td><%=symbol.id %></td>
+              <td><%=symbol.symbolTitle %></td>
+              <td>$ <%= symbol.totalRevenue %></td>
+              <td>$ <%= symbol.totalCost %></td>
+              <td><%= symbol.totalVolume %></td>
+              <td>$ <%= symbol.totalCost %></td>
+              <td><%= symbol.totalVolume %></td>
+              <td><%= symbol.datetime %></td>
+            </tr>
+            <% } }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- 第四行 持有的股票-->
+  <div class="columns">
+    <div class="column">
+      <nav class="panel">
+        <p class="panel-heading">Sold Out Stocks</p>
+      </nav>
+      <div id="sold_stock" style="display: flex">
+        <table class="table" style="flex: 1">
+          <thead>
+            <tr>
+              <th><abbr title="Position">ID</abbr></th>
+              <th><abbr title="Played">Stock Symbol</abbr></th>
+              <th><abbr title="Won">Price</abbr></th>
+              <th><abbr title="Drawn">Volumn</abbr></th>
+              <th><abbr title="Lost">Total Revenue</abbr></th>
+              <th><abbr title="Goals for">Total Cost</abbr></th>
+              <th><abbr title="Goals against">Total Volumn</abbr></th>
+              <th><abbr title="Goal difference">Time</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 第一行测试格式 -->
+            <!-- 正式使用可以删掉第一行 -->
+            <tr>
+              <td>1</td>
+              <td>AAPL(testing)</td>
+              <td>$134(testing)</td>
+              <td>100(testing)</td>
+              <td>$0.01(testing)</td>
+              <td>$13,452(testing)</td>
+              <td>200(testing)</td>
+              <td>2021-4-26 11:11:11(testing)</td>
+            </tr>
+            <!-- 正式插入交易的记录 -->
+            <% user.clients.forEach( function(symbol) { %>
+            <%if(symbol.valid==1){ %>
+            <tr>
+              <td><%=symbol.id %></td>
+              <td><%=symbol.symbolTitle %></td>
+              <td>$ <%= symbol.totalRevenue %></td>
+              <td>$ <%= symbol.totalCost %></td>
+              <td><%= symbol.totalVolume %></td>
+              <td>$ <%= symbol.totalCost %></td>
+              <td><%= symbol.totalVolume %></td>
+              <td><%= symbol.datetime %></td>
+            </tr>
+            <% } }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

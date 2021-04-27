@@ -49,10 +49,11 @@ module.exports.routes = {
 
   /*show the user information and selected and traded stock*/
   //'GET /stock/:id/consultants': 'StockController.populate',
-  'GET /user/clients': 'UserController.populate',
-  'POST /user/clients': 'UserController.populate',
-  'POST /user/holds': 'UserController.populateOne',
+  "GET /user/clients": "UserController.populate",
+  "POST /user/clients": "UserController.populate",
+  "POST /user/holds": "UserController.populateOne",
 
+  "GET /user/clients_2": "UserController.populate_2",
 
   /***************************************************************************
    *                                                                          *
