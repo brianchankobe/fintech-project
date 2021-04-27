@@ -78,54 +78,52 @@ a web-based application that involves stock analytics and trading simulation
 
 - setting up business logic of trading (主要针对美股): 
 
-    - Buy Function
 
-        1. User still doesn't have stock record , they need to create one stock record.
+    1. User still doesn't have stock record , they need to create one stock record.
 
-        2. User aleady had one, only need to change the value in the record that is alrady created
+    2. User aleady had one, only need to change the value in the record that is alrady created
 
-        3. Input Form: Price (At most two decimal digit e.g. 3.14), Volume (should be integer)
+    3. Input Form: Price (At most two decimal digit e.g. 3.14), Volume (should be integer)
 
-        4. (For Buying) price >= market price
+    4. (For Buying) price >= market price
 
-        5. (For Selling) price <= market price
+    5. (For Selling) price <= market price
 
-        6. (Buying) Total Value (price * volume) <= user balance. Otherwise, it cannot buy.
+    6. (Buying) Total Value (price * volume) <= user balance. Otherwise, it cannot buy.
 
-        7. (Selling) User must hold stock record which is valid (valid = 0) (代表用户持有股票可卖), otherwise, it cannot be sold.
+    7. (Selling) User must hold stock record which is valid (valid = 0) (代表用户持有股票可卖), otherwise, it cannot be sold.
 
-        8. (According to US stock rules) there are some rules setting here for buying
+    8. (According to US stock rules) there are some rules setting here for buying
 
-            - user balance >= 25000 and tradeStatus = 1， it can carried out T+0 trading (T+0： 当日可以进行无限次交易)
-                - if user balance < 25000 (after buying stock), set tradeCount = 4 (In later trading, it only can carried out buying action four times until user can have >= $25000 balance)
+        - user balance >= 25000 and tradeStatus = 1， it can carried out T+0 trading (T+0： 当日可以进行无限次交易)
+            - if user balance < 25000 (after buying stock), set tradeCount = 4 (In later trading, it only can carried out buying action four times until user can have >= $25000 balance)
             
-            - user balance < 25000 and tradeCount > 0, it can carry out T+0 trading ( tradeCount - 1.)
-                - if tradeCount == 0 (After minus one), set tradeStatus = 0 (Lock the account for buying, only can sell.)
+        - user balance < 25000 and tradeCount > 0, it can carry out T+0 trading ( tradeCount - 1.)
+            - if tradeCount == 0 (After minus one), set tradeStatus = 0 (Lock the account for buying, only can sell.)
         
-            - user balance < 25000 and tradeStatus == 0, user cannot buy but it can only sell. (Pay attention: User should have >= 25000, the account can be actviated again)
+        - user balance < 25000 and tradeStatus == 0, user cannot buy but it can only sell. (Pay attention: User should have >= 25000, the account can be actviated again)
 
-        9. (For buying) Success buying will have following changed:
-            - balance - totalCost (price * volume) 
-            - TotalCost (everytime it will accumulate)
-            - totalVolume (everytime it will accumulate)
-            - TradeCount - 1 (only when user balance < 25000)
-            - tradeCount == 0, set tradeStatus to be 0 (冻结)
+    9. (For buying) Success buying will have following changed:
+        - balance - totalCost (price * volume) 
+        - TotalCost (everytime it will accumulate)
+        - totalVolume (everytime it will accumulate)
+        - TradeCount - 1 (only when user balance < 25000)
+        - tradeCount == 0, set tradeStatus to be 0 (冻结)
         
-        10. （For Selling） Success selling will have following changing:
-            - balance + totalRevenue (price * volume) (卖出价 * 卖出书)
-            - totalRevenue (everytime it will accumulate)
-            - Total volume (everytime it will decrease) (减持股份)
-            - valid = 1 (all stock were sold out)
-            - if balance >= 25000 (after selling), set tradeStatus = 1, tradeCount = 4 (恢复T+0无限次交易)
-            - Selling 需要满足几个条件：
-                - 必须持有股票
-                - total holding volume > inputed volume, (余额增加，持股减少，总收入增加)
-                - total holding volume = inputed volume, (余额增加，持股为0，总收入增加，valid = 1 - 订单无效)
-                - total holding volume < inputed volume, (无法售出)
+    10. （For Selling） Success selling will have following changing:
+        - balance + totalRevenue (price * volume) (卖出价 * 卖出书)
+        - totalRevenue (everytime it will accumulate)
+        - Total volume (everytime it will decrease) (减持股份)
+        - valid = 1 (all stock were sold out)
+        - if balance >= 25000 (after selling), set tradeStatus = 1, tradeCount = 4 (恢复T+0无限次交易)
+        - Selling 需要满足几个条件：
+            - 必须持有股票
+            - total holding volume > inputed volume, (余额增加，持股减少，总收入增加)
+            - total holding volume = inputed volume, (余额增加，持股为0，总收入增加，valid = 1 - 订单无效)
+            - total holding volume < inputed volume, (无法售出)
 
-        11. data form: volume cannot be zero (min == 1)
+    11. data form: volume cannot be zero (min == 1)
 
-    - Sell Function
 
 ## My Trading Page
 
