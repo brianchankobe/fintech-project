@@ -13,6 +13,10 @@
     max-height: 50vh;
     overflow: auto;
   }
+
+  #price_stock_graph {
+    color: red;
+  }
 </style>
 <div id="main_content">
   <div class="columns">
@@ -77,13 +81,19 @@
         <div class="column is-8">
           <nav class="panel">
             <p class="panel-heading">Real-Time Price Chart</p>
-            <div>
+            <div style="padding-top: 20px">
               <p class="subtitle" id="price_stock_graph"></p>
             </div>
             <div style="width: 800px; height: 485px">
               <canvas id="chart_1"></canvas>
             </div>
-            <div>
+            <div style="padding-bottom: 40px;">
+              <p> US Stock Opening Day: Monday to Friday. </p>
+              <p> US Opening Stock Market Time: 9.30 - 16:00. </p>
+              <p> (US Summer Period) Beijing/HK Time: 21:30 - 4:00</p>
+              <p> (US Winter Period) Beijing/HK Time: 22:30 - 5:00</p>
+            </div>
+            <div style="padding-bottom: 20px;">
               <p id="today_date"></p>
             </div>
           </nav>
@@ -1038,6 +1048,15 @@
 
   //打开买股窗口
   function activateBuy() {
+
+    var now_time = new Date(),
+      hour = '' + now_time.getHours(),
+      minute = '' + now_time.getMinutes();
+
+    if (hour != "21" && minute != "30") {
+      alert("US stock is not opening now. ");
+    }
+
     document.getElementById("modal-buy").className = "modal is-active";
   }
 
@@ -1047,6 +1066,15 @@
   }
   //打开卖股窗口
   function activateSell() {
+
+    var now_time = new Date(),
+      hour = '' + now_time.getHours(),
+      minute = '' + now_time.getMinutes();
+
+    if (hour != "21" && minute != "30") {
+      alert("US stock is not opening now. ");
+    }
+    
     document.getElementById("modal-sell").className = "modal is-active";
   }
 
