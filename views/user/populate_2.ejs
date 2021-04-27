@@ -68,7 +68,9 @@
               <th><abbr title="Lost">Total Revenue</abbr></th>
               <th><abbr title="Goals for">Total Cost</abbr></th>
               <th><abbr title="Goals against">Total Volumn</abbr></th>
+              <th><abbr title="Profit_rate">Profit</abbr></th>
               <th><abbr title="Goal difference">Time</abbr></th>
+              <th><abbr title="refresh">Get New Profit</abbr></th>
             </tr>
           </thead>
           <tbody>
@@ -79,13 +81,15 @@
             <%if(symbol.valid==0){ %>
             <tr>
               <td><%=symbol.id %></td>
-              <td><%=symbol.symbolTitle %></td>
+              <td><a href="/stock/detail/<%= symbol.symbolTitle %>"><%=symbol.symbolTitle %></a></td>
               <td>$ <%= symbol.price %></td>
-              <td>$ <%= symbol.volume %></td>
+              <td><%= symbol.volume %></td>
               <td>$ <%= symbol.totalRevenue %></td>
               <td>$ <%= symbol.totalCost %></td>
               <td><%= symbol.totalVolume %></td>
+              <td id='<%= symbol.symbolTitle %>'></td>
               <td><%= symbol.datetime %></td>
+              <td><a class="button is-info" onclick="getRealTimePrice('<%= symbol.symbolTitle %>', '<%= symbol.totalVolume %>', '<%= symbol.totalCost %>');"> Refresh </a></td>
             </tr>
             <% } }); %>
           </tbody>
@@ -93,7 +97,7 @@
       </div>
     </div>
   </div>
-  <!-- 第四行 持有的股票-->
+  <!-- 第四行 卖出的股票-->
   <div class="columns">
     <div class="column">
       <nav class="panel">
@@ -110,6 +114,7 @@
               <th><abbr title="Lost">Total Revenue</abbr></th>
               <th><abbr title="Goals for">Total Cost</abbr></th>
               <th><abbr title="Goals against">Total Volumn</abbr></th>
+              <th><abbr title="Profit_rate">Profit</abbr></th>
               <th><abbr title="Goal difference">Time</abbr></th>
             </tr>
           </thead>
@@ -121,12 +126,13 @@
             <%if(symbol.valid==1){ %>
             <tr>
               <td><%=symbol.id %></td>
-              <td><%=symbol.symbolTitle %></td>
+              <td><a href="/stock/detail/<%= symbol.symbolTitle %>"><%=symbol.symbolTitle %></a></td>
               <td>$ <%= symbol.price %></td>
               <td>$ <%= symbol.volume %></td>
               <td>$<%= symbol.totalRevenue %></td>
               <td>$ <%= symbol.totalCost %></td>
               <td><%= symbol.totalVolume %></td>
+              <td><%= Math.round((symbol.totalRevenue - symbol.totalCost)*100) / 100 %></td>
               <td><%= symbol.datetime %></td>
             </tr>
             <% } }); %>
@@ -136,3 +142,31 @@
     </div>
   </div>
 </div>
+
+
+<script>
+    
+    /* 获取实时价格计算收益 收益 = （当前价格 * 持有量）- 总成本 = 当前股票价值 - 总成本 */
+  async function getRealTimePrice(symbol, v, cost) {
+
+    var response = await fetch(
+      "https://finnhub.io/api/v1/quote?symbol=" +
+      symbol +
+      "&token=c0ro5sv48v6voi2d8ndg"
+    );
+
+    if (response.ok) {
+      let data = await response.json();
+      var current_price = data.c;
+      console.log("current_price: " + current_price);
+      var profit_rate = Math.round(((data.c * v) - cost) * 100) / 100;
+      var table_profit = document.getElementById(symbol);
+      table_profit.innerHTML = profit_rate;
+
+    } else {
+      alert(response.statusText);
+    }
+  }
+
+
+</script>
