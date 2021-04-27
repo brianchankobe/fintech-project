@@ -1049,11 +1049,29 @@
   //打开买股窗口
   function activateBuy() {
 
-    var now_time = new Date(),
-      hour = '' + now_time.getHours(),
-      minute = '' + now_time.getMinutes();
+    var now_time = new Date();
+    var year = now_time.getFullYear(); //年
+    var month = now_time.getMonth() + 1; //月
+    var day = now_time.getDate(); //日
+    let start_Date1 = year + "/" + month + "/" + day + " " + "21:30:00";
+    let end_Date1 = year + "/" + month + "/" + day + " " + "23:59:59";
+    let start_Date2 = year + "/" + month + "/" + day + " " + "00:00:00";
+    let end_Date2 = year + "/" + month + "/" + day + " " + "04:00:00";
 
-    if (hour != "21" && minute != "30") {
+    let nowDate = new Date(now_time);
+
+    start_Date1 = new Date(start_Date1);
+    end_Date1 = new Date(end_Date1);
+    start_Date2 = new Date(start_Date2);
+    end_Date2 = new Date(end_Date2);
+
+    let start_resut1 = nowDate.getTime() >= start_Date1.getTime();
+    let end_result1 = nowDate.getTime() <= end_Date1.getTime();
+
+    let start_resut2 = nowDate.getTime() >= start_Date2.getTime();
+    let end_result2 = nowDate.getTime() <= end_Date2.getTime();
+
+    if (!(start_resut1 && end_result1) || (start_resut2 && end_result2)) {
       alert("US stock is not opening now. ");
     }
 
@@ -1067,13 +1085,33 @@
   //打开卖股窗口
   function activateSell() {
 
-    var now_time = new Date(),
-      hour = '' + now_time.getHours(),
-      minute = '' + now_time.getMinutes();
+    var now_time = new Date();
+    var year = now_time.getFullYear(); //年
+    var month = now_time.getMonth() + 1; //月
+    var day = now_time.getDate(); //日
+    let start_Date1 = year + "/" + month + "/" + day + " " + "21:30:00";
+    let end_Date1 = year + "/" + month + "/" + day + " " + "23:59:59";
+    let start_Date2 = year + "/" + month + "/" + day + " " + "00:00:00";
+    let end_Date2 = year + "/" + month + "/" + day + " " + "04:00:00";
 
-    if (hour != "21" && minute != "30") {
+    let nowDate = new Date(now_time);
+
+    start_Date1 = new Date(start_Date1);
+    end_Date1 = new Date(end_Date1);
+    start_Date2 = new Date(start_Date2);
+    end_Date2 = new Date(end_Date2);
+
+    let start_resut1 = nowDate.getTime() >= start_Date1.getTime();
+    let end_result1 = nowDate.getTime() <= end_Date1.getTime();
+
+    let start_resut2 = nowDate.getTime() >= start_Date2.getTime();
+    let end_result2 = nowDate.getTime() <= end_Date2.getTime();
+    console.log(start_Date1);
+
+    if (!(start_resut1 && end_result1) || (start_resut2 && end_result2)) {
       alert("US stock is not opening now. ");
     }
+
     document.getElementById("modal-sell").className = "modal is-active";
   }
 

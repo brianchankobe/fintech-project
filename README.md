@@ -15,7 +15,7 @@ a web-based application that involves stock analytics and trading simulation
 
 + Stock Basic Information Display
 + stock Price Trend Visualization
-+ Candlestick Trend Visualizarion (将日期顺序从前到最近， 从左到右)
++ Candlestick Trend Visualizarion 
 + Latest Recommendation Index for reference of investment 
 + Company News Display (Records in the nearly half a year) 
 
@@ -58,100 +58,82 @@ a web-based application that involves stock analytics and trading simulation
         - valid (判断该订单记录是否有效 例如： 0 代表 用户依然持有， 1代表用户不持有该股)
         - category (操作类型。分为buy 和 sell 两个操作)
         - datetime 
-        - consultant (一个对象可关联映射多个 User object)
+        - consultant (主要 one-to-many one USER with many STOCK)
 
     - User (用户)
+
+        - id
+        - username
+        - password
+        - role
+        - balances
+        - tradeStatus (0: 账户不可买， 1： 账户可买)
+        - tradeCount （min = 0 max = 4）
+        - clients  (一个对象可关联映射多个 Stock object)
 
 ## System Core Function: Stock Trade
 
 - Main Implementation: Simulation Trading (Buy Action and Sell Action)
 
 
-
-- Set up association between User and Stock (one to many) e.g. a user can have multiple orders
-
-    - User model (username, password, role, balance, assets ,tradeStatus (0,1), tradeCount (min = 0, max = 4), Client for assiciation with Stock)
-
-- set up the business trading conditions: 
+- setting up business logic of trading (主要针对美股): 
 
     - Buy Function
 
-        + if not exist stock buying record in user, （如果用户没有持有股票） 
-    
-            + if balance >= 25000 and TradeStatus = 1, then  （用户钱包金额大于25000， 可进行无限次 T+0买股）
+        1. User still doesn't have stock record , they need to create one stock record.
 
-                - if balance >= totalCost of buying, then create new stock record to record the total revenue and total cost and add record into user account and update user's information (user balance -= totalCost && user asset += totalCost)   （金额是否足够？）
+        2. User aleady had one, only need to change the value in the record that is alrady created
+
+        3. Input Form: Price (At most two decimal digit e.g. 3.14), Volume (should be integer)
+
+        4. (For Buying) price >= market price
+
+        5. (For Selling) price <= market price
+
+        6. (Buying) Total Value (price * volume) <= user balance. Otherwise, it cannot buy.
+
+        7. (Selling) User must hold stock record which is valid (valid = 0) (代表用户持有股票可卖), otherwise, it cannot be sold.
+
+        8. (According to US stock rules) there are some rules setting here for buying
+
+            - user balance >= 25000 and tradeStatus = 1， it can carried out T+0 trading (T+0： 当日可以进行无限次交易)
+                - if user balance < 25000 (after buying stock), set tradeCount = 4 (In later trading, it only can carried out buying action four times until user can have >= $25000 balance)
             
-                    - if new user balance < 25000, then set tradeCount = 4
-
-                - else not buy 
-
-            + if balance < 25000 and tradeStatus = 1, then  （用户钱包金额小于25000， 只能进行有限次 (4次) T+0买股， 四次以后补齐25000才可进行买股。）
-
-                - if (balance >= totalCost && tradeCount > 0), then create new stock record to record the total revenue and total cost and add record into user account and update user's information (balance -= totalCost && asset += totalCost && tradeCount - 1)
+            - user balance < 25000 and tradeCount > 0, it can carry out T+0 trading ( tradeCount - 1.)
+                - if tradeCount == 0 (After minus one), set tradeStatus = 0 (Lock the account for buying, only can sell.)
         
-                    - if tradeCount == 0, then set tradeStatus = 0  (冻结账户 - 不能购买只能减仓)
-                    
-                - else not buy
+            - user balance < 25000 and tradeStatus == 0, user cannot buy but it can only sell. (Pay attention: User should have >= 25000, the account can be actviated again)
+
+        9. (For buying) Success buying will have following changed:
+            - balance - totalCost (price * volume) 
+            - TotalCost (everytime it will accumulate)
+            - totalVolume (everytime it will accumulate)
+            - TradeCount - 1 (only when user balance < 25000)
+            - tradeCount == 0, set tradeStatus to be 0 (冻结)
         
-            + if balance < 25000  and tradeStatus = 0, then not buy   （账户被锁定，无法购买，只能减仓）
-        
-        + if exist stock record and valid in user, （用户之前已经购买过股票）
+        10. （For Selling） Success selling will have following changing:
+            - balance + totalRevenue (price * volume) (卖出价 * 卖出书)
+            - totalRevenue (everytime it will accumulate)
+            - Total volume (everytime it will decrease) (减持股份)
+            - valid = 1 (all stock were sold out)
+            - if balance >= 25000 (after selling), set tradeStatus = 1, tradeCount = 4 (恢复T+0无限次交易)
+            - Selling 需要满足几个条件：
+                - 必须持有股票
+                - total holding volume > inputed volume, (余额增加，持股减少，总收入增加)
+                - total holding volume = inputed volume, (余额增加，持股为0，总收入增加，valid = 1 - 订单无效)
+                - total holding volume < inputed volume, (无法售出)
 
-            + if balance >= 25000 and TradeStatus = 1, then 
-
-                - if balance >= totalPrice, then change old record (volume, totalCost, price, totalVolume, category, datetime) (user balance -= totalPrice && user asset += totalPrice)   
-
-                    - if new user balance < 25000, then set tradeCount = 4
-                
-                - else not buy 
-
-            + if balance < 25000 and tradeStatus = 1, then 
-
-                - if (balance >= totalPrice && tradeCount > 0), then changed old record (volume, totalCost (和之前累加), price, totalVolume (和之前累加), category, datetime)(balance -= totalPrice && asset += totalPrice && tradeCount - 1)
-
-                    - if tradeCount == 0, then set tradeStatus = 0
-                
-                - else not buy
-
-            + if balance < 25000  and tradeStatus = 0, then not buy
-
+        11. data form: volume cannot be zero (min == 1)
 
     - Sell Function
 
-        + if exist stock order and valid in user, then  (卖股票必须之前用户持有)
+## My Trading Page
 
-            - if order volume > input volume, then changed order (volume, totalRevenue (累加), price, category, totalVolume(总股数-卖出股数), datetime) (balance += totalRevenue, asset -= totalRevuew) 
-            
-                (用户持有 > 预卖出数量）
++ Holding Stock (for showing the stock that user is holding now)
+    - it can get new profit via button
 
-                - if new balance >= 25000, then set tradeStatus = 1, tradeCount = 4
-
-            - if order volume == input volume, then set valid to be 1 (表示订单已无效，清仓)，and (volume, totalRevenue (累加), price, category, totalVolume(总股数-卖出股数), datetime)  (balance += totalRevenue, asset -= totalRevuew) 
-            
-                (用户持有 = 预卖出数量）
-
-            - if order volume < input volume, then not sell 
-            
-                (用户持有 < 预卖出数量）
-
-        + if not exist order, then not sell
-
-            (无法进行卖股票操作，无持有数量）
-
-- show the order to member and admin
-
-
-## Main Page (待定)
-
-+ Market News Display
-+ IPO calendar
-+ Covid-19 data
-
-
-## Administration Page
-
-- List the table including order id, symbol name, price, volumn, category(buy or sell), datetime, who buy or sell it
++ Sold Out Stock (those are already sold by user)
+    - it can also see the profit after selling out all of stocks
 
 
 ### Version info
