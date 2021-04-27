@@ -124,10 +124,19 @@
                 <% } else {%>
                 <!-- have username -->
                 <a class="button is-white" href="">
-                  <strong
-                    >hi, <%= req.session.username%> (role: <%=
+                  <strong>hi, <%= req.session.username%> (role: <%=
                     req.session.role%>)
                   </strong>
+                </a>
+                <a class="button is-white" href="/user/clients_2">
+                  <strong> Your Balance: <%= req.session.balances %></strong>
+                </a>
+                <a class="button is-white" href="/user/clients_2">
+                  <% if (req.session.tradeStatus == 1) { %>
+                    <strong> Trading Status: normal</p></strong>
+                  <% } else { %>
+                    <strong> Trading Status: Locked</p></strong>
+                  <% } %>
                 </a>
                 <a class="button is-light" href="/user/logout"> Log out </a>
                 <% } %>

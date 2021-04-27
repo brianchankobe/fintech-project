@@ -24,6 +24,8 @@ module.exports = {
         req.session.username = user.username;
         req.session.usrid = user.id;
         req.session.role = user.role;
+        req.session.balances = user.balances;
+        req.session.tradeStatus = user.tradeStatus;
         return res.json(user);
       }
 
@@ -34,6 +36,8 @@ module.exports = {
         req.session.username = user.username;
         req.session.usrid = user.id;
         req.session.role = user.role;
+        req.session.balances = user.balances;
+        req.session.tradeStatus = user.tradeStatus;
         return res.json(user);
       });
     } else {
