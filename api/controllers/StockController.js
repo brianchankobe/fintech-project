@@ -104,7 +104,6 @@ module.exports = {
                             //set the first order prices (方便后期计算收益)
                             var updatedOrder = await Stock.updateOne({
                                 where: {
-                                    initialPrice: 0,
                                     id: order.id
                                 }
                             }).set({ totalVolume: parseFloat(req.body.volume) });

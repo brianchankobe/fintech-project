@@ -18,7 +18,6 @@ a web-based application that involves stock analytics and trading simulation
 + Candlestick Trend Visualizarion (将日期顺序从前到最近， 从左到右)
 + Latest Recommendation Index for reference of investment 
 + Company News Display (Records in the nearly half a year) 
-+ Company Sentiment Analysis (未完成 - 从股票新闻情绪感知来分析股市情况)
 
 ## User Login 
 
@@ -27,29 +26,47 @@ a web-based application that involves stock analytics and trading simulation
 
         - search stock
         - browse stock details and visulization
-        - Check the order details including which user buy stock, or which user sell stock
 
     - member 
     
         -  Search and browser stock details and data visualization basically
-        - browser the basic information including market new, IPO calendar etc..
+        - browser the basic information including market new
         - Try to carry out simulation of stock trading 
-        - provided with balance (default balance: 500000)
-        - Check the stock order (已经完成)
-        - Selected Stocks list (未购买)
+        - default wallet balance: 500000
+        - Check the stock order (Holding & Sold Stock)
 
     - nonmember
 
         - Search and browser stock details and data visualization basically
-        - browser the basic information including market new, IPO calendar etc..
+        - browser the basic information including market new
         - default balance: 0
-        
+
+## Database Design
+
+- Local Database
+- Two Data Models
+
+    - Stock (记录持有股票记录)
+
+        - id
+        - stock symbol name
+        - price (买入价)
+        - volume (买入量 - 以1股为最小单位)
+        - totalCost (买入总价值累计)
+        - totalRevenue (总收益)
+        - totalVolume (总持有数)
+        - valid (判断该订单记录是否有效 例如： 0 代表 用户依然持有， 1代表用户不持有该股)
+        - category (操作类型。分为buy 和 sell 两个操作)
+        - datetime 
+        - consultant (一个对象可关联映射多个 User object)
+
+    - User (用户)
 
 ## System Core Function: Stock Trade
 
-- Main Implementation: Two Buttons (buy and sell) in detail page
+- Main Implementation: Simulation Trading (Buy Action and Sell Action)
 
-- create stock order (Stock Model: SymbolTitle, Price, Volume, TotalCost, TotalRevenue, valid(0/1), category, DateTime, Consultant (for association with User))
+
 
 - Set up association between User and Stock (one to many) e.g. a user can have multiple orders
 
