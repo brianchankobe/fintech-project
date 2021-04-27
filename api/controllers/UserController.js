@@ -5,6 +5,8 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 
+sails.bcrypt = require('bcryptjs');
+
 module.exports = {
   login: async function (req, res) {
     //if (req.method == "GET") return res.view('user/login');
@@ -24,8 +26,6 @@ module.exports = {
         req.session.username = user.username;
         req.session.usrid = user.id;
         req.session.role = user.role;
-        req.session.balances = user.balances;
-        req.session.tradeStatus = user.tradeStatus;
         return res.json(user);
       }
 
@@ -36,8 +36,6 @@ module.exports = {
         req.session.username = user.username;
         req.session.usrid = user.id;
         req.session.role = user.role;
-        req.session.balances = user.balances;
-        req.session.tradeStatus = user.tradeStatus;
         return res.json(user);
       });
     } else {
@@ -65,6 +63,38 @@ module.exports = {
     }
   },
 
+  //action: signuo
+  signup: async function (req, res) {
+
+    if (req.wantsJSON) {
+
+      if (!req.body.username || !req.body.password) return res.badRequest();
+
+      var user = await User.findOne({ username: req.body.username });
+
+      if (user) return res.status(409).json("User exist");
+
+      var salt = await sails.bcrypt.genSalt(10);
+      var hash = await sails.bcrypt.hash(req.body.password, salt);
+
+      var userAccount = await User.create({
+        username: req.body.username,
+        password: hash,
+        role: req.body.role,
+        balances: req.body.balances,
+        assets: req.body.assets,
+        tradeStatus: req.body.tradeStatus,
+        tradeCount: req.body.tradeCount,
+      }).fetch();
+
+      return res.json(userAccount);
+
+    } else {
+      res.redirect('/');
+    }
+
+  },
+
   //action: populate
   populate: async function (req, res) {
     if (req.wantsJSON) {
@@ -82,6 +112,18 @@ module.exports = {
 
       return res.view("user/populate", { user: thatUser });
     }
+  },
+
+  //action: populate
+  list: async function (req, res) {
+    if (req.wantsJSON) {
+      //check if user exists order that can still be processed
+      var thatUser = await User.findOne(req.session.usrid);
+
+      if (!thatUser) return res.status(404).json("User not found");
+
+      return res.json(thatUser);
+    } 
   },
 
   //action: populate

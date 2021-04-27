@@ -89,9 +89,10 @@
             <div class="buttons">
               <% if (!req.session.username) { %>
                 <!--no username in session, recover login and signup button-->
-                <a class="button is-primary" href="#">
+                <button class="button is-primary modal-button" data-target="modal-signup" aria-haspopup="true"
+                  onclick="activateSignup()">
                   <strong>Sign up</strong>
-                </a>
+                </button>
                 <button class="button is-light modal-button" data-target="modal-login" aria-haspopup="true"
                   onclick="activateLogin()">
                   Log in
@@ -103,14 +104,10 @@
                     </strong>
                   </a>
                   <a class="button is-black" href="#">
-                    <strong> Your Balance: <%= req.session.balances %></strong>
+                    <strong>Your Balance: <p id="balance_id"></p></strong>
                   </a>
                   <a class="button is-black" href="#">
-                    <% if (req.session.tradeStatus==1) { %>
-                      <strong> Trading Status: normal</p></strong>
-                      <% } else { %>
-                        <strong> Trading Status: Locked</p></strong>
-                        <% } %>
+                    <strong> Trading Status: <p id="trade_status"></p></strong>
                   </a>
                   <a class="button is-light" href="/user/logout"> Log out </a>
                   <% } %>
@@ -151,6 +148,55 @@
         </section>
         <footer class="modal-card-foot">
           <button class="button is-success" type="submit">Login</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Signup page -->
+  <div id="modal-signup" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Signup</p>
+        <button class="delete" aria-label="close" onclick="deactivateSignup();"></button>
+      </header>
+      <form action="/user/signup" method="POST" onsubmit="submitSignup(this); return false">
+        <section class="modal-card-body">
+          <!-- Content ... -->
+          <div class="field">
+            <p class="control has-icons-left has-icons-right">
+              <input class="input" type="text" placeholder="Username" name="username" required />
+              <span class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+              </span>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control has-icons-left">
+              <input class="input" type="password" placeholder="Password" name="password" required />
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control">
+              <label class="label">Role: </label>
+            <div class="control is-expanded">
+              <div class="select">
+                <select name="role">
+                  <option>member</option>
+                  <option>nonmember</option>
+                </select>
+              </div>
+            </div>
+            </p>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success" type="submit">Signup</button>
         </footer>
       </form>
     </div>
@@ -237,6 +283,16 @@
     document.getElementById("modal-login").className = "modal";
   }
 
+  //打开注册页面
+  function activateSignup() {
+    document.getElementById("modal-signup").className = "modal is-active";
+  }
+
+  //关闭注册页面
+  function deactivateSignup() {
+    document.getElementById("modal-signup").className = "modal";
+  }
+
   //login form validation
   async function submitForm(formElem) {
     var response = await fetch(formElem.action, {
@@ -251,6 +307,75 @@
     } else if (response.status == 401) {
       var msg = await response.json();
       alert(msg);
+    } else {
+      alert(response.statusText);
+    }
+  }
+
+  async function getUserInformation() {
+    var response = await fetch("/user/list", {
+      method: "POST",
+    })
+
+    if (response.ok) {
+      var user = await response.json();
+
+      var obj_balance = document.getElementById("balance_id");
+      var obj_status = document.getElementById("trade_status");
+      obj_balance.innerHTML = user.balances;
+
+      if (user.tradeStatus == 1) {
+        obj_status.innerHTML = "Normal";
+      } else {
+        obj_status.innerHTML = "Locked";
+      }
+
+    } else {
+      alert(response.statusText);
+    }
+  }
+
+
+
+  setInterval(function () {
+    console.log('<%= req.session.username%>');
+    if ('<%= req.session.username%>') {
+      getUserInformation();
+    }
+  }, 5000);
+
+  //sign up
+  async function submitSignup(formElem) {
+
+    var data_form = new FormData(formElem);
+
+    if (data_form.get("role") == "member") {
+      data_form.append("balances", 500000);
+      data_form.append("assets", 500000);
+      data_form.append("tradeStatus", 1);
+      data_form.append("tradeCount", 4);
+    } else {
+      data_form.append("balances", 0);
+      data_form.append("assets", 0);
+      data_form.append("tradeStatus", 0);
+      data_form.append("tradeCount", 0);
+    }
+
+    var response = await fetch(formElem.action, {
+      method: formElem.method,
+      body: data_form,
+    });
+
+    if (response.ok) {
+
+      var user = await response.json();
+
+      alert(user.username + " signed up successfully. ");
+
+      location.assign("/");
+
+    } else if (response.status == 409) {
+      alert("User exist");
     } else {
       alert(response.statusText);
     }
