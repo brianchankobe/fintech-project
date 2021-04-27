@@ -65,13 +65,13 @@ module.exports = {
                             //add association with User
                             await User.addToCollection(req.session.usrid, "clients").members(updatedOrder.id);
 
-                            //update User balance of money
+                            //update User balance of money (资产 = 旧资产 + （新投资价值 - 总成本）)
                             var updatedUser = await User.updateOne({
                                 where: {
                                     balances: thatUser.balances,
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: Math.round((thatUser.balances - parseFloat(req.body.price) * parseFloat(req.body.volume)) * 100) / 100, assets: Math.round((thatUser.assets + parseFloat(req.body.price) * parseFloat(req.body.volume)) * 100) /100 });
+                            }).set({ balances: Math.round((thatUser.balances - parseFloat(req.body.price) * parseFloat(req.body.volume)) * 100) / 100, assets: Math.round((thatUser.assets +  parseFloat(req.body.price) * parseFloat(req.body.volume)) * 100) /100 });
 
                             //如果用户余额小于25000， 开始限制最大T+0买股票次数
                             if (updatedUser.balances < 25000) {
@@ -155,9 +155,9 @@ module.exports = {
                                 where: {
                                     id: order.id
                                 }
-                            }).set({ volume: parseFloat(req.body.volume), totalCost: Math.floor((order.totalCost + parseFloat(req.body.totalCost)) * 100 ) / 100, price: parseFloat(req.body.price), totalVolume: parseFloat(req.body.volume) + order.totalVolume, category: req.body.category, datetime: req.body.datetime });
+                            }).set({ volume: parseFloat(req.body.volume), totalCost: Math.round((order.totalCost + parseFloat(req.body.totalCost)) * 100 ) / 100, price: parseFloat(req.body.price), totalVolume: parseFloat(req.body.volume) + order.totalVolume,category: req.body.category, datetime: req.body.datetime });
 
-                            //update User balance of money
+                            //update User balance of money (资产 = 旧资产 + （新投资价值 - 总成本）)
                             var updatedUser = await User.updateOne({
                                 where: {
                                     balances: thatUser.balances,
@@ -195,7 +195,7 @@ module.exports = {
                                 where: {
                                     id: order.id
                                 }
-                            }).set({ volume: parseFloat(req.body.volume), totalCost: Math.floor((order.totalCost + parseFloat(req.body.totalCost)) * 100 ) / 100, price: parseFloat(req.body.price), totalVolume: parseFloat(req.body.volume) + order.totalVolume, category: req.body.category, datetime: req.body.datetime });
+                            }).set({ volume: parseFloat(req.body.volume), totalCost: Math.round((order.totalCost + parseFloat(req.body.totalCost)) * 100 ) / 100, price: parseFloat(req.body.price), totalVolume: parseFloat(req.body.volume) + order.totalVolume, category: req.body.category, datetime: req.body.datetime });
 
                             //update User balance of money and tradeCount of user - 1
                             var updatedUser = await User.updateOne({
@@ -243,13 +243,13 @@ module.exports = {
                                 where: {
                                     id: order.id,
                                 }
-                            }).set({ valid: 1, volume: parseFloat(req.body.volume), totalRevenue: Math.floor((order.totalRevenue + parseFloat(req.body.totalRevenue)) * 100) /100, price: parseFloat(req.body.price), totalVolume: order.totalVolume - parseFloat(req.body.volume), category: req.body.category, datetime: req.body.datetime });
+                            }).set({ valid: 1, volume: parseFloat(req.body.volume), totalRevenue: Math.round((order.totalRevenue + parseFloat(req.body.totalRevenue)) * 100) /100, price: parseFloat(req.body.price), totalVolume: order.totalVolume - parseFloat(req.body.volume), category: req.body.category, datetime: req.body.datetime });
 
                             var updatedUser = await User.updateOne({
                                 where: {
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: Math.floor((thatUser.balances + parseFloat(req.body.totalRevenue)) * 100) / 100, assets: Math.floor((thatUser.assets - parseFloat(req.body.totalRevenue)) * 100) / 100 });
+                            }).set({ balances: Math.round((thatUser.balances + parseFloat(req.body.totalRevenue)) * 100) / 100, assets: Math.round((thatUser.assets - parseFloat(req.body.totalRevenue)) * 100) / 100 });
 
                             if (updatedUser.balances >= 25000) {
                                 updatedUser = await User.updateOne({
@@ -273,13 +273,13 @@ module.exports = {
                                 where: {
                                     id: order.id,
                                 }
-                            }).set({ volume: parseFloat(req.body.volume), totalRevenue: Math.floor((order.totalRevenue + parseFloat(req.body.totalRevenue)) * 100) /100, price: parseFloat(req.body.price), totalVolume: order.totalVolume - parseFloat(req.body.volume), category: req.body.category, datetime: req.body.datetime });
+                            }).set({ volume: parseFloat(req.body.volume), totalRevenue: Math.round((order.totalRevenue + parseFloat(req.body.totalRevenue)) * 100) /100, price: parseFloat(req.body.price), totalVolume: order.totalVolume - parseFloat(req.body.volume), category: req.body.category, datetime: req.body.datetime });
 
                             var updatedUser = await User.updateOne({
                                 where: {
                                     id: req.session.usrid,
                                 }
-                            }).set({ balances: Math.floor((thatUser.balances + parseFloat(req.body.totalRevenue)) * 100) / 100, assets: Math.floor((thatUser.assets - parseFloat(req.body.totalRevenue)) * 100) / 100 });
+                            }).set({ balances: Math.round((thatUser.balances + parseFloat(req.body.totalRevenue)) * 100) / 100, assets: Math.round((thatUser.assets - parseFloat(req.body.totalRevenue)) * 100) / 100 });
 
                             if (updatedUser.balances >= 25000) {
                                 updatedUser = await User.updateOne({
