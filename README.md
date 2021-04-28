@@ -3,6 +3,16 @@
 a web-based application that involves stock analytics and trading simulation
 
 
+## Software Installation
+
++ Installing Visual Studio Code
++ Open terminal and type `npm install -g sails`
++ Type `sails new <project name>` 
++ Run `npm install finnhub`
++ Run web appication using `sails lift`
++ `sails lift` may need to choose 1 or 2 (1: run for base of original DB, 2: drop the DB content and run again)
++ You may use http://localhost:1337/ to open it.
+
 ## Stock Search Page (Search Page)
 
 + Searching stock from different exchange code (e.g. US)
@@ -137,6 +147,11 @@ a web-based application that involves stock analytics and trading simulation
 ### Version info
 
 This app was originally generated on Sat Mar 06 2021 21:48:42 GMT+0800 (GMT+08:00) using Sails v1.3.1.
+
+## Contribution
+
++ CHAN YEUNG YEH (System Developer & Frontend Designer)
++ CHEN SHANG HUA (System Developer & Frontend Designer)
 
 <!-- Internally, Sails used [`sails-generate@2.0.0`](https://github.com/balderdashy/sails-generate/tree/v2.0.0/lib/core-generators/new). -->
 
