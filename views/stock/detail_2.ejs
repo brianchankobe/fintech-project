@@ -599,7 +599,7 @@
           news.source +
           "</div>" +
           '<div id="news_datetime">Date:' +
-          news.datetime +
+            new Date(news.datetime * 1000).toLocaleDateString() +
           "</div>" +
           "</div>" +
           "</div>" +
