@@ -55,6 +55,11 @@ module.exports.routes = {
 
   "GET /user/clients_2": "UserController.populate_2",
 
+  //sign up
+  "POST /user/signup": "UserController.signup",
+
+  "POST /user/list": "UserController.list",
+
   /***************************************************************************
    *                                                                          *
    * More custom routes here...                                               *

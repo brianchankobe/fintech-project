@@ -63,7 +63,8 @@
             <tr>
               <th><abbr title="Position">ID</abbr></th>
               <th><abbr title="Played">Stock Symbol</abbr></th>
-              <th><abbr title="Won">Price</abbr></th>
+              <th><abbr title="Won">Buy Price</abbr></th>
+              <th><abbr title="Won">Current Price</abbr></th>
               <th><abbr title="Drawn">Volumn</abbr></th>
               <th><abbr title="Lost">Total Revenue</abbr></th>
               <th><abbr title="Goals for">Total Cost</abbr></th>
@@ -83,6 +84,7 @@
               <td><%=symbol.id %></td>
               <td><a href="/stock/detail/<%= symbol.symbolTitle %>"><%=symbol.symbolTitle %></a></td>
               <td>$ <%= symbol.price %></td>
+              <td id="current_price_real_time"></td>
               <td><%= symbol.volume %></td>
               <td>$ <%= symbol.totalRevenue %></td>
               <td>$ <%= symbol.totalCost %></td>
@@ -161,7 +163,9 @@
       console.log("current_price: " + current_price);
       var profit_rate = Math.round(((data.c * v) - cost) * 100) / 100;
       var table_profit = document.getElementById(symbol);
+      var obj_real_p = document.getElementById("current_price_real_time");
       table_profit.innerHTML = profit_rate;
+      obj_real_p.innerHTML = "$ " + data.c;
 
     } else {
       alert(response.statusText);

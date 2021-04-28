@@ -1071,7 +1071,7 @@
     let start_resut2 = nowDate.getTime() >= start_Date2.getTime();
     let end_result2 = nowDate.getTime() <= end_Date2.getTime();
 
-    if (!(start_resut1 && end_result1) || (start_resut2 && end_result2)) {
+    if (!((start_resut1 && end_result1) || (start_resut2 && end_result2))) {
       alert("US stock is not opening now. ");
     }
 
@@ -1106,9 +1106,8 @@
 
     let start_resut2 = nowDate.getTime() >= start_Date2.getTime();
     let end_result2 = nowDate.getTime() <= end_Date2.getTime();
-    console.log(start_Date1);
 
-    if (!(start_resut1 && end_result1) || (start_resut2 && end_result2)) {
+    if (!((start_resut1 && end_result1) || (start_resut2 && end_result2))) {
       alert("US stock is not opening now. ");
     }
 
