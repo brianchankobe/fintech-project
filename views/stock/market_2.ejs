@@ -19,18 +19,23 @@
     overflow: auto;
   }
 </style>
+
 <body>
   <div class="main">
     <!-- 系统大标题 -->
+    <!-- Welcome -->
+
     <div class="columns">
       <div class="column" style="padding: 0">
         <div class="panel">
           <section class="hero is-white">
-            <div class="hero-body" style="padding: 24px 24px">
+            <div class="hero-body" style="text-align: center">
               <p class="title">
+                Welcome to the
+                <strong>
                 Stock Digitalization & Simulation Trading Platform
+                </strong>
               </p>
-              <p class="subtitle">Market News</p>
             </div>
           </section>
         </div>
@@ -43,12 +48,12 @@
         <!-- 分页标签导航栏 -->
         <div class="tabs is-centered is-large">
           <ul>
-            <li id="all-tab" class="is-active">
+            <!--li id="all-tab" class="is-active">
               <a onClick="switchToAll()">
                 <span class="icon is-small"><i class="fa fa-html5"></i></span>
                 <span>Welcome</span>
               </a>
-            </li>
+            </li-->
             <li id="adaptivedesign-tab">
               <a onClick="switchToAdaptiveDesign()">
                 <span class="icon is-small"><i class="fa fa-tablet"></i></span>
@@ -57,9 +62,7 @@
             </li>
             <li id="jquery-tab">
               <a onClick="switchToJquery()">
-                <span class="icon is-small"
-                  ><i class="fa fa-file-code-o"></i
-                ></span>
+                <span class="icon is-small"><i class="fa fa-file-code-o"></i></span>
                 <span>Forex News</span>
               </a>
             </li>
@@ -71,9 +74,7 @@
             </li>
             <li id="angularjs-tab">
               <a onClick="switchToAngularJS()">
-                <span class="icon is-small"
-                  ><i class="fa fa-file-text-o"></i
-                ></span>
+                <span class="icon is-small"><i class="fa fa-file-text-o"></i></span>
                 <span>Merger News</span>
               </a>
             </li>
@@ -84,7 +85,7 @@
         <!-- 分页标签的内容   -->
         <div class="container">
           <!-- Welcome -->
-          <div id="all-tab-content">
+          <!--div id="all-tab-content">
             <nav class="panel">
               <h1 class="title is-1" style="text-align: center">
                 Welcome to the
@@ -93,7 +94,7 @@
                 </strong>
               </h1>
             </nav>
-          </div>
+          </div-->
 
           <!-- testing testing testing testing-->
 
@@ -197,8 +198,8 @@
     var newsList_obj_1 = document.getElementById("marketnewsgeneral");
     const response = await fetch(
       "https://finnhub.io/api/v1/news?category=" +
-        news_type +
-        "&token=c0ro5sv48v6voi2d8ndg"
+      news_type +
+      "&token=c0ro5sv48v6voi2d8ndg"
     );
     if (response.ok) {
       var data = await response.json();
@@ -262,8 +263,8 @@
     var newsList_obj_2 = document.getElementById("marketnewsforex");
     const response = await fetch(
       "https://finnhub.io/api/v1/news?category=" +
-        news_type +
-        "&token=c0ro5sv48v6voi2d8ndg"
+      news_type +
+      "&token=c0ro5sv48v6voi2d8ndg"
     );
     if (response.ok) {
       var data = await response.json();
@@ -326,8 +327,8 @@
     var newsList_obj_3 = document.getElementById("marketnewscrypto");
     const response = await fetch(
       "https://finnhub.io/api/v1/news?category=" +
-        news_type +
-        "&token=c0ro5sv48v6voi2d8ndg"
+      news_type +
+      "&token=c0ro5sv48v6voi2d8ndg"
     );
     if (response.ok) {
       var data = await response.json();
@@ -390,8 +391,8 @@
     var newsList_obj_4 = document.getElementById("marketnewsmerger");
     const response = await fetch(
       "https://finnhub.io/api/v1/news?category=" +
-        news_type +
-        "&token=c0ro5sv48v6voi2d8ndg"
+      news_type +
+      "&token=c0ro5sv48v6voi2d8ndg"
     );
     if (response.ok) {
       var data = await response.json();
