@@ -25,6 +25,7 @@ module.exports.routes = {
   //market news
   "GET /": "StockController.marketnews",
   "GET /marketnews": "StockController.marketnews",
+  "GET /market_2": "StockController.market_2",
 
   //create stock model for getting info of stock
   "GET /stock/search": "StockController.search",

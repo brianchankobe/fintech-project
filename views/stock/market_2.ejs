@@ -1,74 +1,195 @@
 <style>
   #marketnewsgeneral {
-    max-height: 50vh;
+    max-height: 70vh;
     overflow: auto;
   }
 
   #marketnewsforex {
-    max-height: 50vh;
+    max-height: 70vh;
     overflow: auto;
   }
 
   #marketnewscrypto {
-    max-height: 50vh;
+    max-height: 70vh;
     overflow: auto;
   }
 
   #marketnewsmerger {
-    max-height: 50vh;
+    max-height: 70vh;
     overflow: auto;
   }
 </style>
-
-<div class="container">
-  <div class="panel">
-    <section class="hero is-white">
-      <div class="hero-body" style="padding: 24px 24px">
-        <p class="title">Stock Digitalization & Simulation Trading Platform</p>
-        <p class="subtitle">Market News</p>
-      </div>
-    </section>
-  </div>
-</div>
-
-<div class="columns" style="margin: 0">
-  <div class="column is-full">
+<body>
+  <div class="main">
+    <!-- 系统大标题 -->
     <div class="columns">
-      <div class="column is-6">
-        <nav class="panel">
-          <!-- General News -->
-          <p class="panel-heading">General</p>
-          <div id="marketnewsgeneral"></div>
-        </nav>
-      </div>
-      <div class="column is-6">
-        <nav class="panel">
-          <!-- Forex News -->
-          <p class="panel-heading">Forex</p>
-          <div id="marketnewsforex"></div>
-        </nav>
+      <div class="column" style="padding: 0">
+        <div class="panel">
+          <section class="hero is-white">
+            <div class="hero-body" style="padding: 24px 24px">
+              <p class="title">
+                Stock Digitalization & Simulation Trading Platform
+              </p>
+              <p class="subtitle">Market News</p>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
+
+    <!-- 新闻部分 -->
     <div class="columns">
-      <div class="column is-6">
-        <nav class="panel">
-          <!-- General News -->
-          <p class="panel-heading">Crypto</p>
-          <div id="marketnewscrypto"></div>
-        </nav>
-      </div>
-      <div class="column is-6">
-        <nav class="panel">
-          <!-- Forex News -->
-          <p class="panel-heading">Merger</p>
-          <div id="marketnewsmerger"></div>
-        </nav>
+      <div class="column" style="padding: 0">
+        <!-- 分页标签导航栏 -->
+        <div class="tabs is-centered is-large">
+          <ul>
+            <li id="all-tab" class="is-active">
+              <a onClick="switchToAll()">
+                <span class="icon is-small"><i class="fa fa-html5"></i></span>
+                <span>Welcome</span>
+              </a>
+            </li>
+            <li id="adaptivedesign-tab">
+              <a onClick="switchToAdaptiveDesign()">
+                <span class="icon is-small"><i class="fa fa-tablet"></i></span>
+                <span>General News</span>
+              </a>
+            </li>
+            <li id="jquery-tab">
+              <a onClick="switchToJquery()">
+                <span class="icon is-small"
+                  ><i class="fa fa-file-code-o"></i
+                ></span>
+                <span>Forex News</span>
+              </a>
+            </li>
+            <li id="ajax-tab">
+              <a onClick="switchToAjax()">
+                <span class="icon is-small"><i class="fa fa-cog"></i></span>
+                <span>Crypto News</span>
+              </a>
+            </li>
+            <li id="angularjs-tab">
+              <a onClick="switchToAngularJS()">
+                <span class="icon is-small"
+                  ><i class="fa fa-file-text-o"></i
+                ></span>
+                <span>Merger News</span>
+              </a>
+            </li>
+          </ul>
+          <!--/tabs is-centered-->
+        </div>
+
+        <!-- 分页标签的内容   -->
+        <div class="container">
+          <!-- Welcome -->
+          <div id="all-tab-content">
+            <nav class="panel">
+              <h1 class="title is-1" style="text-align: center">
+                Welcome to the
+                <strong>
+                  Stock Digitalization & Simulation Trading Platform
+                </strong>
+              </h1>
+            </nav>
+          </div>
+
+          <!-- General -->
+          <div class="is-hidden" id="adaptivedesign-tab-content">
+            <nav class="panel">
+              <!-- General News -->
+              <p class="panel-heading">General</p>
+              <div id="marketnewsgeneral"></div>
+            </nav>
+          </div>
+
+          <!-- Forex -->
+          <div class="is-hidden" id="jquery-tab-content">
+            <nav class="panel">
+              <!-- Forex News -->
+              <p class="panel-heading">Forex</p>
+              <div id="marketnewsforex"></div>
+            </nav>
+          </div>
+
+          <!-- Crypto -->
+          <div class="is-hidden" id="ajax-tab-content">
+            <nav class="panel">
+              <!-- General News -->
+              <p class="panel-heading">Crypto</p>
+              <div id="marketnewscrypto"></div>
+            </nav>
+          </div>
+
+          <!-- Merger -->
+          <div class="is-hidden" id="angularjs-tab-content">
+            <nav class="panel">
+              <!-- Forex News -->
+              <p class="panel-heading">Merger</p>
+              <div id="marketnewsmerger"></div>
+            </nav>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
+</body>
 <script>
+  // welcome
+  function switchToAll() {
+    removeActive();
+    hideAll();
+    $("#all-tab").addClass("is-active");
+    $("#all-tab-content").removeClass("is-hidden");
+  }
+
+  // general
+  function switchToAdaptiveDesign() {
+    removeActive();
+    hideAll();
+    $("#adaptivedesign-tab").addClass("is-active");
+    $("#adaptivedesign-tab-content").removeClass("is-hidden");
+  }
+
+  // forex
+  function switchToJquery() {
+    removeActive();
+    hideAll();
+    $("#jquery-tab").addClass("is-active");
+    $("#jquery-tab-content").removeClass("is-hidden");
+  }
+
+  // crypto
+  function switchToAjax() {
+    removeActive();
+    hideAll();
+    $("#ajax-tab").addClass("is-active");
+    $("#ajax-tab-content").removeClass("is-hidden");
+  }
+
+  //merger
+  function switchToAngularJS() {
+    removeActive();
+    hideAll();
+    $("#angularjs-tab").addClass("is-active");
+    $("#angularjs-tab-content").removeClass("is-hidden");
+  }
+
+  function removeActive() {
+    $("li").each(function () {
+      $(this).removeClass("is-active");
+    });
+  }
+
+  function hideAll() {
+    $("#all-tab-content").addClass("is-hidden");
+    $("#adaptivedesign-tab-content").addClass("is-hidden");
+    $("#jquery-tab-content").addClass("is-hidden");
+    $("#ajax-tab-content").addClass("is-hidden");
+    $("#angularjs-tab-content").addClass("is-hidden");
+  }
+
   //get general news
   async function getMarketNews_1(news_type) {
     var newsList_obj_1 = document.getElementById("marketnewsgeneral");
@@ -133,6 +254,7 @@
     }
   }
 
+  //
   //get forex news
   async function getMarketNews_2(news_type) {
     var newsList_obj_2 = document.getElementById("marketnewsforex");
@@ -324,6 +446,7 @@
       alert(response.statusText);
     }
   }
+
   //执行函数
   //general news
   getMarketNews_1("general");
