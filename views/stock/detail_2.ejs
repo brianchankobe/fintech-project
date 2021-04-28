@@ -84,16 +84,16 @@
             <div style="padding-top: 20px">
               <Strong>Current Price: (USD) $</Strong><a class="subtitle" id="price_stock_graph"></a>
             </div>
-            <div style="width: 800px; height: 485px">
+            <div style="width: 780px; height: 400px">
               <canvas id="chart_1"></canvas>
             </div>
-            <div style="padding-bottom: 40px;">
+            <div style="padding: 10px 0;">
               <p> US Stock Opening Day: Monday to Friday. </p>
               <p> US Opening Stock Market Time: 9.30 - 16:00. </p>
               <p> (US Summer Period) Beijing/HK Time: 21:30 - 4:00</p>
               <p> (US Winter Period) Beijing/HK Time: 22:30 - 5:00</p>
             </div>
-            <div style="padding-bottom: 20px;">
+            <div style="padding: 15px 0;">
               <p id="today_date"></p>
             </div>
           </nav>
@@ -572,9 +572,11 @@
           news.url +
           '">' +
           '<figure class="image is-4by3">' +
-          '<img src="' +
+            "<img src=" +
           news.image +
-          '" id="news_img"/>' +
+          ' alt="' +
+          news.headline +
+          '" onerror="this.src=\'http://anokha.world/images/not-found.png\'"/>' +
           "</figure>" +
           "</a>" +
           "</div>" +
