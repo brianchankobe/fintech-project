@@ -82,7 +82,7 @@
           <nav class="panel">
             <p class="panel-heading">Real-Time Price Chart</p>
             <div style="padding-top: 20px">
-              <p class="subtitle" id="price_stock_graph"></p>
+              <Strong>Current Price: (USD) $</Strong><a class="subtitle" id="price_stock_graph"></a>
             </div>
             <div style="width: 800px; height: 485px">
               <canvas id="chart_1"></canvas>
@@ -948,7 +948,7 @@
       myChart_1.data.labels.push(real_time);
       //push y_data
       myChart_1.data.datasets[0].data.push(data.c);
-      obj_show_price.innerHTML = "<Strong>Current Price:"+data.c+"(USD)</Strong>";
+      obj_show_price.innerHTML = data.c;
       myChart_1.update();
 
     } else {
