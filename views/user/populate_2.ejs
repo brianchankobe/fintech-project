@@ -86,8 +86,8 @@
               <td>$ <%= symbol.price %></td>
               <td id="current_price_real_time"></td>
               <td><%= symbol.volume %></td>
-              <td>$ <%= symbol.totalRevenue %></td>
-              <td>$ <%= symbol.totalCost %></td>
+              <td>$ <%= Math.round(symbol.totalRevenue * 100) /100 %></td>
+              <td>$ <%= Math.round(symbol.totalCost * 100 ) / 100 %></td>
               <td><%= symbol.totalVolume %></td>
               <td id='<%= symbol.symbolTitle %>'></td>
               <td><%= symbol.datetime %></td>
@@ -131,8 +131,8 @@
               <td><a href="/stock/detail/<%= symbol.symbolTitle %>"><%=symbol.symbolTitle %></a></td>
               <td>$ <%= symbol.price %></td>
               <td>$ <%= symbol.volume %></td>
-              <td>$<%= symbol.totalRevenue %></td>
-              <td>$ <%= symbol.totalCost %></td>
+              <td>$ <%= Math.round(symbol.totalRevenue * 100) /100 %></td>
+              <td>$ <%= Math.round(symbol.totalCost * 100 ) / 100 %></td>
               <td><%= symbol.totalVolume %></td>
               <td><%= Math.round((symbol.totalRevenue - symbol.totalCost)*100) / 100 %></td>
               <td><%= symbol.datetime %></td>
