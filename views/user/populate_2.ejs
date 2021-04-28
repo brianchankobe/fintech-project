@@ -63,7 +63,7 @@
             <tr>
               <th><abbr title="Position">ID</abbr></th>
               <th><abbr title="Played">Stock Symbol</abbr></th>
-              <th><abbr title="Won">Buy Price</abbr></th>
+              <th><abbr title="Won">Price</abbr></th>
               <th><abbr title="Won">Current Price</abbr></th>
               <th><abbr title="Drawn">Volumn</abbr></th>
               <th><abbr title="Lost">Total Revenue</abbr></th>
@@ -71,6 +71,7 @@
               <th><abbr title="Goals against">Total Volumn</abbr></th>
               <th><abbr title="Profit_rate">Profit</abbr></th>
               <th><abbr title="Goal difference">Time</abbr></th>
+              <th><abbr title="Goal difference">Last Action</abbr></th>
               <th><abbr title="refresh">Get New Profit</abbr></th>
             </tr>
           </thead>
@@ -86,11 +87,12 @@
               <td>$ <%= symbol.price %></td>
               <td id="current_price_real_time"></td>
               <td><%= symbol.volume %></td>
-              <td>$ <%= symbol.totalRevenue %></td>
-              <td>$ <%= symbol.totalCost %></td>
+              <td>$ <%= Math.round(symbol.totalRevenue * 100) /100 %></td>
+              <td>$ <%= Math.round(symbol.totalCost * 100 ) / 100 %></td>
               <td><%= symbol.totalVolume %></td>
               <td id='<%= symbol.symbolTitle %>'></td>
               <td><%= symbol.datetime %></td>
+              <td><%= symbol.category %></td>
               <td><a class="button is-info" onclick="getRealTimePrice('<%= symbol.symbolTitle %>', '<%= symbol.totalVolume %>', '<%= symbol.totalCost %>');"> Refresh </a></td>
             </tr>
             <% } }); %>
@@ -118,6 +120,7 @@
               <th><abbr title="Goals against">Total Volumn</abbr></th>
               <th><abbr title="Profit_rate">Profit</abbr></th>
               <th><abbr title="Goal difference">Time</abbr></th>
+              <th><abbr title="Goal difference">Last Action</abbr></th>
             </tr>
           </thead>
           <tbody>
@@ -131,11 +134,12 @@
               <td><a href="/stock/detail/<%= symbol.symbolTitle %>"><%=symbol.symbolTitle %></a></td>
               <td>$ <%= symbol.price %></td>
               <td>$ <%= symbol.volume %></td>
-              <td>$<%= symbol.totalRevenue %></td>
-              <td>$ <%= symbol.totalCost %></td>
+              <td>$ <%= Math.round(symbol.totalRevenue * 100) /100 %></td>
+              <td>$ <%= Math.round(symbol.totalCost * 100 ) / 100 %></td>
               <td><%= symbol.totalVolume %></td>
               <td><%= Math.round((symbol.totalRevenue - symbol.totalCost)*100) / 100 %></td>
               <td><%= symbol.datetime %></td>
+              <td><%= symbol.category %></td>
             </tr>
             <% } }); %>
           </tbody>
