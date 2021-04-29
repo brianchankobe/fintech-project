@@ -7,7 +7,7 @@ a web-based application that involves stock analytics and trading simulation
 
 + Installing Visual Studio Code
 + Open terminal and type `npm install -g sails`
-+ Type `sails new <project name>` 
++ Run `npm install`
 + Run `npm install finnhub`
 + Run web appication using `sails lift`
 + `sails lift` may need to choose 1 or 2 (1: run for base of original DB, 2: drop the DB content and run again)

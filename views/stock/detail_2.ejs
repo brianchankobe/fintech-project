@@ -209,7 +209,8 @@
               <label class="label"> Price ($): </label>
             <div class="columns">
               <div class="column is-three-quarters">
-                <input class="input" type="number" name="price" min="0.00" step="0.01" id="input_price" required>
+                <input class="input" type="number" name="price" min="0.00" step="0.01" id="input_price"
+                  oninput="calculateTotal(this.value, document.getElementById('input_volumn_2').value);" required>
               </div>
               <div class="column is-one-quarter">
                 <a class="button is-info" onclick="getCurrentPriceForBuy()">Current Price</a>
@@ -221,7 +222,7 @@
           <div class="field">
             <p class="control">
               <label class="label"> Volume: </label>
-              <input class="input" type="number" name="volume" min="1"
+              <input class="input" type="number" name="volume" min="1" id="input_volumn_2"
                 oninput="calculateTotal(this.value, document.getElementById('input_price').value);" required>
             </p>
           </div>
@@ -269,7 +270,8 @@
             <div class="columns">
               <!-- 价格输入 -->
               <div class="column is-three-quarters">
-                <input class="input" type="number" name="price" min="0.00" step="0.01" id="input_price_2" required>
+                <input class="input" type="number" name="price" min="0.00" step="0.01" id="input_price_2"
+                  oninput="calculateTotal_2(this.value, document.getElementById('input_volumn_1').value);" required>
               </div>
               <div class="column is-one-quarter">
                 <a class="button is-info" onclick="getCurrentPriceForSell()">Current Price</a>
@@ -572,7 +574,7 @@
           news.url +
           '">' +
           '<figure class="image is-4by3">' +
-            "<img src=" +
+          "<img src=" +
           news.image +
           ' alt="' +
           news.headline +
@@ -601,7 +603,7 @@
           news.source +
           "</div>" +
           '<div id="news_datetime">Date:' +
-            new Date(news.datetime * 1000).toLocaleDateString() +
+          new Date(news.datetime * 1000).toLocaleDateString() +
           "</div>" +
           "</div>" +
           "</div>" +
@@ -1126,6 +1128,7 @@
     var real_price = parseFloat(document.getElementById("price_stock_graph").innerHTML);  //real-time price
     var input_price_form = document.getElementById("input_price");
     input_price_form.value = real_price;
+    input_price_form.oninput = calculateTotal(input_price_form.value, document.getElementById('input_volumn_2').value);
   }
 
   //获取当前价格输出到卖出表单
